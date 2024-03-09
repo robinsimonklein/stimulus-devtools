@@ -1,38 +1,47 @@
-import {resolve} from 'path'
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-// @ts-ignore
-import {manifest} from "./src/manifest";
+import { defineConfig } from 'vite';
+import path from 'path';
+import vue from '@vitejs/plugin-vue';
+import tailwind from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
+import { manifest } from './src/manifest';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  css: {
+    postcss: {
+      plugins: [tailwind(), autoprefixer()],
+    },
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
   plugins: [
-      vue(),
+    vue(),
     {
       name: 'manifest',
-      generateBundle(outputOptions, bundle) {
+      generateBundle() {
         this.emitFile({
           type: 'asset',
           fileName: 'manifest.json',
-          // @ts-ignore
-          source: manifest
+          source: manifest,
         });
-      }
-    }
+      },
+    },
   ],
   build: {
     emptyOutDir: true,
     outDir: 'build',
     rollupOptions: {
       input: {
-        'devtools': 'devtools.html',
-        'detector': 'src/detector/index.ts',
+        devtools: 'devtools.html',
+        detector: 'src/detector/index.ts',
         'content-script': 'src/contentScript/index.ts',
-        'manifest': 'src/manifest.ts' // TODO: find a workaround to watch manifest.ts without including it as input
       },
       output: {
-        entryFileNames: 'assets/[name].js'
+        entryFileNames: 'assets/[name].js',
       },
     },
-  }
-})
+  },
+});
