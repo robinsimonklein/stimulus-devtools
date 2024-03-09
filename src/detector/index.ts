@@ -18,7 +18,7 @@ function detect() {
   if (window['Stimulus']) {
     window['__STIMULUS_DEVTOOLS_DETECTED__'] = true;
     sendMessage({
-      detected: true,
+      name: '_stimulus_devtools:detected',
     });
     if (detectorInterval) clearInterval(detectorInterval);
   }
@@ -26,4 +26,5 @@ function detect() {
 
 window.addEventListener('DOMContentLoaded', () => {
   detectorInterval = setInterval(detect, 1000);
+  detect();
 });

@@ -1,5 +1,6 @@
 import { onBeforeUnmount, ref } from 'vue';
 
+const isLoading = ref(true);
 const stimulusDetected = ref(false);
 const checkCount = ref(0);
 const checkStimulusInterval = ref<ReturnType<typeof setInterval> | null>(null);
@@ -8,6 +9,12 @@ chrome.devtools.network.onNavigated.addListener(() => {
   checkCount.value = 0;
   stimulusDetected.value = false;
   checkIfHasStimulus(true);
+});
+
+chrome.runtime.onMessage.addListener(message => {
+  if (message.name === '_stimulus_devtools:detected') {
+    checkIfHasStimulus(true);
+  }
 });
 
 function checkIfHasStimulus(runInterval = false) {
@@ -20,6 +27,7 @@ function checkIfHasStimulus(runInterval = false) {
     if (checkStimulusInterval.value) {
       clearInterval(checkStimulusInterval.value);
       checkStimulusInterval.value = null;
+      isLoading.value = false;
     }
     return;
   }
@@ -40,5 +48,5 @@ export const useStimulusDetector = () => {
     if (checkStimulusInterval.value) clearInterval(checkStimulusInterval.value);
   });
 
-  return { stimulusDetected, checkIfHasStimulus };
+  return { isLoading, stimulusDetected, checkIfHasStimulus };
 };
