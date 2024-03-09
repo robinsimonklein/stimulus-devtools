@@ -1,0 +1,14 @@
+[*.{js,ts,jsx,tsx,vue}]
+tab_width = 2
+indent_size = 2
+indent_style = space
+
+[*.{json,yml,yaml}]
+tab_width = 2
+indent_size = 2
+indent_style = space
+
+[*.{css,scss}]
+tab_width = 2
+indent_size = 2
+indent_style = space
