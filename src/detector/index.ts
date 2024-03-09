@@ -6,7 +6,7 @@ let detectorCount = 0;
 declare global {
   interface Window {
     Stimulus?: any;
-    __STIMULUS_DEVTOOLS_DETECTED?: boolean;
+    __STIMULUS_DEVTOOLS_DETECTED__?: boolean;
   }
 }
 
@@ -16,7 +16,7 @@ function detect() {
   }
 
   if (window['Stimulus']) {
-    window['__STIMULUS_DEVTOOLS_DETECTED'] = true;
+    window['__STIMULUS_DEVTOOLS_DETECTED__'] = true;
     sendMessage({
       detected: true,
     });
