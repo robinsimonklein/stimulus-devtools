@@ -3,6 +3,7 @@ import path from 'path';
 import vue from '@vitejs/plugin-vue';
 import tailwind from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
+import hotReloadExtension from 'hot-reload-extension-vite';
 import { manifest } from './src/manifest';
 
 // https://vitejs.dev/config/
@@ -19,6 +20,10 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    hotReloadExtension({
+      log: true,
+      backgroundPath: 'src/background/index.ts',
+    }),
     {
       name: 'manifest',
       generateBundle() {
@@ -33,10 +38,15 @@ export default defineConfig({
   build: {
     emptyOutDir: true,
     outDir: 'build',
+    minify: false,
+    target: ['esnext'],
     rollupOptions: {
       input: {
         devtools: 'devtools.html',
+        'devtools-background': 'devtools-background.html',
         detector: 'src/detector/index.ts',
+        client: 'src/client/index.ts',
+        background: 'src/background/index.ts',
         'content-script': 'src/contentScript/index.ts',
       },
       output: {

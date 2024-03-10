@@ -11,7 +11,10 @@ export const manifest = JSON.stringify({
     '48': 'images/icon-48.png',
     '128': 'images/icon-128.png',
   },
-  devtools_page: 'devtools.html',
+  background: {
+    service_worker: 'assets/background.js',
+  },
+  devtools_page: 'devtools-background.html',
   content_scripts: [
     {
       matches: ['http://*/*', 'https://*/*'],
@@ -24,5 +27,12 @@ export const manifest = JSON.stringify({
       run_at: 'document_start',
       world: 'MAIN',
     },
+    {
+      matches: ['http://*/*', 'https://*/*'],
+      js: ['assets/client.js'],
+      run_at: 'document_start',
+      world: 'MAIN',
+    },
   ],
+  permissions: ['tabs'],
 });

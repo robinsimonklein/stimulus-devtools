@@ -12,7 +12,7 @@ chrome.devtools.network.onNavigated.addListener(() => {
 });
 
 chrome.runtime.onMessage.addListener(message => {
-  if (message.name === '_stimulus_devtools:detected') {
+  if (message.name === 'stimulus-devtools:detected') {
     checkIfHasStimulus(true);
   }
 });

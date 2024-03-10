@@ -7,10 +7,8 @@ import javascript from 'highlight.js/lib/languages/javascript';
 import css from 'highlight.js/lib/languages/css';
 import xml from 'highlight.js/lib/languages/xml';
 
-chrome.devtools.panels.create('Stimulus', '', '../../devtools.html', function () {
-  hljs.registerLanguage('javascript', javascript);
-  hljs.registerLanguage('css', css);
-  hljs.registerLanguage('html', xml);
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('css', css);
+hljs.registerLanguage('html', xml);
 
-  createApp(DevTools).mount('#app');
-});
+createApp(DevTools).mount('#app');

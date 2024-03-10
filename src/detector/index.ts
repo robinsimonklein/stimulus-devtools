@@ -1,28 +1,29 @@
 import { sendMessage } from './utils.ts';
+import type { Application } from '@hotwired/stimulus';
 
 let detectorInterval: ReturnType<typeof setInterval> | null = null;
 let detectorCount = 0;
 
 declare global {
   interface Window {
-    Stimulus?: any;
+    Stimulus?: Application;
     __STIMULUS_DEVTOOLS_DETECTED__?: boolean;
   }
 }
 
-function detect() {
+const detect = () => {
   if (detectorCount++ > 10) {
     if (detectorInterval) clearInterval(detectorInterval);
   }
 
   if (window['Stimulus']) {
     window['__STIMULUS_DEVTOOLS_DETECTED__'] = true;
-    sendMessage({
-      name: '_stimulus_devtools:detected',
+    sendMessage('detector', {
+      name: 'stimulus-devtools:detected',
     });
     if (detectorInterval) clearInterval(detectorInterval);
   }
-}
+};
 
 window.addEventListener('DOMContentLoaded', () => {
   detectorInterval = setInterval(detect, 1000);
