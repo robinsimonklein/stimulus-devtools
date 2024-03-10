@@ -1,18 +1,32 @@
-# Vue 3 + TypeScript + Vite
+# Stimulus DevTools
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Overview
 
-## Recommended IDE Setup
+The StimulusDevTools Chrome Extension is an open-source tool designed to simplify the process of debugging [Stimulus](https://stimulus.hotwired.dev/) controllers on a web page. It provides a user-friendly interface for inspecting values, targets, outlets, and classes of Stimulus controllers, all directly from Chrome's DevTools.
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## Features
 
-## Type Support For `.vue` Imports in TS
+- **Controller List:** Displays a list of Stimulus controllers present on the current page.
+- **Property Inspection:** Allows inspecting values, targets, outlets, and classes associated with each controller.
+- **Real-time Modification:** Ability to change property values on-the-fly and observe immediate updates.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+## Installation 
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+[//]: # (TODO: add link to chrome webstore)
+1. Download the extension from the Chrome Web Store (link to be provided).
+2. Open Chrome DevTools.
+3. Navigate to the "Stimulus Debugger" tab.
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+## Usage
+
+[//]: # (TODO)
+
+## Contribution
+
+[//]: # (TODO: Contributong)
+Contributions are welcome! Before getting started, please review our contribution guide [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+[//]: # (TODO: Choose a license)
+This project is licensed under the [MIT License](LICENSE).
