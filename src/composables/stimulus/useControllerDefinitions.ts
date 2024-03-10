@@ -15,7 +15,7 @@ chrome.runtime.onMessage.addListener(message => {
 });
 
 export const useControllerDefinitions = () => {
-  const { sendMessage } = useContentScript();
+  const { executeAction } = useContentScript();
 
   const selectedDefinition = computed(() =>
     definitions.value?.find(definition => definition.identifier === selectedDefinitionIdentifier.value),
@@ -26,7 +26,7 @@ export const useControllerDefinitions = () => {
   };
 
   const refresh = async () => {
-    await sendMessage({ action: 'updateControllers' });
+    await executeAction('updateControllers');
   };
 
   return { definitions, selectedDefinition, refresh, selectDefinition };

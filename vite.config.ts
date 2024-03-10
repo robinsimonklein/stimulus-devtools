@@ -44,7 +44,6 @@ export default defineConfig({
       input: {
         devtools: 'devtools.html',
         'devtools-background': 'devtools-background.html',
-        detector: 'src/detector/index.ts',
         client: 'src/client/index.ts',
         background: 'src/background/index.ts',
         'content-script': 'src/contentScript/index.ts',

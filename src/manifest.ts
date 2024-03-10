@@ -23,12 +23,6 @@ export const manifest = JSON.stringify({
     },
     {
       matches: ['http://*/*', 'https://*/*'],
-      js: ['assets/detector.js'],
-      run_at: 'document_start',
-      world: 'MAIN',
-    },
-    {
-      matches: ['http://*/*', 'https://*/*'],
       js: ['assets/client.js'],
       run_at: 'document_start',
       world: 'MAIN',

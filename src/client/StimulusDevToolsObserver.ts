@@ -1,24 +1,19 @@
-import type { Application, Controller } from '@hotwired/stimulus';
+import type { Controller } from '@hotwired/stimulus';
 import {
   ParsedStimulusControllerDefinition,
   ParsedStimulusControllerInstance,
   StimulusControllerDefinition,
   StimulusControllerInstance,
 } from '../types/stimulus.ts';
+import { sendEvent } from '@/client/utils.ts';
 
 export interface StimulusDevToolsObserverInterface {
   updateControllers: () => void;
 }
 
 export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterface {
-  application?: Application;
-
   controllerInstances: StimulusControllerInstance[] = [];
   lazyControllerIdentifiers = new Set<Controller['identifier']>();
-
-  constructor(application?: Application) {
-    this.application = application;
-  }
 
   // Getters
 
@@ -67,8 +62,13 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
   // Actions
 
   updateControllers() {
+    if (!window.Stimulus) {
+      sendEvent('stimulus-devtools:undetected');
+      return;
+    }
+
     this.controllerInstances =
-      this.application?.controllers.map((controller, index) => {
+      window.Stimulus?.controllers.map((controller, index) => {
         const isLazyController = !!(controller as Controller & { __stimulusLazyController: unknown })[
           '__stimulusLazyController'
         ];

@@ -5,5 +5,9 @@ export const useContentScript = () => {
     await chrome.tabs.sendMessage(tab.id, message);
   };
 
-  return { sendMessage };
+  const executeAction = async (name: string) => {
+    await sendMessage({ action: name });
+  };
+
+  return { sendMessage, executeAction };
 };

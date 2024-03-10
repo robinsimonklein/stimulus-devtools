@@ -1,11 +1,11 @@
 import { StimulusDevToolsClient } from '@/client/StimulusDevToolsClient.ts';
+import type { Application } from '@hotwired/stimulus';
 
-let devtoolsClient: StimulusDevToolsClient | null = null;
-
-window.addEventListener('message', event => {
-  if (event.data.key !== '_stimulus-devtools-send-message') return;
-
-  if (event.data?.message?.name === 'stimulus-devtools:detected') {
-    if (!devtoolsClient) devtoolsClient = new StimulusDevToolsClient();
+declare global {
+  interface Window {
+    Stimulus?: Application;
+    __STIMULUS_DEVTOOLS_DETECTED__?: boolean;
   }
-});
+}
+
+new StimulusDevToolsClient();
