@@ -16,11 +16,11 @@ export type StimulusControllerInstance = {
   uid: string;
   identifier: Controller['identifier'];
   element: Controller['element'];
+  elementSelector: string;
   isLazyController?: boolean;
 };
 
-export type ParsedStimulusControllerInstance = {
-  uid: string;
-  identifier: Controller['identifier'];
-  isLazyController?: boolean;
-};
+export type ParsedStimulusControllerInstance = Pick<
+  StimulusControllerInstance,
+  'uid' | 'identifier' | 'elementSelector' | 'isLazyController'
+>;

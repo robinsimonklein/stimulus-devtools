@@ -6,6 +6,7 @@ import {
   StimulusControllerInstance,
 } from '../types/stimulus.ts';
 import { sendEvent } from '@/client/utils.ts';
+import { getElementSelectorString } from '@/utils/dom.ts';
 
 export interface StimulusDevToolsObserverInterface {
   updateControllers: () => void;
@@ -78,6 +79,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
           uid: `${controller.identifier}-${index}`,
           identifier: controller.identifier,
           element: controller.element,
+          elementSelector: getElementSelectorString(controller.element),
         } as StimulusControllerInstance;
       }) || [];
 

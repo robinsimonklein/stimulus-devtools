@@ -1,7 +1,7 @@
 <template>
   <Button size="icon-sm" variant="ghost" @click.prevent="copyText">
-    <CopyCheck v-if="copied" class="w-4 h-" />
-    <Copy v-else class="w-4 h-4" />
+    <CopyCheck v-if="copied" class="w-3.5 h-3.5" />
+    <Copy v-else class="w-3.5 h-3.5" />
   </Button>
 </template>
 
