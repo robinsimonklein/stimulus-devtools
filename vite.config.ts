@@ -4,7 +4,7 @@ import vue from '@vitejs/plugin-vue';
 import tailwind from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
 import hotReloadExtension from 'hot-reload-extension-vite';
-import { manifest } from './src/manifest';
+import manifest from './src/manifest';
 
 // https://vitejs.dev/config/
 export default defineConfig({
