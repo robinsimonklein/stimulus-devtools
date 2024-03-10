@@ -16,6 +16,16 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
   controllerInstances: StimulusControllerInstance[] = [];
   lazyControllerIdentifiers = new Set<Controller['identifier']>();
 
+  controllersObserver?: MutationObserver;
+
+  constructor() {
+    this.controllersObserver = new MutationObserver(this.onControllersObserve.bind(this));
+    this.controllersObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+  }
+
   // Getters
 
   get controllerDefinitions(): StimulusControllerDefinition[] {
@@ -93,5 +103,32 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
         },
       },
     });
+  }
+
+  // Observers
+  onControllersObserve(mutationsList: MutationRecord[]) {
+    let needsToUpdate = false;
+
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'childList') {
+        // Check for added controllers
+        mutation.addedNodes.forEach(node => {
+          if (!window.Stimulus) return;
+          if (node instanceof Element && node.hasAttribute(window.Stimulus.schema.controllerAttribute)) {
+            needsToUpdate = true;
+          }
+        });
+
+        // Check for removed controllers
+        mutation.removedNodes.forEach(node => {
+          if (!window.Stimulus) return;
+          if (node instanceof Element && node.hasAttribute(window.Stimulus.schema.controllerAttribute)) {
+            needsToUpdate = true;
+          }
+        });
+      }
+    }
+
+    if (needsToUpdate) this.updateControllers();
   }
 }

@@ -3,7 +3,7 @@
     <template #a>
       <div class="absolute inset-0 flex flex-col overflow-hidden">
         <div class="h-[44px] flex items-center px-3">
-          <span class="text-md truncate font-medium">{{ identifier }}</span>
+          <span class="text-base truncate font-medium">{{ identifier }}</span>
           <CopyButton class="flex-shrink-0 ml-2" :text="identifier" />
         </div>
         <div v-if="definition" class="flex-1 overflow-y-auto">
@@ -45,6 +45,21 @@ watch(
   },
   {
     immediate: true,
+  },
+);
+
+watch(
+  () => definition.value?.instances,
+  newInstances => {
+    if (!definition.value) return;
+
+    if (!newInstances?.find(newInstance => newInstance.uid === selectedInstance.value?.uid)) {
+      if (newInstances?.length) {
+        selectedInstance.value = newInstances[0];
+      } else {
+        selectedInstance.value = null;
+      }
+    }
   },
 );
 </script>

@@ -30,13 +30,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import StimulusControllerDefinitionsRow from '@/components/stimulus/StimulusControllerDefinitionsRow.vue';
 import { useControllerDefinitions } from '@/composables/stimulus/useControllerDefinitions.ts';
 import { Search, RotateCcw } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 
-const { definitions, refresh } = useControllerDefinitions();
+const { definitions, selectedDefinition, selectDefinition, refresh } = useControllerDefinitions();
 
 const searchInput = ref<HTMLInputElement | null>(null);
 const query = ref<string>('');
@@ -46,5 +46,15 @@ const filteredDefinitions = computed(() => {
     return Array.from(definitions.value).filter(definition => definition.identifier.includes(query.value));
   }
   return definitions.value;
+});
+
+watch(definitions, newDefinitions => {
+  if (!newDefinitions.find(newDefinition => newDefinition.identifier === selectedDefinition.value?.identifier)) {
+    if (newDefinitions.length) {
+      selectDefinition(newDefinitions[0].identifier);
+    } else {
+      selectDefinition(null);
+    }
+  }
 });
 </script>

@@ -10,7 +10,10 @@ chrome.runtime.onMessage.addListener(message => {
   if (message.scope !== 'controllers') return;
 
   if (message.name === 'update:controllers') {
-    definitions.value = message.data.controllerDefinitions;
+    definitions.value = (message.data.controllerDefinitions || []).sort(
+      (a: ParsedStimulusControllerDefinition, b: ParsedStimulusControllerDefinition) =>
+        a.identifier < b.identifier ? -1 : 1,
+    );
   }
 });
 
