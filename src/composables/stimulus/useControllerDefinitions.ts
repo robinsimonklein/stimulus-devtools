@@ -1,15 +1,17 @@
 import { computed, ref, shallowRef } from 'vue';
-import { useContentScript } from '@/composables/useContentScript.ts';
 import type { Controller } from '@hotwired/stimulus';
 import { ParsedStimulusControllerDefinition } from '@/types/stimulus.ts';
+import { executeAction } from '@/utils/contentScript.ts';
 
 const definitions = shallowRef<ParsedStimulusControllerDefinition[]>([]);
 const selectedDefinitionIdentifier = ref<Controller['identifier'] | null>(null);
 
-chrome.runtime.onMessage.addListener(message => {
-  if (message.scope !== 'controllers') return;
+chrome.runtime.onMessage.addListener(async message => {
+  if (message.type === 'event' && message.name === 'stimulus-devtools:detected') {
+    await executeAction('updateControllers');
+  }
 
-  if (message.name === 'update:controllers') {
+  if (message.type === 'event' && message.name === 'stimulus-devtools:controllers:updated') {
     definitions.value = (message.data.controllerDefinitions || []).sort(
       (a: ParsedStimulusControllerDefinition, b: ParsedStimulusControllerDefinition) =>
         a.identifier < b.identifier ? -1 : 1,
@@ -18,8 +20,6 @@ chrome.runtime.onMessage.addListener(message => {
 });
 
 export const useControllerDefinitions = () => {
-  const { executeAction } = useContentScript();
-
   const selectedDefinition = computed(() =>
     definitions.value?.find(definition => definition.identifier === selectedDefinitionIdentifier.value),
   );

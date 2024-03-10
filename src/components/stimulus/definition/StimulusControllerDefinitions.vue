@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import StimulusControllerDefinitionsRow from '@/components/stimulus/StimulusControllerDefinitionsRow.vue';
+import StimulusControllerDefinitionsRow from '@/components/stimulus/definition/StimulusControllerDefinitionsRow.vue';
 import { useControllerDefinitions } from '@/composables/stimulus/useControllerDefinitions.ts';
 import { Search, RotateCcw } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
@@ -52,8 +52,6 @@ watch(definitions, newDefinitions => {
   if (!newDefinitions.find(newDefinition => newDefinition.identifier === selectedDefinition.value?.identifier)) {
     if (newDefinitions.length) {
       selectDefinition(newDefinitions[0].identifier);
-    } else {
-      selectDefinition(null);
     }
   }
 });

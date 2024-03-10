@@ -96,8 +96,8 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     window.postMessage({
       key: '_stimulus-devtools-send-message',
       message: {
-        name: 'update:controllers',
-        scope: 'controllers',
+        type: 'event',
+        name: 'stimulus-devtools:controllers:updated',
         data: {
           controllerDefinitions: this.parsedControllerDefinitions,
         },

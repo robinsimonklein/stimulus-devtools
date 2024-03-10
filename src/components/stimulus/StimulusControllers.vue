@@ -1,5 +1,5 @@
 <template>
-  <SplitPane class="absolute inset-0" :orientation="splitPaneOrientation" :min="0.2" :max="0.6">
+  <SplitPane class="absolute inset-0" :orientation="splitPaneOrientation" :size="0.3" :min="0.2" :max="0.6">
     <template #a>
       <StimulusControllerDefinitions />
     </template>
@@ -13,9 +13,9 @@
 import { computed, onBeforeMount } from 'vue';
 import { useWindowSize } from '@vueuse/core';
 import { useControllerDefinitions } from '@/composables/stimulus/useControllerDefinitions.ts';
-import StimulusControllerDefinitions from '@/components/stimulus/StimulusControllerDefinitions.vue';
+import StimulusControllerDefinitions from '@/components/stimulus/definition/StimulusControllerDefinitions.vue';
 import SplitPane from '@/components/core/SplitPane.vue';
-import StimulusControllerDefinitionDetails from '@/components/stimulus/StimulusControllerDefinitionDetails.vue';
+import StimulusControllerDefinitionDetails from '@/components/stimulus/definition/StimulusControllerDefinitionDetails.vue';
 
 const { width: windowWidth } = useWindowSize();
 const { selectedDefinition, refresh } = useControllerDefinitions();

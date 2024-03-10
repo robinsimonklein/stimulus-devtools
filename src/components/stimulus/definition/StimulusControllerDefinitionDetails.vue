@@ -1,5 +1,5 @@
 <template>
-  <SplitPane class="absolute inset-0" orientation="vertical">
+  <SplitPane class="absolute inset-0" :size="0.3" :min="0.2" :max="0.8" orientation="vertical">
     <template #a>
       <div class="absolute inset-0 flex flex-col overflow-hidden">
         <div class="h-[44px] flex items-center px-3">
@@ -28,7 +28,7 @@ import SplitPane from '@/components/core/SplitPane.vue';
 import CopyButton from '@/components/core/CopyButton.vue';
 import { ParsedStimulusControllerDefinition, ParsedStimulusControllerInstance } from '@/types/stimulus.ts';
 import { useControllerDefinition } from '@/composables/stimulus/useControllerDefinition.ts';
-import StimulusControllerInstancesRow from '@/components/stimulus/StimulusControllerInstancesRow.vue';
+import StimulusControllerInstancesRow from '@/components/stimulus/instance/StimulusControllerInstancesRow.vue';
 
 const props = defineProps<{
   identifier: ParsedStimulusControllerDefinition['identifier'];
