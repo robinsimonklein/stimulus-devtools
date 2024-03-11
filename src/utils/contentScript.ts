@@ -4,6 +4,6 @@ export const sendMessage = async (message: unknown) => {
   await chrome.tabs.sendMessage(tab.id, message);
 };
 
-export const executeAction = async (name: string) => {
-  await sendMessage({ action: name });
+export const executeAction = async (name: string, args?: Record<string, unknown>) => {
+  await sendMessage({ type: 'action', name, args });
 };

@@ -19,24 +19,44 @@
         </div>
       </div>
     </template>
+    <template #b>
+      <div class="absolute inset-0 overflow-y-auto">
+        <Accordion v-model="detailsAccordion" type="multiple" collapsible>
+          <AccordionItem value="values">
+            <AccordionTrigger class="px-3 py-2 text-sm dark:bg-neutral-900/40">Values</AccordionTrigger>
+            <AccordionContent>
+              <StimulusControllerValues :instance="selectedInstance" />
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+    </template>
   </SplitPane>
 </template>
 
 <script setup lang="ts">
-import { ref, toRef, watch } from 'vue';
+import { onBeforeMount, onBeforeUnmount, ref, toRef, watch } from 'vue';
 import SplitPane from '@/components/core/SplitPane.vue';
 import CopyButton from '@/components/core/CopyButton.vue';
 import { ParsedStimulusControllerDefinition, ParsedStimulusControllerInstance } from '@/types/stimulus.ts';
 import { useControllerDefinition } from '@/composables/stimulus/useControllerDefinition.ts';
 import StimulusControllerInstancesRow from '@/components/stimulus/instance/StimulusControllerInstancesRow.vue';
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
+import StimulusControllerValues from '@/components/stimulus/members/values/StimulusControllerValues.vue';
+import { executeAction } from '@/utils/contentScript.ts';
 
 const props = defineProps<{
   identifier: ParsedStimulusControllerDefinition['identifier'];
 }>();
 
 const selectedInstance = ref<ParsedStimulusControllerInstance | null>(null);
+const detailsAccordion = ref<string[]>(['values']);
 
 const { definition } = useControllerDefinition(toRef(props, 'identifier'));
+
+const onControllersUpdate = () => {
+  if (selectedInstance.value) executeAction('updateInstanceValues', { uid: selectedInstance.value.uid });
+};
 
 watch(
   () => definition.value?.identifier,
@@ -62,4 +82,12 @@ watch(
     }
   },
 );
+
+onBeforeMount(() => {
+  window.addEventListener('stimulus-devtools:controllers:updated', onControllersUpdate);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('stimulus-devtools:controllers:updated', onControllersUpdate);
+});
 </script>

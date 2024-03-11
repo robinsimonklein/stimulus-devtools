@@ -1,4 +1,5 @@
 import type { Controller } from '@hotwired/stimulus';
+import type { ValueDescriptor } from '@hotwired/stimulus/dist/types/core/value_properties';
 
 export type StimulusControllerDefinition = {
   identifier: Controller['identifier'];
@@ -24,3 +25,15 @@ export type ParsedStimulusControllerInstance = Pick<
   StimulusControllerInstance,
   'uid' | 'identifier' | 'elementSelector' | 'isLazyController'
 >;
+
+export interface StimulusControllerMember {
+  name: string;
+  htmlAttribute: string;
+  jsSingular: string;
+  jsPlural: string;
+  jsExistential: string;
+}
+
+export interface StimulusControllerValue extends StimulusControllerMember, ValueDescriptor {
+  currentValue: unknown;
+}

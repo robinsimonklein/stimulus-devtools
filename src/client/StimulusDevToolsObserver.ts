@@ -4,12 +4,17 @@ import {
   ParsedStimulusControllerInstance,
   StimulusControllerDefinition,
   StimulusControllerInstance,
+  StimulusControllerValue,
 } from '../types/stimulus.ts';
-import { sendEvent } from '@/client/utils.ts';
+import { getControllerFromInstance, sendEvent } from '@/client/utils.ts';
 import { getElementSelectorString } from '@/utils/dom.ts';
+import type { ValueController } from '@hotwired/stimulus/dist/types/tests/controllers/value_controller';
+
+type StimulusDevToolsObserverAction = (args?: unknown) => void;
 
 export interface StimulusDevToolsObserverInterface {
-  updateControllers: () => void;
+  updateControllers: StimulusDevToolsObserverAction;
+  updateInstanceValues: StimulusDevToolsObserverAction;
 }
 
 export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterface {
@@ -17,13 +22,18 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
   lazyControllerIdentifiers = new Set<Controller['identifier']>();
 
   controllersObserver?: MutationObserver;
+  controllerValuesObserver?: MutationObserver;
+
+  observedControllerValuesInstanceUid?: string;
 
   constructor() {
-    this.controllersObserver = new MutationObserver(this.onControllersObserve.bind(this));
+    this.controllersObserver = new MutationObserver(this.onControllersObservation.bind(this));
     this.controllersObserver.observe(document.body, {
       childList: true,
       subtree: true,
     });
+
+    this.controllerValuesObserver = new MutationObserver(this.onControllerValuesObservation.bind(this));
   }
 
   // Getters
@@ -93,20 +103,52 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
         } as StimulusControllerInstance;
       }) || [];
 
-    window.postMessage({
-      key: '_stimulus-devtools-send-message',
-      message: {
-        type: 'event',
-        name: 'stimulus-devtools:controllers:updated',
-        data: {
-          controllerDefinitions: this.parsedControllerDefinitions,
-        },
-      },
-    });
+    sendEvent('stimulus-devtools:controllers:updated', { controllerDefinitions: this.parsedControllerDefinitions });
   }
 
-  // Observers
-  onControllersObserve(mutationsList: MutationRecord[]) {
+  updateInstanceValues(args: unknown) {
+    const uid = (args as { uid: StimulusControllerInstance['uid'] }).uid;
+
+    if (!uid) return;
+    if (!window.Stimulus) return;
+    const instance = this.controllerInstances.find(controllerInstance => controllerInstance.uid === uid);
+    if (!instance) return;
+
+    const controller = getControllerFromInstance(instance);
+
+    if (!controller) return;
+
+    const valueDescriptorMap = (controller as ValueController).valueDescriptorMap;
+
+    const values = Object.values(valueDescriptorMap).map(valueDescriptor => {
+      const name = valueDescriptor.name.slice(0, -5); // Remove "Value" at the end
+      return {
+        name,
+        type: valueDescriptor.type,
+        key: valueDescriptor.key,
+        defaultValue: valueDescriptor.defaultValue,
+        currentValue: (controller as Controller & Record<string, unknown>)[valueDescriptor.name],
+        htmlAttribute: `data-${controller.identifier}-${valueDescriptor.key}`,
+        jsSingular: `this.${name}Value`,
+        jsPlural: `this.${name}Values`,
+        jsExistential: `this.has${name[0].toUpperCase() + name.slice(1)}Value`,
+      } as StimulusControllerValue;
+    });
+
+    if (this.observedControllerValuesInstanceUid !== uid) {
+      this.observedControllerValuesInstanceUid = uid;
+      this.controllerValuesObserver?.disconnect();
+      this.controllerValuesObserver?.observe(controller.element, {
+        attributes: true,
+      });
+    }
+
+    sendEvent('stimulus-devtools:instance-values:updated', { uid, values });
+  }
+
+  // Observations
+
+  onControllersObservation(mutationsList: MutationRecord[]) {
     let needsToUpdate = false;
 
     for (const mutation of mutationsList) {
@@ -130,5 +172,12 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     }
 
     if (needsToUpdate) this.updateControllers();
+  }
+
+  onControllerValuesObservation(mutationsList: MutationRecord[]) {
+    mutationsList.forEach(mutation => {
+      if (!(mutation.attributeName?.startsWith('data-') && mutation.attributeName?.endsWith('-value'))) return;
+      this.updateInstanceValues({ uid: this.observedControllerValuesInstanceUid });
+    });
   }
 }

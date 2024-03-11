@@ -1,4 +1,4 @@
-import { computed, ref, shallowRef } from 'vue';
+import { computed, ref, shallowRef, watch } from 'vue';
 import type { Controller } from '@hotwired/stimulus';
 import { ParsedStimulusControllerDefinition } from '@/types/stimulus.ts';
 import { executeAction } from '@/utils/contentScript.ts';
@@ -17,6 +17,14 @@ chrome.runtime.onMessage.addListener(async message => {
         a.identifier < b.identifier ? -1 : 1,
     );
   }
+});
+
+watch(definitions, updatedDefinitions => {
+  window.dispatchEvent(
+    new CustomEvent('stimulus-devtools:controllers:updated', {
+      detail: { controllerDefinitions: updatedDefinitions },
+    }),
+  );
 });
 
 export const useControllerDefinitions = () => {

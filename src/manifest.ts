@@ -1,6 +1,8 @@
 import packageData from '../package.json';
 
-export const manifest = JSON.stringify({
+const isDev = process.env.NODE_ENV !== 'production';
+
+const manifest: Record<string, unknown> = {
   manifest_version: 3,
   name: packageData.displayName || packageData.name,
   version: packageData.version,
@@ -10,9 +12,6 @@ export const manifest = JSON.stringify({
     '32': 'images/icon-34.png',
     '48': 'images/icon-48.png',
     '128': 'images/icon-128.png',
-  },
-  background: {
-    service_worker: 'assets/background.js',
   },
   devtools_page: 'devtools-background.html',
   content_scripts: [
@@ -29,4 +28,11 @@ export const manifest = JSON.stringify({
     },
   ],
   permissions: ['tabs'],
-});
+};
+
+if (isDev)
+  manifest['background'] = {
+    service_worker: 'assets/background.js',
+  };
+
+export default JSON.stringify(manifest);

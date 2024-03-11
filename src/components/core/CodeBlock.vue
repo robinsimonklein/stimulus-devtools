@@ -1,16 +1,19 @@
 <template>
   <template v-if="inline">
     <span class="inline font-mono">
-      <code ref="element" :class="`language-${language}`">{{ code }}</code>
+      <code ref="element" :class="`language-${language}`">{{ code.trim() }}</code>
     </span>
   </template>
   <template v-else>
     <div class="group">
-      <ScrollArea class="relative border border-neutral-200 dark:border-neutral-800 rounded-md">
+      <ScrollArea
+        class="relative"
+        :class="{ 'border border-neutral-200 dark:border-neutral-800 rounded-md': bordered }"
+      >
         <CopyButton class="absolute top-2 right-2 transition-opacity opacity-0 group-hover:opacity-100" :text="code" />
-        <pre class="whitespace-pre p-4 text-sm font-mono">
-          <code ref="element" :class="`language-${language}`">{{ code }}</code>
-        </pre>
+        <div class="whitespace-pre p-4 text-sm font-mono">
+          <code ref="element" :class="`language-${language}`">{{ code.trim() }}</code>
+        </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
     </div>
@@ -30,10 +33,12 @@ withDefaults(
     code: string;
     language?: 'javascript' | 'css' | 'html';
     inline?: boolean;
+    bordered?: boolean;
   }>(),
   {
     language: 'javascript',
     inline: false,
+    bordered: true,
   },
 );
 

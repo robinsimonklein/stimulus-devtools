@@ -12,7 +12,6 @@ export class StimulusDevToolsClient {
     window.addEventListener('message', this.onMessage.bind(this));
 
     document.addEventListener('visibilitychange', () => {
-      console.log('visibilitychange', document.visibilityState);
       if (document.visibilityState === 'visible' && window.__STIMULUS_DEVTOOLS_DETECTED__) {
         sendEvent('stimulus-devtools:detected');
       }
@@ -30,15 +29,16 @@ export class StimulusDevToolsClient {
     if (!message) return;
 
     if (message.type === 'event' && message.name === 'stimulus-devtools:tab-changed') {
-      this.observer?.updateControllers();
+      if (this.observer) this.observer.updateControllers();
     }
 
-    if (message.action) {
+    if (message.type === 'action') {
       if (!this.observer) return;
 
-      const action = message.action as keyof StimulusDevToolsObserverInterface;
-      if (this.observer[action] && typeof this.observer[action] === 'function') {
-        this.observer[action]();
+      const actionName = message.name as keyof StimulusDevToolsObserverInterface;
+
+      if (this.observer[actionName] && typeof this.observer[actionName] === 'function') {
+        this.observer[actionName](message.args);
       }
     }
   }

@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onBeforeUnmount, ref } from 'vue';
+import { onBeforeMount, onBeforeUnmount, ref, watch } from 'vue';
 import { usePreferredColorScheme } from '@vueuse/core';
 import { useStimulusDetector } from '@/composables/useStimulusDetector.ts';
 import StimulusUnavailable from '@/components/stimulus/StimulusUnavailable.vue';
@@ -25,6 +25,16 @@ const initialLoadingTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
 const stopInitialLoading = () => {
   initialLoading.value = false;
 };
+
+watch(
+  preferredColor,
+  value => {
+    document.body.classList.toggle('dark', value === 'dark');
+  },
+  {
+    immediate: true,
+  },
+);
 
 onBeforeMount(() => {
   if (!stimulusDetected.value) initialLoadingTimeout.value = setTimeout(stopInitialLoading, 10 * 1000);
