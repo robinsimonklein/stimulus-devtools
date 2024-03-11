@@ -20,6 +20,8 @@
   },
   "rules": {
     "prettier/prettier": "error",
+    // Typescript
+    "@typescript-eslint/no-explicit-any": "off",
     // Vue
     "vue/multi-word-component-names": "off",
     "vue/no-multiple-template-root": "off",

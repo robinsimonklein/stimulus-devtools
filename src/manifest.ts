@@ -27,7 +27,7 @@ const manifest: Record<string, unknown> = {
       world: 'MAIN',
     },
   ],
-  permissions: ['tabs'],
+  permissions: ['tabs', 'storage'],
 };
 
 if (isDev)

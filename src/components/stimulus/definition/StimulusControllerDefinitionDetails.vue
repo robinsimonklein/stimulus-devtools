@@ -1,5 +1,12 @@
 <template>
-  <SplitPane class="absolute inset-0" :size="0.3" :min="0.2" :max="0.8" orientation="vertical">
+  <SplitPane
+    class="absolute inset-0"
+    :size="instanceSplit.size"
+    :min="0.2"
+    :max="0.8"
+    orientation="vertical"
+    @update:size="handleInstanceSplitResize"
+  >
     <template #a>
       <div class="absolute inset-0 flex flex-col overflow-hidden">
         <div class="h-[44px] flex items-center px-3">
@@ -44,6 +51,7 @@ import StimulusControllerInstancesRow from '@/components/stimulus/instance/Stimu
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 import StimulusControllerValues from '@/components/stimulus/members/values/StimulusControllerValues.vue';
 import { executeAction } from '@/utils/contentScript.ts';
+import { useChromeStorage } from '@/composables/useChromeStorage.ts';
 
 const props = defineProps<{
   identifier: ParsedStimulusControllerDefinition['identifier'];
@@ -53,9 +61,14 @@ const selectedInstance = ref<ParsedStimulusControllerInstance | null>(null);
 const detailsAccordion = ref<string[]>(['values']);
 
 const { definition } = useControllerDefinition(toRef(props, 'identifier'));
+const instanceSplit = useChromeStorage('instanceSplit', { size: 0.3 });
 
 const onControllersUpdate = () => {
   if (selectedInstance.value) executeAction('updateInstanceValues', { uid: selectedInstance.value.uid });
+};
+
+const handleInstanceSplitResize = (size: number) => {
+  instanceSplit.value = { size };
 };
 
 watch(
