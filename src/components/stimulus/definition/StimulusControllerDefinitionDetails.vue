@@ -83,12 +83,15 @@ watch(
 
 watch(
   () => definition.value?.instances,
-  newInstances => {
+  (newInstances, oldInstances) => {
     if (!definition.value) return;
+
+    const previousIndex = oldInstances?.findIndex(instance => instance.uid === selectedInstance.value?.uid) || 0;
+    const newIndex = Math.max(0, Math.min(previousIndex, (newInstances?.length || 0) - 1));
 
     if (!newInstances?.find(newInstance => newInstance.uid === selectedInstance.value?.uid)) {
       if (newInstances?.length) {
-        selectedInstance.value = newInstances[0];
+        selectedInstance.value = newInstances[newIndex];
       } else {
         selectedInstance.value = null;
       }

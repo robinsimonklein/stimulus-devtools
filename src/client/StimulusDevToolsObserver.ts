@@ -88,15 +88,57 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
       return;
     }
 
+    const controllerInstancesLastIndex = new Map<Controller['identifier'], number>();
+
+    // Populate instances last indexes
+    window.Stimulus.controllers.forEach(controller => {
+      // Ignore if controller last index has already been populated
+      if (controllerInstancesLastIndex.has(controller.identifier)) return;
+
+      const previousControllerElements = document.querySelectorAll(`[stimulus-devtools-${controller.identifier}-uid]`);
+      if (!previousControllerElements.length) return;
+
+      // Get higher index
+      const higherIndex = Array.from(previousControllerElements)
+        .map(element => {
+          const uid = element.getAttribute(`stimulus-devtools-${controller.identifier}-uid`);
+          return parseInt(uid?.split('-')?.pop() || '0');
+        })
+        .sort()
+        .pop();
+      if (higherIndex) controllerInstancesLastIndex.set(controller.identifier, higherIndex);
+    });
+
     this.controllerInstances =
-      window.Stimulus?.controllers.map((controller, index) => {
+      window.Stimulus?.controllers.map(controller => {
         const isLazyController = !!(controller as Controller & { __stimulusLazyController: unknown })[
           '__stimulusLazyController'
         ];
         if (isLazyController) this.lazyControllerIdentifiers.add(controller.identifier);
 
+        // Create uid and ensure to track controller instances elements
+        const uidAttribute = `stimulus-devtools-${controller.identifier}-uid`;
+        const lastIndexKey = controller.identifier;
+
+        let index = 0;
+
+        const elementUid = controller.element.getAttribute(uidAttribute);
+        const elementIndex = elementUid?.split('-').pop();
+        const lastIndex = controllerInstancesLastIndex.get(lastIndexKey);
+
+        if (elementIndex) {
+          index = parseInt(elementIndex);
+          if (!lastIndex || lastIndex < index) controllerInstancesLastIndex.set(lastIndexKey, index);
+        } else {
+          if (typeof lastIndex === 'number') index = lastIndex + 1;
+          controllerInstancesLastIndex.set(lastIndexKey, index);
+        }
+
+        const uid = `${controller.identifier}-${index}`;
+        if (!elementIndex) controller.element.setAttribute(uidAttribute, uid);
+
         return {
-          uid: `${controller.identifier}-${index}`,
+          uid,
           identifier: controller.identifier,
           element: controller.element,
           elementSelector: getElementSelectorString(controller.element),
