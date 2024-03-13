@@ -14,7 +14,6 @@ export const useControllerInstanceTargets = (instance: Ref<ParsedStimulusControl
   };
 
   const reset = async () => {
-    console.log('targets:reset', instance.value.uid);
     await executeAction('updateInstanceTargets', { uid: instance.value.uid });
   };
 

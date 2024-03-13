@@ -71,7 +71,10 @@ const { definition } = useControllerDefinition(toRef(props, 'identifier'));
 const instanceSplit = useChromeStorage('instanceSplit', { size: 0.3 });
 
 const onControllersUpdate = () => {
-  if (selectedInstance.value) executeAction('updateInstanceValues', { uid: selectedInstance.value.uid });
+  if (selectedInstance.value) {
+    executeAction('updateInstanceValues', { uid: selectedInstance.value.uid });
+    executeAction('updateTargetsValues', { uid: selectedInstance.value.uid });
+  }
 };
 
 const handleInstanceSplitResize = (size: number) => {

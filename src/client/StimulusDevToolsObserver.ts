@@ -28,8 +28,14 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
 
   controllersObserver?: MutationObserver;
   controllerValuesObserver?: MutationObserver;
+  controllerTargetsObserver?: MutationObserver;
+
+  controllerInstancesLastIndex = new Map<string, number>();
+  controllerTargetElementsLastIndex = new Map<string, number>();
 
   observedControllerValuesInstanceUid?: string;
+  observedControllerTargetsInstanceUid?: string;
+  observedControllerTargetsAttribute?: string;
 
   constructor() {
     this.controllersObserver = new MutationObserver(this.onControllersObservation.bind(this));
@@ -39,6 +45,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     });
 
     this.controllerValuesObserver = new MutationObserver(this.onControllerValuesObservation.bind(this));
+    this.controllerTargetsObserver = new MutationObserver(this.onControllerTargetsObservation.bind(this));
   }
 
   // Getters
@@ -93,27 +100,6 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
       return;
     }
 
-    const controllerInstancesLastIndex = new Map<Controller['identifier'], number>();
-
-    // Populate instances last indexes
-    window.Stimulus.controllers.forEach(controller => {
-      // Ignore if controller last index has already been populated
-      if (controllerInstancesLastIndex.has(controller.identifier)) return;
-
-      const previousControllerElements = document.querySelectorAll(`[stimulus-devtools-${controller.identifier}-uid]`);
-      if (!previousControllerElements.length) return;
-
-      // Get higher index
-      const higherIndex = Array.from(previousControllerElements)
-        .map(element => {
-          const uid = element.getAttribute(`stimulus-devtools-${controller.identifier}-uid`);
-          return parseInt(uid?.split('-')?.pop() || '0');
-        })
-        .sort()
-        .pop();
-      if (higherIndex) controllerInstancesLastIndex.set(controller.identifier, higherIndex);
-    });
-
     this.controllerInstances =
       window.Stimulus?.controllers.map(controller => {
         const isLazyController = !!(controller as Controller & { __stimulusLazyController: unknown })[
@@ -122,24 +108,24 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
         if (isLazyController) this.lazyControllerIdentifiers.add(controller.identifier);
 
         // Create uid and ensure to track controller instances elements
-        const uidAttribute = `stimulus-devtools-${controller.identifier}-uid`;
+        const uidAttribute = `sd-${controller.identifier}-uid`;
         const lastIndexKey = controller.identifier;
 
         let index = 0;
 
         const elementUid = controller.element.getAttribute(uidAttribute);
         const elementIndex = elementUid?.split('-').pop();
-        const lastIndex = controllerInstancesLastIndex.get(lastIndexKey);
+        const lastIndex = this.controllerInstancesLastIndex.get(lastIndexKey);
 
         if (elementIndex) {
           index = parseInt(elementIndex);
-          if (!lastIndex || lastIndex < index) controllerInstancesLastIndex.set(lastIndexKey, index);
+          if (!lastIndex || lastIndex < index) this.controllerInstancesLastIndex.set(lastIndexKey, index);
         } else {
           if (typeof lastIndex === 'number') index = lastIndex + 1;
-          controllerInstancesLastIndex.set(lastIndexKey, index);
+          this.controllerInstancesLastIndex.set(lastIndexKey, index);
         }
 
-        const uid = `${controller.identifier}-${index}`;
+        const uid = `${controller.identifier}-${index.toString()}`;
         if (!elementIndex) controller.element.setAttribute(uidAttribute, uid);
 
         return {
@@ -157,8 +143,8 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
 
   updateInstanceValues(args: unknown) {
     const uid = (args as { uid: StimulusControllerInstance['uid'] }).uid;
-
     if (!uid) return;
+
     if (!window.Stimulus) return;
 
     const instance = this.controllerInstances.find(controllerInstance => controllerInstance.uid === uid);
@@ -198,8 +184,8 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
 
   updateInstanceTargets(args: unknown) {
     const uid = (args as { uid: StimulusControllerInstance['uid'] }).uid;
-
     if (!uid) return;
+
     if (!window.Stimulus) return;
 
     const instance = this.controllerInstances.find(controllerInstance => controllerInstance.uid === uid);
@@ -214,35 +200,33 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
       .filter(k => k.endsWith('Target') && !k.startsWith('has'))
       .map(k => k.slice(0, -6)); // Remove "Target" at the end
 
-    const controllerTargetElementsLastIndex = new Map<string, number>();
-
     const targets = targetNames.map(targetName => {
       const elements = (controller as Controller & Record<string, unknown>)[`${targetName}Targets`] as Element[];
 
       const targetElements = elements.map(element => {
         // Create uid and ensure to track target elements
-        const uidAttribute = `stimulus-devtools-${controller.identifier}-${targetName}-uid`;
+        const uidAttribute = `sd-${controller.identifier}-t-${targetName.toLowerCase()}-uid`;
         const lastIndexKey = `${controller.identifier}-${targetName}`;
 
         let index = 0;
 
         const elementUid = element.getAttribute(uidAttribute);
         const elementIndex = elementUid?.split('-').pop();
-        const lastIndex = controllerTargetElementsLastIndex.get(lastIndexKey);
+        const lastIndex = this.controllerTargetElementsLastIndex.get(lastIndexKey);
 
         if (elementIndex) {
           index = parseInt(elementIndex);
-          if (!lastIndex || lastIndex < index) controllerTargetElementsLastIndex.set(lastIndexKey, index);
+          if (!lastIndex || lastIndex < index) this.controllerTargetElementsLastIndex.set(lastIndexKey, index);
         } else {
           if (typeof lastIndex === 'number') index = lastIndex + 1;
-          controllerTargetElementsLastIndex.set(lastIndexKey, index);
+          this.controllerTargetElementsLastIndex.set(lastIndexKey, index);
         }
 
         const uid = `${targetName}-${index}`;
-        if (!elementIndex) controller.element.setAttribute(uidAttribute, uid);
+        if (!elementUid) element.setAttribute(uidAttribute, uid);
 
         return {
-          uid: index.toString(),
+          uid,
           uidSelector: `[${uidAttribute}="${uid}"]`,
           elementSelector: getElementSelectorString(element),
         };
@@ -257,6 +241,17 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
         jsExistential: `this.has${targetName[0].toUpperCase() + targetName.slice(1)}Target`,
       } as StimulusControllerTarget;
     });
+
+    // Start or restart observer
+    if (this.observedControllerTargetsInstanceUid !== uid) {
+      this.observedControllerTargetsInstanceUid = uid;
+      this.observedControllerTargetsAttribute = window.Stimulus.schema.targetAttributeForScope(controller.identifier);
+      this.controllerTargetsObserver?.disconnect();
+      this.controllerTargetsObserver?.observe(controller.element, {
+        childList: true,
+        subtree: true,
+      });
+    }
 
     _stimulus_sendEvent('stimulus-devtools:instance-targets:updated', { uid, targets });
   }
@@ -290,9 +285,33 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
   }
 
   onControllerValuesObservation(mutationsList: MutationRecord[]) {
+    let shouldUpdate = false;
     mutationsList.forEach(mutation => {
-      if (!(mutation.attributeName?.startsWith('data-') && mutation.attributeName?.endsWith('-value'))) return;
-      this.updateInstanceValues({ uid: this.observedControllerValuesInstanceUid });
+      if (mutation.attributeName?.startsWith('data-') && mutation.attributeName?.endsWith('-value')) {
+        shouldUpdate = true;
+      }
     });
+
+    if (shouldUpdate) this.updateInstanceValues({ uid: this.observedControllerValuesInstanceUid });
+  }
+
+  onControllerTargetsObservation(mutationsList: MutationRecord[]) {
+    let shouldUpdate = false;
+    mutationsList.forEach(mutation => {
+      const nodes = [];
+      if (mutation.addedNodes?.length) nodes.push(...Array.from(mutation.addedNodes));
+      if (mutation.removedNodes?.length) nodes.push(...Array.from(mutation.removedNodes));
+      if (
+        nodes.find(node => {
+          return !!Array.from((node as HTMLElement).attributes).find(
+            attribute => attribute.name === this.observedControllerTargetsAttribute,
+          );
+        })
+      ) {
+        shouldUpdate = true;
+      }
+    });
+
+    if (shouldUpdate) this.updateInstanceTargets({ uid: this.observedControllerTargetsInstanceUid });
   }
 }
