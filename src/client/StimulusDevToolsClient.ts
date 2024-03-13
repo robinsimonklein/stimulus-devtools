@@ -1,6 +1,6 @@
 import { StimulusDevToolsObserver, StimulusDevToolsObserverInterface } from '@/client/StimulusDevToolsObserver.ts';
 import { StimulusDevToolsDetector } from '@/client/StimulusDevToolsDetector.ts';
-import { sendEvent } from '@/client/utils.ts';
+import { _stimulus_sendEvent } from '@/client/utils.ts';
 
 export class StimulusDevToolsClient {
   detector: StimulusDevToolsDetector;
@@ -13,7 +13,7 @@ export class StimulusDevToolsClient {
 
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible' && window.__STIMULUS_DEVTOOLS_DETECTED__) {
-        sendEvent('stimulus-devtools:detected');
+        _stimulus_sendEvent('stimulus-devtools:detected');
       }
     });
   }

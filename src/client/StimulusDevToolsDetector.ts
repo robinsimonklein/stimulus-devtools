@@ -1,4 +1,4 @@
-import { sendEvent } from './utils.ts';
+import { _stimulus_sendEvent } from './utils.ts';
 
 type StimulusDevToolsDetectorCallback = () => unknown;
 
@@ -27,7 +27,7 @@ export class StimulusDevToolsDetector {
     if (window['Stimulus']) {
       // Stimulus detected
       window['__STIMULUS_DEVTOOLS_DETECTED__'] = true;
-      sendEvent('stimulus-devtools:detected');
+      _stimulus_sendEvent('stimulus-devtools:detected');
 
       this.callback();
       if (this.detectorInterval) clearInterval(this.detectorInterval);

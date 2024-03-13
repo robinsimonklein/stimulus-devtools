@@ -37,3 +37,13 @@ export interface StimulusControllerMember {
 export interface StimulusControllerValue extends StimulusControllerMember, ValueDescriptor {
   currentValue: unknown;
 }
+
+export type StimulusControllerTargetElement = {
+  uid: string;
+  uidSelector: string;
+  elementSelector: string;
+};
+
+export interface StimulusControllerTarget extends StimulusControllerMember {
+  elements: StimulusControllerTargetElement[];
+}

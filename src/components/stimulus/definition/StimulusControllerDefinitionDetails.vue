@@ -30,9 +30,15 @@
       <div class="absolute inset-0 overflow-y-auto">
         <Accordion v-model="detailsAccordion" type="multiple" collapsible>
           <AccordionItem value="values">
-            <AccordionTrigger class="px-3 py-2 text-sm dark:bg-neutral-900/40">Values</AccordionTrigger>
+            <AccordionTrigger class="px-3 py-2 text-sm bg-neutral-100 dark:bg-neutral-900/40">Values</AccordionTrigger>
             <AccordionContent>
               <StimulusControllerValues :instance="selectedInstance" />
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="targets">
+            <AccordionTrigger class="px-3 py-2 text-sm bg-neutral-100 dark:bg-neutral-900/40">Targets</AccordionTrigger>
+            <AccordionContent>
+              <StimullusControllerTargets :instance="selectedInstance" />
             </AccordionContent>
           </AccordionItem>
         </Accordion>
@@ -52,13 +58,14 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/
 import StimulusControllerValues from '@/components/stimulus/members/values/StimulusControllerValues.vue';
 import { executeAction } from '@/utils/contentScript.ts';
 import { useChromeStorage } from '@/composables/useChromeStorage.ts';
+import StimullusControllerTargets from '@/components/stimulus/members/targets/StimullusControllerTargets.vue';
 
 const props = defineProps<{
   identifier: ParsedStimulusControllerDefinition['identifier'];
 }>();
 
 const selectedInstance = ref<ParsedStimulusControllerInstance | null>(null);
-const detailsAccordion = ref<string[]>(['values']);
+const detailsAccordion = ref<string[]>(['values', 'targets']);
 
 const { definition } = useControllerDefinition(toRef(props, 'identifier'));
 const instanceSplit = useChromeStorage('instanceSplit', { size: 0.3 });

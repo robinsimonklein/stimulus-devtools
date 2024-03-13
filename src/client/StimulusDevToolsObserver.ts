@@ -4,9 +4,14 @@ import {
   ParsedStimulusControllerInstance,
   StimulusControllerDefinition,
   StimulusControllerInstance,
+  StimulusControllerTarget,
   StimulusControllerValue,
 } from '../types/stimulus.ts';
-import { getControllerFromInstance, sendEvent } from '@/client/utils.ts';
+import {
+  _stimulus_getControllerFromInstance,
+  _stimulus_getControllerKeys,
+  _stimulus_sendEvent,
+} from '@/client/utils.ts';
 import { getElementSelectorString } from '@/utils/dom.ts';
 import type { ValueController } from '@hotwired/stimulus/dist/types/tests/controllers/value_controller';
 
@@ -84,7 +89,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
 
   updateControllers() {
     if (!window.Stimulus) {
-      sendEvent('stimulus-devtools:undetected');
+      _stimulus_sendEvent('stimulus-devtools:undetected');
       return;
     }
 
@@ -145,7 +150,9 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
         } as StimulusControllerInstance;
       }) || [];
 
-    sendEvent('stimulus-devtools:controllers:updated', { controllerDefinitions: this.parsedControllerDefinitions });
+    _stimulus_sendEvent('stimulus-devtools:controllers:updated', {
+      controllerDefinitions: this.parsedControllerDefinitions,
+    });
   }
 
   updateInstanceValues(args: unknown) {
@@ -153,11 +160,11 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
 
     if (!uid) return;
     if (!window.Stimulus) return;
+
     const instance = this.controllerInstances.find(controllerInstance => controllerInstance.uid === uid);
     if (!instance) return;
 
-    const controller = getControllerFromInstance(instance);
-
+    const controller = _stimulus_getControllerFromInstance(instance);
     if (!controller) return;
 
     const valueDescriptorMap = (controller as ValueController).valueDescriptorMap;
@@ -177,6 +184,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
       } as StimulusControllerValue;
     });
 
+    // Start or restart observer
     if (this.observedControllerValuesInstanceUid !== uid) {
       this.observedControllerValuesInstanceUid = uid;
       this.controllerValuesObserver?.disconnect();
@@ -185,7 +193,72 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
       });
     }
 
-    sendEvent('stimulus-devtools:instance-values:updated', { uid, values });
+    _stimulus_sendEvent('stimulus-devtools:instance-values:updated', { uid, values });
+  }
+
+  updateInstanceTargets(args: unknown) {
+    const uid = (args as { uid: StimulusControllerInstance['uid'] }).uid;
+
+    if (!uid) return;
+    if (!window.Stimulus) return;
+
+    const instance = this.controllerInstances.find(controllerInstance => controllerInstance.uid === uid);
+    if (!instance) return;
+
+    const controller = _stimulus_getControllerFromInstance(instance);
+    if (!controller) return;
+
+    const controllerKeys = _stimulus_getControllerKeys(controller);
+
+    const targetNames = controllerKeys
+      .filter(k => k.endsWith('Target') && !k.startsWith('has'))
+      .map(k => k.slice(0, -6)); // Remove "Target" at the end
+
+    const controllerTargetElementsLastIndex = new Map<string, number>();
+
+    const targets = targetNames.map(targetName => {
+      const elements = (controller as Controller & Record<string, unknown>)[`${targetName}Targets`] as Element[];
+
+      const targetElements = elements.map(element => {
+        // Create uid and ensure to track target elements
+        const uidAttribute = `stimulus-devtools-${controller.identifier}-${targetName}-uid`;
+        const lastIndexKey = `${controller.identifier}-${targetName}`;
+
+        let index = 0;
+
+        const elementUid = element.getAttribute(uidAttribute);
+        const elementIndex = elementUid?.split('-').pop();
+        const lastIndex = controllerTargetElementsLastIndex.get(lastIndexKey);
+
+        if (elementIndex) {
+          index = parseInt(elementIndex);
+          if (!lastIndex || lastIndex < index) controllerTargetElementsLastIndex.set(lastIndexKey, index);
+        } else {
+          if (typeof lastIndex === 'number') index = lastIndex + 1;
+          controllerTargetElementsLastIndex.set(lastIndexKey, index);
+        }
+
+        const uid = `${targetName}-${index}`;
+        if (!elementIndex) controller.element.setAttribute(uidAttribute, uid);
+
+        return {
+          uid: index.toString(),
+          uidSelector: `[${uidAttribute}="${uid}"]`,
+          elementSelector: getElementSelectorString(element),
+        };
+      });
+
+      return {
+        name: targetName,
+        elements: targetElements,
+        htmlAttribute: `${controller.context.schema.targetAttributeForScope(controller.identifier)}="${targetName}"`,
+        jsSingular: `this.${targetName}Target`,
+        jsPlural: `this.${targetName}Targets`,
+        jsExistential: `this.has${targetName[0].toUpperCase() + targetName.slice(1)}Target`,
+      } as StimulusControllerTarget;
+    });
+
+    _stimulus_sendEvent('stimulus-devtools:instance-targets:updated', { uid, targets });
   }
 
   // Observations
