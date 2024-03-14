@@ -136,6 +136,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
 
         return {
           uid,
+          uidSelector: `[${uidAttribute}="${uid}"]`,
           identifier: controller.identifier,
           element: controller.element,
           elementSelector: getElementSelectorString(controller.element),

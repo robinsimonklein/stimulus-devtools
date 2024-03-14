@@ -15,6 +15,7 @@ export type ParsedStimulusControllerDefinition = {
 
 export type StimulusControllerInstance = {
   uid: string;
+  uidSelector: string;
   identifier: Controller['identifier'];
   element: Controller['element'];
   elementSelector: string;
@@ -23,7 +24,7 @@ export type StimulusControllerInstance = {
 
 export type ParsedStimulusControllerInstance = Pick<
   StimulusControllerInstance,
-  'uid' | 'identifier' | 'elementSelector' | 'isLazyController'
+  'uid' | 'uidSelector' | 'identifier' | 'elementSelector' | 'isLazyController'
 >;
 
 export interface StimulusControllerMember {
