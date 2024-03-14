@@ -61,6 +61,8 @@
           type="button"
           class="rounded px-1.5 cursor-pointer hover:bg-neutral-100 hover:dark:bg-neutral-800"
           @click="inspect(item)"
+          @mouseenter="executeAction('highlightElement', { selector: item.uidSelector, title: outlet.name })"
+          @mouseleave="executeAction('stopHighlightElement')"
         >
           <CodeBlock class="text-xs" :code="item.elementSelector" language="css" inline />
         </button>
@@ -79,6 +81,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import CopyButton from '@/components/core/CopyButton.vue';
 import CodeBlock from '@/components/core/CodeBlock.vue';
 import Tree from '@/components/core/tree/Tree.vue';
+import { executeAction } from '@/utils/contentScript.ts';
 
 const props = defineProps<{
   outlet: StimulusControllerOutlet;

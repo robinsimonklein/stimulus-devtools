@@ -46,6 +46,8 @@
           type="button"
           class="rounded px-1.5 cursor-pointer hover:bg-neutral-100 hover:dark:bg-neutral-800"
           @click="inspect(item)"
+          @mouseenter="executeAction('highlightElement', { selector: item.uidSelector, title: target.name })"
+          @mouseleave="executeAction('stopHighlightElement')"
         >
           <CodeBlock class="text-xs" :code="item.elementSelector" language="css" inline />
         </button>
@@ -64,6 +66,7 @@ import Tree from '@/components/core/tree/Tree.vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ChevronRight, EllipsisVertical } from 'lucide-vue-next';
 import { inspectElement } from '@/utils';
+import { executeAction } from '@/utils/contentScript.ts';
 
 const props = defineProps<{
   target: StimulusControllerTarget;
