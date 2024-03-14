@@ -1,9 +1,18 @@
 <template>
   <li class="mt-1 first:mt-0">
     <div class="flex items-center">
-      <button type="button" class="group inline-flex items-center cursor-pointer" @click="expanded = !expanded">
-        <span class="mr-1" :class="{ 'rotate-90': expanded }"><ChevronRight class="w-4 h-4" /></span>
-        <span class="group-hover:underline underline-offset-2">{{ target.name }} ({{ target.elements.length }})</span>
+      <button
+        type="button"
+        class="group inline-flex items-center"
+        :class="{ 'opacity-50': !canExpand, ' cursor-pointer': canExpand }"
+        @click="toggle"
+      >
+        <span class="mr-1" :class="{ 'rotate-90': canExpand && expanded }">
+          <ChevronRight class="w-4 h-4" />
+        </span>
+        <span class="underline-offset-2" :class="{ 'group-hover:underline': canExpand }">
+          {{ target.name }} ({{ target.elements.length }})
+        </span>
       </button>
       <Popover>
         <PopoverTrigger>
@@ -45,8 +54,11 @@
             />
             <span class="absolute left-[8px] top-1/2 w-[20px] h-[1px] -mt-[0.5px] bg-neutral-400 dark:bg-neutral-600" />
           </div>
-          <!-- TODO: inspect on click -->
-          <button type="button" class="rounded px-1.5 cursor-pointer hover:bg-neutral-100 hover:dark:bg-neutral-800">
+          <button
+            type="button"
+            class="rounded px-1.5 cursor-pointer hover:bg-neutral-100 hover:dark:bg-neutral-800"
+            @click="inspect(element)"
+          >
             <CodeBlock class="text-xs" :code="element.elementSelector" language="css" inline />
           </button>
         </div>
@@ -56,17 +68,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import CodeBlock from '@/components/core/CodeBlock.vue';
-import { StimulusControllerTarget } from '@/types/stimulus.ts';
+import { StimulusControllerTarget, StimulusControllerTargetElement } from '@/types/stimulus.ts';
 import { Button } from '@/components/ui/button';
 import { ChevronRight, EllipsisVertical } from 'lucide-vue-next';
 import CopyButton from '@/components/core/CopyButton.vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { inspectElement } from '@/utils';
 
-defineProps<{
+const props = defineProps<{
   target: StimulusControllerTarget;
 }>();
 
-const expanded = ref(true);
+const expanded = ref(false);
+
+const canExpand = computed(() => !!props.target.elements.length);
+
+const toggle = () => {
+  if (!props.target.elements.length) return;
+  expanded.value = !expanded.value;
+};
+
+const inspect = (element: StimulusControllerTargetElement) => {
+  inspectElement(element.uidSelector);
+};
 </script>
