@@ -57,6 +57,7 @@ export interface StimulusControllerOutlet extends StimulusControllerMember {
 }
 
 export type StimulusControllerOutletReference = {
+  uid: string;
+  uidSelector: string;
   identifier: Controller['identifier'];
-  element: Controller['element'];
 };

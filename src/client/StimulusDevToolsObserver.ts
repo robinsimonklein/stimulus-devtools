@@ -31,6 +31,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
   controllersObserver?: MutationObserver;
   controllerValuesObserver?: MutationObserver;
   controllerTargetsObserver?: MutationObserver;
+  controllerOutletsObserver?: MutationObserver;
 
   controllerInstancesLastIndex = new Map<string, number>();
   controllerTargetElementsLastIndex = new Map<string, number>();
@@ -39,6 +40,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
   observedControllerValuesInstanceUid?: string;
   observedControllerTargetsInstanceUid?: string;
   observedControllerTargetsAttribute?: string;
+  observedControllerOutletsInstanceUid?: string;
 
   constructor() {
     this.controllersObserver = new MutationObserver(this.onControllersObservation.bind(this));
@@ -49,6 +51,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
 
     this.controllerValuesObserver = new MutationObserver(this.onControllerValuesObservation.bind(this));
     this.controllerTargetsObserver = new MutationObserver(this.onControllerTargetsObservation.bind(this));
+    this.controllerOutletsObserver = new MutationObserver(this.onControllerOutletsObservation.bind(this));
   }
 
   // Getters
@@ -321,6 +324,16 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
       };
     });
 
+    // Start or restart observer
+    if (this.observedControllerOutletsInstanceUid !== uid) {
+      this.observedControllerOutletsInstanceUid = uid;
+      this.controllerOutletsObserver?.disconnect();
+      this.controllerOutletsObserver?.observe(document.documentElement, {
+        childList: true,
+        subtree: true,
+      });
+    }
+
     _stimulus_sendEvent('stimulus-devtools:instance-outlets:updated', { uid, outlets });
   }
 
@@ -381,5 +394,26 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     });
 
     if (shouldUpdate) this.updateInstanceTargets({ uid: this.observedControllerTargetsInstanceUid });
+  }
+
+  onControllerOutletsObservation(mutationsList: MutationRecord[]) {
+    let shouldUpdate = false;
+
+    mutationsList.forEach(mutation => {
+      const nodes = [];
+      if (mutation.addedNodes?.length) nodes.push(...Array.from(mutation.addedNodes));
+      if (mutation.removedNodes?.length) nodes.push(...Array.from(mutation.removedNodes));
+      if (
+        nodes.find(node => {
+          return !!Array.from((node as HTMLElement).attributes).find(
+            attribute => attribute.name === window.Stimulus?.schema.controllerAttribute,
+          );
+        })
+      ) {
+        shouldUpdate = true;
+      }
+    });
+
+    if (shouldUpdate) this.updateInstanceOutlets({ uid: this.observedControllerOutletsInstanceUid });
   }
 }
