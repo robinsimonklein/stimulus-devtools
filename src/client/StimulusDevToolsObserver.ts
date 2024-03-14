@@ -8,6 +8,7 @@ import {
   StimulusControllerValue,
 } from '../types/stimulus.ts';
 import {
+  _stimulus_createHighlightBox,
   _stimulus_getControllerFromInstance,
   _stimulus_getControllerKeys,
   _stimulus_sendEvent,
@@ -336,6 +337,25 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     }
 
     _stimulus_sendEvent('stimulus-devtools:instance-outlets:updated', { uid, outlets });
+  }
+
+  highlightElement(args: any) {
+    const { selector, title } = args;
+    if (!selector) return;
+
+    const highlightedElement = document.querySelector(selector) as HTMLElement;
+    if (!highlightedElement) return;
+
+    const highlightBox = _stimulus_createHighlightBox(highlightedElement, title);
+
+    document.body.appendChild(highlightBox);
+  }
+
+  stopHighlightElement() {
+    const highlightBoxes = document.querySelectorAll('.stimulus-devtools-highlight');
+    highlightBoxes.forEach(highlightBoxe => {
+      highlightBoxe.remove();
+    });
   }
 
   // Observations
