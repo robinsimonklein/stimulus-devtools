@@ -17,6 +17,8 @@ import type { ValueController } from '@hotwired/stimulus/dist/types/tests/contro
 
 type StimulusDevToolsObserverAction = (args?: unknown) => void;
 
+type ControllerWithOutlets = Controller & Record<string, Controller[]>;
+
 export interface StimulusDevToolsObserverInterface {
   updateControllers: StimulusDevToolsObserverAction;
   updateInstanceValues: StimulusDevToolsObserverAction;
@@ -32,6 +34,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
 
   controllerInstancesLastIndex = new Map<string, number>();
   controllerTargetElementsLastIndex = new Map<string, number>();
+  controllerOutletElementsLastIndex = new Map<string, number>();
 
   observedControllerValuesInstanceUid?: string;
   observedControllerTargetsInstanceUid?: string;
@@ -254,6 +257,71 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     }
 
     _stimulus_sendEvent('stimulus-devtools:instance-targets:updated', { uid, targets });
+  }
+
+  updateInstanceOutlets(args: unknown) {
+    const uid = (args as { uid: StimulusControllerInstance['uid'] }).uid;
+    if (!uid) return;
+
+    if (!window.Stimulus) return;
+
+    const instance = this.controllerInstances.find(controllerInstance => controllerInstance.uid === uid);
+    if (!instance) return;
+
+    const controller = _stimulus_getControllerFromInstance(instance);
+    if (!controller) return;
+
+    const controllerKeys = _stimulus_getControllerKeys(controller);
+
+    const outletNames = controllerKeys
+      .filter(k => k.endsWith('Outlet') && !k.startsWith('has'))
+      .map(k => k.slice(0, -6)); // Remove "Outlet" at the end
+
+    const outlets = outletNames.map(outletName => {
+      const outletReferences = (controller as ControllerWithOutlets)[`${outletName}Outlets`].map(outletController => {
+        // Create uid and ensure to track outlet elements
+        const uidAttribute = `sd-${controller.identifier}-o-${outletName.toLowerCase()}-uid`;
+        const lastIndexKey = `${controller.identifier}-${outletName}`;
+
+        let index = 0;
+
+        const elementUid = outletController.element.getAttribute(uidAttribute);
+        const elementIndex = elementUid?.split('-').pop();
+        const lastIndex = this.controllerOutletElementsLastIndex.get(lastIndexKey);
+
+        if (elementIndex) {
+          index = parseInt(elementIndex);
+          if (!lastIndex || lastIndex < index) this.controllerOutletElementsLastIndex.set(lastIndexKey, index);
+        } else {
+          if (typeof lastIndex === 'number') index = lastIndex + 1;
+          this.controllerOutletElementsLastIndex.set(lastIndexKey, index);
+        }
+
+        const uid = `${outletName}-${index}`;
+        if (!elementUid) outletController.element.setAttribute(uidAttribute, uid);
+
+        return {
+          uid,
+          uidSelector: `[${uidAttribute}="${uid}"]`,
+          identifier: outletController.identifier,
+          elementSelector: getElementSelectorString(controller.element),
+        };
+      });
+
+      return {
+        name: outletName,
+        selector: controller.outlets.getSelectorForOutletName(outletName),
+        references: outletReferences,
+        htmlAttribute: `${controller.context.schema.outletAttributeForScope(controller.identifier, outletName)}`,
+        jsSingular: `this.${outletName}Outlet`,
+        jsPlural: `this.${outletName}Outlets`,
+        jsExistential: `this.has${outletName[0].toUpperCase() + outletName.slice(1)}Outlet`,
+        jsElementSingular: `this.${outletName}OutletElement`,
+        jsElementPlural: `this.${outletName}OutletElements`,
+      };
+    });
+
+    _stimulus_sendEvent('stimulus-devtools:instance-outlets:updated', { uid, outlets });
   }
 
   // Observations

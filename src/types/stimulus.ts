@@ -38,12 +38,25 @@ export interface StimulusControllerValue extends StimulusControllerMember, Value
   currentValue: unknown;
 }
 
+export interface StimulusControllerTarget extends StimulusControllerMember {
+  elements: StimulusControllerTargetElement[];
+}
+
 export type StimulusControllerTargetElement = {
   uid: string;
   uidSelector: string;
   elementSelector: string;
 };
 
-export interface StimulusControllerTarget extends StimulusControllerMember {
-  elements: StimulusControllerTargetElement[];
+export interface StimulusControllerOutlet extends StimulusControllerMember {
+  selector: string | null;
+  references: StimulusControllerOutletReference[];
+
+  jsElementSingular: string;
+  jsElementPlural: string;
 }
+
+export type StimulusControllerOutletReference = {
+  identifier: Controller['identifier'];
+  element: Controller['element'];
+};

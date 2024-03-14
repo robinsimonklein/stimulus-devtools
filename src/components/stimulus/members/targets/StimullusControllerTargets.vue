@@ -2,7 +2,6 @@
   <div class="px-3 py-1">
     <ul>
       <StimulusControllerTargetsRow v-for="target in targets" :key="target.name" :target="target" />
-      <!-- TODO: "Show more" button when too many elements -->
     </ul>
   </div>
 </template>

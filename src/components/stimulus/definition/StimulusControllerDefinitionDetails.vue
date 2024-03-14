@@ -41,6 +41,12 @@
               <StimullusControllerTargets :instance="selectedInstance" />
             </AccordionContent>
           </AccordionItem>
+          <AccordionItem value="outlets">
+            <AccordionTrigger class="px-3 py-2 text-sm bg-neutral-100 dark:bg-neutral-900/40">Outlets</AccordionTrigger>
+            <AccordionContent>
+              <StimulusControllerOutlets :instance="selectedInstance" />
+            </AccordionContent>
+          </AccordionItem>
         </Accordion>
       </div>
     </template>
@@ -59,6 +65,7 @@ import StimulusControllerValues from '@/components/stimulus/members/values/Stimu
 import { executeAction } from '@/utils/contentScript.ts';
 import { useChromeStorage } from '@/composables/useChromeStorage.ts';
 import StimullusControllerTargets from '@/components/stimulus/members/targets/StimullusControllerTargets.vue';
+import StimulusControllerOutlets from '@/components/stimulus/members/outlets/StimulusControllerOutlets.vue';
 
 const props = defineProps<{
   identifier: ParsedStimulusControllerDefinition['identifier'];
