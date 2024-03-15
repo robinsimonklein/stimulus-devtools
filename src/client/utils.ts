@@ -26,14 +26,16 @@ export const _stimulus_getControllerKeys = (controller: Controller) => {
 };
 
 export const _stimulus_createHighlightBox = (target: HTMLElement, title?: string) => {
+  const targetBoundingClientRect = target.getBoundingClientRect();
+
   const highlightBox = document.createElement('div');
   highlightBox.classList.add('stimulus-devtools-highlight');
   highlightBox.style.position = 'fixed';
   highlightBox.style.zIndex = '2147483646';
-  highlightBox.style.top = `${target.offsetTop}px`;
-  highlightBox.style.left = `${target.offsetLeft}px`;
-  highlightBox.style.width = `${target.clientWidth}px`;
-  highlightBox.style.height = `${target.clientHeight}px`;
+  highlightBox.style.top = `${targetBoundingClientRect.top}px`;
+  highlightBox.style.left = `${targetBoundingClientRect.left}px`;
+  highlightBox.style.width = `${targetBoundingClientRect.width}px`;
+  highlightBox.style.height = `${targetBoundingClientRect.height}px`;
   highlightBox.style.backgroundColor = 'rgba(119, 232, 185, 0.5)';
   highlightBox.style.borderColor = 'rgba(119, 232, 185, 1)';
   highlightBox.style.borderWidth = '1px';
@@ -53,7 +55,7 @@ export const _stimulus_createHighlightBox = (target: HTMLElement, title?: string
     highlightBoxTitle.style.color = '#000';
     highlightBoxTitle.style.backgroundColor = 'rgba(119, 232, 185, 1)';
 
-    target.offsetTop > 16
+    targetBoundingClientRect.top > 16
       ? (highlightBoxTitle.style.bottom = 'calc(100% + 1px)')
       : (highlightBoxTitle.style.top = 'calc(100% + 1px)');
     highlightBox.appendChild(highlightBoxTitle);
