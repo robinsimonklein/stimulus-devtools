@@ -361,58 +361,35 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
   // Observations
 
   onControllersObservation(mutationsList: MutationRecord[]) {
-    let needsToUpdate = false;
+    let shouldUpdate = false;
 
     for (const mutation of mutationsList) {
-      if (mutation.type === 'childList') {
-        // Check for added controllers
-        mutation.addedNodes.forEach(node => {
-          if (!window.Stimulus) return;
-          if (node instanceof Element && node.hasAttribute(window.Stimulus.schema.controllerAttribute)) {
-            needsToUpdate = true;
-          }
-        });
-
-        // Check for removed controllers
-        mutation.removedNodes.forEach(node => {
-          if (!window.Stimulus) return;
-          if (node instanceof Element && node.hasAttribute(window.Stimulus.schema.controllerAttribute)) {
-            needsToUpdate = true;
-          }
-        });
+      if (mutation.type === 'childList' && (mutation.addedNodes.length || mutation.removedNodes.length)) {
+        shouldUpdate = true;
       }
     }
 
-    if (needsToUpdate) this.updateControllers();
+    if (shouldUpdate) this.updateControllers();
   }
 
   onControllerValuesObservation(mutationsList: MutationRecord[]) {
     let shouldUpdate = false;
-    mutationsList.forEach(mutation => {
+    for (const mutation of mutationsList) {
       if (mutation.attributeName?.startsWith('data-') && mutation.attributeName?.endsWith('-value')) {
         shouldUpdate = true;
       }
-    });
+    }
 
     if (shouldUpdate) this.updateInstanceValues({ uid: this.observedControllerValuesInstanceUid });
   }
 
   onControllerTargetsObservation(mutationsList: MutationRecord[]) {
     let shouldUpdate = false;
-    mutationsList.forEach(mutation => {
-      const nodes = [];
-      if (mutation.addedNodes?.length) nodes.push(...Array.from(mutation.addedNodes));
-      if (mutation.removedNodes?.length) nodes.push(...Array.from(mutation.removedNodes));
-      if (
-        nodes.find(node => {
-          return !!Array.from((node as HTMLElement).attributes).find(
-            attribute => attribute.name === this.observedControllerTargetsAttribute,
-          );
-        })
-      ) {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'childList' && (mutation.addedNodes.length || mutation.removedNodes.length)) {
         shouldUpdate = true;
       }
-    });
+    }
 
     if (shouldUpdate) this.updateInstanceTargets({ uid: this.observedControllerTargetsInstanceUid });
   }
@@ -420,20 +397,11 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
   onControllerOutletsObservation(mutationsList: MutationRecord[]) {
     let shouldUpdate = false;
 
-    mutationsList.forEach(mutation => {
-      const nodes = [];
-      if (mutation.addedNodes?.length) nodes.push(...Array.from(mutation.addedNodes));
-      if (mutation.removedNodes?.length) nodes.push(...Array.from(mutation.removedNodes));
-      if (
-        nodes.find(node => {
-          return !!Array.from((node as HTMLElement).attributes).find(
-            attribute => attribute.name === window.Stimulus?.schema.controllerAttribute,
-          );
-        })
-      ) {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'childList' && (mutation.addedNodes.length || mutation.removedNodes.length)) {
         shouldUpdate = true;
       }
-    });
+    }
 
     if (shouldUpdate) this.updateInstanceOutlets({ uid: this.observedControllerOutletsInstanceUid });
   }
