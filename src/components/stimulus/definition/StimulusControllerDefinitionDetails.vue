@@ -4,7 +4,7 @@
     :size="instanceSplit.size"
     :min="0.2"
     :max="0.8"
-    orientation="vertical"
+    :orientation="splitPaneOrientation"
     @update:size="handleInstanceSplitResize"
   >
     <template #a>
@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onBeforeUnmount, ref, toRef, watch } from 'vue';
+import { computed, onBeforeMount, onBeforeUnmount, ref, toRef, watch } from 'vue';
 import SplitPane from '@/components/core/SplitPane.vue';
 import CopyButton from '@/components/core/CopyButton.vue';
 import { ParsedStimulusControllerDefinition, ParsedStimulusControllerInstance } from '@/types/stimulus.ts';
@@ -66,6 +66,7 @@ import { executeAction } from '@/utils/contentScript.ts';
 import { useChromeStorage } from '@/composables/useChromeStorage.ts';
 import StimullusControllerTargets from '@/components/stimulus/members/targets/StimullusControllerTargets.vue';
 import StimulusControllerOutlets from '@/components/stimulus/members/outlets/StimulusControllerOutlets.vue';
+import { useWindowSize } from '@vueuse/core';
 
 const props = defineProps<{
   identifier: ParsedStimulusControllerDefinition['identifier'];
@@ -76,6 +77,9 @@ const detailsAccordion = ref<string[]>(['outlets']);
 
 const { definition } = useControllerDefinition(toRef(props, 'identifier'));
 const instanceSplit = useChromeStorage('instanceSplit', { size: 0.3 });
+
+const { width: windowWidth } = useWindowSize();
+const splitPaneOrientation = computed(() => (windowWidth.value > 960 ? 'horizontal' : 'vertical'));
 
 const onControllersUpdate = () => {
   if (selectedInstance.value) {
