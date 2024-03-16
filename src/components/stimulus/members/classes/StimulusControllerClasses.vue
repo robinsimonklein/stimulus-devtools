@@ -1,5 +1,5 @@
 <template>
-  <div class="px-3 py-1">
+  <div class="px-3 py-2">
     <template v-if="classes?.length">
       <StimulusControllerClassesRow v-for="cssClass in classes" :key="cssClass.name" :css-class="cssClass" />
     </template>

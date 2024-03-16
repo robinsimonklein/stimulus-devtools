@@ -1,5 +1,5 @@
 <template>
-  <div class="px-3 py-1">
+  <div class="px-3 py-2">
     <template v-if="outlets?.length">
       <StimulusControllerOutletsRow v-for="outlet in outlets" :key="outlet.name" :outlet="outlet" />
     </template>

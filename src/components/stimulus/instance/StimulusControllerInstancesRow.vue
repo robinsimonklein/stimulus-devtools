@@ -7,17 +7,17 @@
     @mouseleave="executeAction('stopHighlightElement')"
   >
     <span v-show="selected" class="absolute left-0 inset-y-0 w-[1px] bg-primary" />
-    <div class="opacity-70 group-hover:opacity-100 group-[.is-selected]:opacity-100 mr-2">
-      <div class="inline-flex items-center">
+    <div class="flex items-center w-full opacity-70 group-hover:opacity-100 group-[.is-selected]:opacity-100">
+      <div class="mr-2">
         <CodeInline class="text-sm truncate" :code="instance.elementSelector" language="css" />
-        <button
-          class="ml-3 opacity-0 group-hover:opacity-100"
-          type="button"
-          @click.stop="inspectElement(instance.uidSelector)"
-        >
-          <SquareDashedMousePointer class="w-4 h-4 opacity-70 hover:opacity-100" />
-        </button>
       </div>
+      <button
+        class="ml-auto opacity-0 group-hover:opacity-100"
+        type="button"
+        @click.stop="inspectElement(instance.uidSelector)"
+      >
+        <SquareDashedMousePointer class="w-4 h-4 opacity-60 hover:opacity-100" />
+      </button>
     </div>
   </div>
 </template>

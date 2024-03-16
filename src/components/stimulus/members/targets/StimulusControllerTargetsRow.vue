@@ -40,17 +40,20 @@
         </PopoverContent>
       </Popover>
     </div>
-    <Tree v-if="expanded" :items="target.elements" unique-key="uid">
-      <template #default="{ item }">
-        <button
-          type="button"
-          class="rounded px-1.5 py-[2px] cursor-pointer hover:bg-neutral-100 hover:dark:bg-neutral-800"
-          @click="inspect(item)"
-          @mouseenter="executeAction('highlightElement', { selector: item.uidSelector, title: target.name })"
-          @mouseleave="executeAction('stopHighlightElement')"
-        >
-          <CodeInline class="text-xs" :code="item.elementSelector" language="css" />
-        </button>
+    <Tree
+      v-if="expanded"
+      :items="target.elements"
+      unique-key="uid"
+      @item-mouse-enter="handleItemMouseEnter"
+      @item-mouse-leave="handleItemMouseLeave"
+    >
+      <template #item="{ item }">
+        <CodeInline class="text-xs" :code="item.elementSelector" language="css" />
+      </template>
+      <template #item-actions="{ item }">
+        <TreeAction @click.stop="inspectElement(item.uidSelector)">
+          <SquareDashedMousePointer />
+        </TreeAction>
       </template>
     </Tree>
   </div>
@@ -63,10 +66,11 @@ import { Button } from '@/components/ui/button';
 import CopyButton from '@/components/core/CopyButton.vue';
 import Tree from '@/components/core/tree/Tree.vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { ChevronRight, EllipsisVertical } from 'lucide-vue-next';
+import { ChevronRight, EllipsisVertical, SquareDashedMousePointer } from 'lucide-vue-next';
 import { inspectElement } from '@/utils';
 import { executeAction } from '@/utils/contentScript.ts';
 import CodeInline from '@/components/core/code/CodeInline.vue';
+import TreeAction from '@/components/core/tree/TreeAction.vue';
 
 const props = defineProps<{
   target: StimulusControllerTarget;
@@ -81,7 +85,11 @@ const toggle = () => {
   expanded.value = !expanded.value;
 };
 
-const inspect = (element: StimulusControllerTargetElement) => {
-  inspectElement(element.uidSelector);
+const handleItemMouseEnter = (element: StimulusControllerTargetElement) => {
+  executeAction('highlightElement', { selector: element.uidSelector, title: props.target.name });
+};
+
+const handleItemMouseLeave = () => {
+  executeAction('stopHighlightElement');
 };
 </script>

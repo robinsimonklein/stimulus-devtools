@@ -1,5 +1,5 @@
 <template>
-  <div class="px-3 py-1">
+  <div class="px-3 py-2">
     <template v-if="targets?.length">
       <StimulusControllerTargetsRow v-for="target in targets" :key="target.name" :target="target" />
     </template>

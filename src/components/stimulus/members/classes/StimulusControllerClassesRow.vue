@@ -41,14 +41,10 @@
       </Popover>
     </div>
     <Tree v-if="expanded" :items="cssClass.classNames" unique-key="name">
-      <template #default="{ item }">
-        <button
-          type="button"
-          class="rounded px-1.5 py-[2px] cursor-pointer hover:bg-neutral-100 hover:dark:bg-neutral-800"
-        >
-          <CodeInline class="text-xs" :code="`.${item}`" language="css" />
-        </button>
+      <template #item="{ item }">
+        <CodeInline class="text-xs" :code="`.${item}`" language="css" />
       </template>
+      <!-- TODO(idea): Copy class selector action -->
     </Tree>
   </div>
 </template>
