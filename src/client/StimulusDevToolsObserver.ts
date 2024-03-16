@@ -19,6 +19,7 @@ import type { ValueController } from '@hotwired/stimulus/dist/types/tests/contro
 type StimulusDevToolsObserverAction = (args?: unknown) => void;
 
 type ControllerWithOutlets = Controller & Record<string, Controller[]>;
+type ControllerWithClasses = Controller & Record<string, string[]>;
 
 export interface StimulusDevToolsObserverInterface {
   updateControllers: StimulusDevToolsObserverAction;
@@ -337,6 +338,38 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     }
 
     _stimulus_sendEvent('stimulus-devtools:instance-outlets:updated', { uid, outlets });
+  }
+
+  updateInstanceClasses(args: unknown) {
+    const uid = (args as { uid: StimulusControllerInstance['uid'] }).uid;
+    if (!uid) return;
+
+    if (!window.Stimulus) return;
+
+    const instance = this.controllerInstances.find(controllerInstance => controllerInstance.uid === uid);
+    if (!instance) return;
+
+    const controller = _stimulus_getControllerFromInstance(instance);
+    if (!controller) return;
+
+    // Retrieve controller's prototype members
+    const controllerKeys = _stimulus_getControllerKeys(controller);
+
+    const classesNames = controllerKeys
+      .filter(k => k.endsWith('Class') && !k.startsWith('has'))
+      .map(k => k.slice(0, -5)); // Remove "Class" at the end
+
+    const classes = classesNames.map(name => ({
+      name: name,
+      classNames: (controller as ControllerWithClasses)[`${name}Classes`],
+      htmlAttribute: controller.classes.getAttributeName(name),
+      jsSingular: `this.${name}Class`,
+      jsPlural: `this.${name}Classes`,
+      jsExistential: `this.has${name[0].toUpperCase() + name.slice(1)}Class`,
+      test: controller.classes.getAll(name),
+    }));
+
+    _stimulus_sendEvent('stimulus-devtools:instance-classes:updated', { uid, classes });
   }
 
   highlightElement(args: any) {

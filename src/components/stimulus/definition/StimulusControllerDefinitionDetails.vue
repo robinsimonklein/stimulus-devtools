@@ -38,13 +38,19 @@
           <AccordionItem value="targets">
             <AccordionTrigger class="px-3 py-2 text-sm bg-neutral-100 dark:bg-neutral-900/40">Targets</AccordionTrigger>
             <AccordionContent>
-              <StimullusControllerTargets :instance="selectedInstance" />
+              <StimulusControllerTargets :instance="selectedInstance" />
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="outlets">
             <AccordionTrigger class="px-3 py-2 text-sm bg-neutral-100 dark:bg-neutral-900/40">Outlets</AccordionTrigger>
             <AccordionContent>
               <StimulusControllerOutlets :instance="selectedInstance" />
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="classes">
+            <AccordionTrigger class="px-3 py-2 text-sm bg-neutral-100 dark:bg-neutral-900/40">Classes</AccordionTrigger>
+            <AccordionContent>
+              <StimulusControllerClasses :instance="selectedInstance" />
             </AccordionContent>
           </AccordionItem>
         </Accordion>
@@ -58,14 +64,15 @@ import { computed, onBeforeMount, onBeforeUnmount, ref, toRef, watch } from 'vue
 import SplitPane from '@/components/core/SplitPane.vue';
 import CopyButton from '@/components/core/CopyButton.vue';
 import { ParsedStimulusControllerDefinition, ParsedStimulusControllerInstance } from '@/types/stimulus.ts';
-import { useControllerDefinition } from '@/composables/stimulus/useControllerDefinition.ts';
-import StimulusControllerInstancesRow from '@/components/stimulus/instance/StimulusControllerInstancesRow.vue';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
+import StimulusControllerInstancesRow from '@/components/stimulus/instance/StimulusControllerInstancesRow.vue';
 import StimulusControllerValues from '@/components/stimulus/members/values/StimulusControllerValues.vue';
-import { executeAction } from '@/utils/contentScript.ts';
-import { useChromeStorage } from '@/composables/useChromeStorage.ts';
-import StimullusControllerTargets from '@/components/stimulus/members/targets/StimullusControllerTargets.vue';
 import StimulusControllerOutlets from '@/components/stimulus/members/outlets/StimulusControllerOutlets.vue';
+import StimulusControllerClasses from '@/components/stimulus/members/classes/StimulusControllerClasses.vue';
+import StimulusControllerTargets from '@/components/stimulus/members/targets/StimulusControllerTargets.vue';
+import { useControllerDefinition } from '@/composables/stimulus/useControllerDefinition.ts';
+import { useChromeStorage } from '@/composables/useChromeStorage.ts';
+import { executeAction } from '@/utils/contentScript.ts';
 import { useWindowSize } from '@vueuse/core';
 
 const props = defineProps<{
@@ -73,7 +80,7 @@ const props = defineProps<{
 }>();
 
 const selectedInstance = ref<ParsedStimulusControllerInstance | null>(null);
-const detailsAccordion = ref<string[]>(['outlets']);
+const detailsAccordion = ref<string[]>(['values', 'targets', 'outlets', 'classes']);
 
 const { definition } = useControllerDefinition(toRef(props, 'identifier'));
 const instanceSplit = useChromeStorage('instanceSplit', { size: 0.3 });
@@ -86,6 +93,7 @@ const onControllersUpdate = () => {
     executeAction('updateInstanceValues', { uid: selectedInstance.value.uid });
     executeAction('updateInstanceTargets', { uid: selectedInstance.value.uid });
     executeAction('updateInstanceOutlets', { uid: selectedInstance.value.uid });
+    executeAction('updateInstanceClasses', { uid: selectedInstance.value.uid });
   }
 };
 
