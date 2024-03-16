@@ -18,7 +18,6 @@ import type { ValueController } from '@hotwired/stimulus/dist/types/tests/contro
 
 type StimulusDevToolsObserverAction = (args?: unknown) => void;
 
-type ControllerWithOutlets = Controller & Record<string, Controller[]>;
 type ControllerWithClasses = Controller & Record<string, string[]>;
 
 export interface StimulusDevToolsObserverInterface {
@@ -280,53 +279,57 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     const controller = _stimulus_getControllerFromInstance(instance);
     if (!controller) return;
 
-    const controllerKeys = _stimulus_getControllerKeys(controller);
-
-    const outletNames = controllerKeys
-      .filter(k => k.endsWith('Outlet') && !k.startsWith('has'))
-      .map(k => k.slice(0, -6)); // Remove "Outlet" at the end
+    const outletNames = controller.context['outletObserver'].outletDefinitions as string[];
 
     const outlets = outletNames.map(outletName => {
-      const outletReferences = (controller as ControllerWithOutlets)[`${outletName}Outlets`].map(outletController => {
-        // Create uid and ensure to track outlet elements
-        const uidAttribute = `sd-${controller.identifier}-o-${outletName.toLowerCase()}-uid`;
-        const lastIndexKey = `${controller.identifier}-${outletName}`;
+      const outletReferences = controller.context['outletObserver'].outletsByName
+        .getValuesForKey(outletName)
+        .map((outletController: Controller) => {
+          // Create uid and ensure to track outlet elements
+          const uidAttribute = `sd-${controller.identifier}-o-${outletName}-uid`;
+          const lastIndexKey = `${controller.identifier}-${outletName}`;
 
-        let index = 0;
+          let index = 0;
 
-        const elementUid = outletController.element.getAttribute(uidAttribute);
-        const elementIndex = elementUid?.split('-').pop();
-        const lastIndex = this.controllerOutletElementsLastIndex.get(lastIndexKey);
+          const elementUid = outletController.element.getAttribute(uidAttribute);
+          const elementIndex = elementUid?.split('-').pop();
+          const lastIndex = this.controllerOutletElementsLastIndex.get(lastIndexKey);
 
-        if (elementIndex) {
-          index = parseInt(elementIndex);
-          if (!lastIndex || lastIndex < index) this.controllerOutletElementsLastIndex.set(lastIndexKey, index);
-        } else {
-          if (typeof lastIndex === 'number') index = lastIndex + 1;
-          this.controllerOutletElementsLastIndex.set(lastIndexKey, index);
-        }
+          if (elementIndex) {
+            index = parseInt(elementIndex);
+            if (!lastIndex || lastIndex < index) this.controllerOutletElementsLastIndex.set(lastIndexKey, index);
+          } else {
+            if (typeof lastIndex === 'number') index = lastIndex + 1;
+            this.controllerOutletElementsLastIndex.set(lastIndexKey, index);
+          }
 
-        const uid = `${outletName}-${index}`;
-        if (!elementUid) outletController.element.setAttribute(uidAttribute, uid);
+          const uid = `${outletName}-${index}`;
+          if (!elementUid) outletController.element.setAttribute(uidAttribute, uid);
 
-        return {
-          uid,
-          uidSelector: `[${uidAttribute}="${uid}"]`,
-          identifier: outletController.identifier,
-          elementSelector: getElementSelectorString(controller.element),
-        };
-      });
+          return {
+            uid,
+            uidSelector: `[${uidAttribute}="${uid}"]`,
+            identifier: outletController.identifier,
+            elementSelector: getElementSelectorString(controller.element),
+          };
+        });
+
+      const propertyName = outletName
+        .split('-')
+        .filter(s => s.length)
+        .map((s, i) => (i > 0 ? s[0].toUpperCase() + s.slice(1) : s))
+        .join('');
 
       return {
         name: outletName,
         selector: controller.outlets.getSelectorForOutletName(outletName),
         references: outletReferences,
-        htmlAttribute: `${controller.context.schema.outletAttributeForScope(controller.identifier, outletName)}`,
-        jsSingular: `this.${outletName}Outlet`,
-        jsPlural: `this.${outletName}Outlets`,
-        jsExistential: `this.has${outletName[0].toUpperCase() + outletName.slice(1)}Outlet`,
-        jsElementSingular: `this.${outletName}OutletElement`,
-        jsElementPlural: `this.${outletName}OutletElements`,
+        htmlAttribute: `${controller.context.schema.outletAttributeForScope(controller.identifier, outletName)}=""`,
+        jsSingular: `this.${propertyName}Outlet`,
+        jsPlural: `this.${propertyName}Outlets`,
+        jsExistential: `this.has${propertyName[0].toUpperCase() + propertyName.slice(1)}Outlet`,
+        jsElementSingular: `this.${propertyName}OutletElement`,
+        jsElementPlural: `this.${propertyName}OutletElements`,
       };
     });
 
