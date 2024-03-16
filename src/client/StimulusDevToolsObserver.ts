@@ -34,6 +34,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
   controllerValuesObserver?: MutationObserver;
   controllerTargetsObserver?: MutationObserver;
   controllerOutletsObserver?: MutationObserver;
+  controllerClassesObserver?: MutationObserver;
 
   controllerInstancesLastIndex = new Map<string, number>();
   controllerTargetElementsLastIndex = new Map<string, number>();
@@ -43,6 +44,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
   observedControllerTargetsInstanceUid?: string;
   observedControllerTargetsAttribute?: string;
   observedControllerOutletsInstanceUid?: string;
+  observedControllerClassesInstanceUid?: string;
 
   constructor() {
     this.controllersObserver = new MutationObserver(this.onControllersObservation.bind(this));
@@ -54,6 +56,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     this.controllerValuesObserver = new MutationObserver(this.onControllerValuesObservation.bind(this));
     this.controllerTargetsObserver = new MutationObserver(this.onControllerTargetsObservation.bind(this));
     this.controllerOutletsObserver = new MutationObserver(this.onControllerOutletsObservation.bind(this));
+    this.controllerClassesObserver = new MutationObserver(this.onControllerClassesObservation.bind(this));
   }
 
   // Getters
@@ -369,6 +372,15 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
       test: controller.classes.getAll(name),
     }));
 
+    // Start or restart observer
+    if (this.observedControllerClassesInstanceUid !== uid) {
+      this.observedControllerClassesInstanceUid = uid;
+      this.controllerClassesObserver?.disconnect();
+      this.controllerClassesObserver?.observe(controller.element, {
+        attributes: true,
+      });
+    }
+
     _stimulus_sendEvent('stimulus-devtools:instance-classes:updated', { uid, classes });
   }
 
@@ -437,5 +449,16 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     }
 
     if (shouldUpdate) this.updateInstanceOutlets({ uid: this.observedControllerOutletsInstanceUid });
+  }
+
+  onControllerClassesObservation(mutationsList: MutationRecord[]) {
+    let shouldUpdate = false;
+    for (const mutation of mutationsList) {
+      if (mutation.attributeName?.startsWith('data-') && mutation.attributeName?.endsWith('-class')) {
+        shouldUpdate = true;
+      }
+    }
+
+    if (shouldUpdate) this.updateInstanceClasses({ uid: this.observedControllerValuesInstanceUid });
   }
 }
