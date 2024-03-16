@@ -1,8 +1,12 @@
 <template>
   <div class="px-3 py-1">
-    <ul>
+    <template v-if="targets?.length">
       <StimulusControllerTargetsRow v-for="target in targets" :key="target.name" :target="target" />
-    </ul>
+    </template>
+
+    <template v-else>
+      <p class="text-muted-foreground text-sm">No target.</p>
+    </template>
   </div>
 </template>
 

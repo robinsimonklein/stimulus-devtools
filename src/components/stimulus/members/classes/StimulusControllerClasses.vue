@@ -1,6 +1,12 @@
 <template>
   <div class="px-3 py-1">
-    <StimulusControllerClassesRow v-for="cssClass in classes" :key="cssClass.name" :css-class="cssClass" />
+    <template v-if="classes?.length">
+      <StimulusControllerClassesRow v-for="cssClass in classes" :key="cssClass.name" :css-class="cssClass" />
+    </template>
+
+    <template v-else>
+      <p class="text-muted-foreground text-sm">No class.</p>
+    </template>
   </div>
 </template>
 

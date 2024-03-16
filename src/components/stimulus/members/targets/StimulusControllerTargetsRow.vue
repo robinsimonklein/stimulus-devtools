@@ -1,5 +1,5 @@
 <template>
-  <li class="mt-1 first:mt-0">
+  <div class="mt-1 first:mt-0">
     <div class="flex items-center">
       <button
         type="button"
@@ -53,7 +53,7 @@
         </button>
       </template>
     </Tree>
-  </li>
+  </div>
 </template>
 
 <script setup lang="ts">

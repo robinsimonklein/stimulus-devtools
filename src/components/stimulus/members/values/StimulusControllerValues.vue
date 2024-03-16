@@ -1,6 +1,12 @@
 <template>
   <div class="px-3 py-1">
-    <StimulusControllerValuesRow v-for="value in values" :key="value.key" :value="value" />
+    <template v-if="values?.length">
+      <StimulusControllerValuesRow v-for="value in values" :key="value.key" :value="value" />
+    </template>
+
+    <template v-else>
+      <p class="text-muted-foreground text-sm">No value.</p>
+    </template>
   </div>
 </template>
 

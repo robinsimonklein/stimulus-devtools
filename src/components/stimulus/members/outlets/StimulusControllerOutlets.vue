@@ -1,8 +1,12 @@
 <template>
   <div class="px-3 py-1">
-    <ul>
+    <template v-if="outlets?.length">
       <StimulusControllerOutletsRow v-for="outlet in outlets" :key="outlet.name" :outlet="outlet" />
-    </ul>
+    </template>
+
+    <template v-else>
+      <p class="text-muted-foreground text-sm">No outlet.</p>
+    </template>
   </div>
 </template>
 
