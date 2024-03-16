@@ -19,19 +19,19 @@
           <hr class="my-2 opacity-20" />
           <table class="w-full">
             <tr>
-              <td><CodeBlock :code="value.htmlAttribute" language="html" inline /></td>
+              <td><CodeInline :code="value.htmlAttribute" language="css" /></td>
               <td><CopyButton :text="value.htmlAttribute" /></td>
             </tr>
             <tr>
-              <td><CodeBlock :code="value.jsSingular" language="javascript" inline /></td>
+              <td><CodeInline :code="value.jsSingular" language="javascript" /></td>
               <td><CopyButton :text="value.jsSingular" /></td>
             </tr>
             <tr>
-              <td><CodeBlock :code="value.jsPlural" language="javascript" inline /></td>
+              <td><CodeInline :code="value.jsPlural" language="javascript" /></td>
               <td><CopyButton :text="value.jsPlural" /></td>
             </tr>
             <tr>
-              <td><CodeBlock :code="value.jsExistential" language="javascript" inline /></td>
+              <td><CodeInline :code="value.jsExistential" language="javascript" /></td>
               <td><CopyButton :text="value.jsExistential" /></td>
             </tr>
           </table>
@@ -49,8 +49,8 @@ import { StimulusControllerValue } from '@/types/stimulus.ts';
 import TypedValue from '@/components/core/TypedValue.vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import CopyButton from '@/components/core/CopyButton.vue';
-import CodeBlock from '@/components/core/CodeBlock.vue';
 import ValueType from '@/components/core/ValueType.vue';
+import CodeInline from '@/components/core/code/CodeInline.vue';
 
 defineProps<{
   value: StimulusControllerValue;

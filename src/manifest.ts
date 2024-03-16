@@ -27,6 +27,9 @@ const manifest: Record<string, unknown> = {
       world: 'MAIN',
     },
   ],
+  content_security_policy: {
+    extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
+  },
   permissions: ['tabs', 'storage'],
 };
 

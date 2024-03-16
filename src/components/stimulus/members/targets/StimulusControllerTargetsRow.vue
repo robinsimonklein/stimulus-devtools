@@ -21,19 +21,19 @@
         <PopoverContent align="center" side="right">
           <table class="w-full">
             <tr>
-              <td><CodeBlock :code="target.htmlAttribute" language="html" inline /></td>
+              <td><CodeInline :code="target.htmlAttribute" language="css" /></td>
               <td><CopyButton :text="target.htmlAttribute" /></td>
             </tr>
             <tr>
-              <td><CodeBlock :code="target.jsSingular" language="javascript" inline /></td>
+              <td><CodeInline :code="target.jsSingular" language="javascript" /></td>
               <td><CopyButton :text="target.jsSingular" /></td>
             </tr>
             <tr>
-              <td><CodeBlock :code="target.jsPlural" language="javascript" inline /></td>
+              <td><CodeInline :code="target.jsPlural" language="javascript" /></td>
               <td><CopyButton :text="target.jsPlural" /></td>
             </tr>
             <tr>
-              <td><CodeBlock :code="target.jsExistential" language="javascript" inline /></td>
+              <td><CodeInline :code="target.jsExistential" language="javascript" /></td>
               <td><CopyButton :text="target.jsExistential" /></td>
             </tr>
           </table>
@@ -44,12 +44,12 @@
       <template #default="{ item }">
         <button
           type="button"
-          class="rounded px-1.5 cursor-pointer hover:bg-neutral-100 hover:dark:bg-neutral-800"
+          class="rounded px-1.5 py-[2px] cursor-pointer hover:bg-neutral-100 hover:dark:bg-neutral-800"
           @click="inspect(item)"
           @mouseenter="executeAction('highlightElement', { selector: item.uidSelector, title: target.name })"
           @mouseleave="executeAction('stopHighlightElement')"
         >
-          <CodeBlock class="text-xs" :code="item.elementSelector" language="css" inline />
+          <CodeInline class="text-xs" :code="item.elementSelector" language="css" />
         </button>
       </template>
     </Tree>
@@ -59,7 +59,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { StimulusControllerTarget, StimulusControllerTargetElement } from '@/types/stimulus.ts';
-import CodeBlock from '@/components/core/CodeBlock.vue';
 import { Button } from '@/components/ui/button';
 import CopyButton from '@/components/core/CopyButton.vue';
 import Tree from '@/components/core/tree/Tree.vue';
@@ -67,6 +66,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { ChevronRight, EllipsisVertical } from 'lucide-vue-next';
 import { inspectElement } from '@/utils';
 import { executeAction } from '@/utils/contentScript.ts';
+import CodeInline from '@/components/core/code/CodeInline.vue';
 
 const props = defineProps<{
   target: StimulusControllerTarget;

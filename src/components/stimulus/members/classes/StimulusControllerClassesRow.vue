@@ -21,32 +21,32 @@
         <PopoverContent align="center" side="right">
           <table class="w-full">
             <tr>
-              <td><CodeBlock :code="cssClass.htmlAttribute" language="html" inline /></td>
+              <td><CodeInline :code="cssClass.htmlAttribute" language="css" /></td>
               <td><CopyButton :text="cssClass.htmlAttribute" /></td>
             </tr>
             <tr>
-              <td><CodeBlock :code="cssClass.jsSingular" language="javascript" inline /></td>
+              <td><CodeInline :code="cssClass.jsSingular" language="javascript" /></td>
               <td><CopyButton :text="cssClass.jsSingular" /></td>
             </tr>
             <tr>
-              <td><CodeBlock :code="cssClass.jsPlural" language="javascript" inline /></td>
+              <td><CodeInline :code="cssClass.jsPlural" language="javascript" /></td>
               <td><CopyButton :text="cssClass.jsPlural" /></td>
             </tr>
             <tr>
-              <td><CodeBlock :code="cssClass.jsExistential" language="javascript" inline /></td>
+              <td><CodeInline :code="cssClass.jsExistential" language="javascript" /></td>
               <td><CopyButton :text="cssClass.jsExistential" /></td>
             </tr>
           </table>
         </PopoverContent>
       </Popover>
     </div>
-    <Tree v-if="expanded" :items="cssClass.classNames" unique-key="uid">
+    <Tree v-if="expanded" :items="cssClass.classNames" unique-key="name">
       <template #default="{ item }">
         <button
           type="button"
           class="rounded px-1.5 py-[2px] cursor-pointer hover:bg-neutral-100 hover:dark:bg-neutral-800"
         >
-          <CodeBlock class="text-xs" :code="`.${item}`" language="css" inline />
+          <CodeInline class="text-xs" :code="`.${item}`" language="css" />
         </button>
       </template>
     </Tree>
@@ -60,8 +60,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import CopyButton from '@/components/core/CopyButton.vue';
 import { ChevronRight, EllipsisVertical } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
-import CodeBlock from '@/components/core/CodeBlock.vue';
 import Tree from '@/components/core/tree/Tree.vue';
+import CodeInline from '@/components/core/code/CodeInline.vue';
 
 const props = defineProps<{
   cssClass: StimulusControllerClass;

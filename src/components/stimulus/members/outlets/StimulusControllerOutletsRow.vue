@@ -22,33 +22,33 @@
           <table class="w-full">
             <tr>
               <td>Selector</td>
-              <td><CodeBlock :code="outlet.selector" language="css" inline /></td>
+              <td><CodeInline :code="outlet.selector" language="css" /></td>
             </tr>
           </table>
           <hr class="my-2 opacity-20" />
           <table class="w-full">
             <tr>
-              <td><CodeBlock :code="outlet.htmlAttribute" language="html" inline /></td>
+              <td><CodeInline :code="outlet.htmlAttribute" language="css" /></td>
               <td><CopyButton :text="outlet.htmlAttribute" /></td>
             </tr>
             <tr>
-              <td><CodeBlock :code="outlet.jsSingular" language="javascript" inline /></td>
+              <td><CodeInline :code="outlet.jsSingular" language="javascript" /></td>
               <td><CopyButton :text="outlet.jsSingular" /></td>
             </tr>
             <tr>
-              <td><CodeBlock :code="outlet.jsPlural" language="javascript" inline /></td>
+              <td><CodeInline :code="outlet.jsPlural" language="javascript" /></td>
               <td><CopyButton :text="outlet.jsPlural" /></td>
             </tr>
             <tr>
-              <td><CodeBlock :code="outlet.jsExistential" language="javascript" inline /></td>
+              <td><CodeInline :code="outlet.jsExistential" language="javascript" /></td>
               <td><CopyButton :text="outlet.jsExistential" /></td>
             </tr>
             <tr>
-              <td><CodeBlock :code="outlet.jsElementSingular" language="javascript" inline /></td>
+              <td><CodeInline :code="outlet.jsElementSingular" language="javascript" /></td>
               <td><CopyButton :text="outlet.jsElementSingular" /></td>
             </tr>
             <tr>
-              <td><CodeBlock :code="outlet.jsElementPlural" language="javascript" inline /></td>
+              <td><CodeInline :code="outlet.jsElementPlural" language="javascript" /></td>
               <td><CopyButton :text="outlet.jsElementPlural" /></td>
             </tr>
           </table>
@@ -59,12 +59,12 @@
       <template #default="{ item }">
         <button
           type="button"
-          class="rounded px-1.5 cursor-pointer hover:bg-neutral-100 hover:dark:bg-neutral-800"
+          class="rounded px-1.5 py-[2px] cursor-pointer hover:bg-neutral-100 hover:dark:bg-neutral-800"
           @click="inspect(item)"
           @mouseenter="executeAction('highlightElement', { selector: item.uidSelector, title: outlet.name })"
           @mouseleave="executeAction('stopHighlightElement')"
         >
-          <CodeBlock class="text-xs" :code="item.elementSelector" language="css" inline />
+          <CodeInline class="text-xs" :code="item.elementSelector" language="css" />
         </button>
       </template>
     </Tree>
@@ -79,9 +79,9 @@ import { StimulusControllerOutlet, StimulusControllerTargetElement } from '@/typ
 import { inspectElement } from '@/utils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import CopyButton from '@/components/core/CopyButton.vue';
-import CodeBlock from '@/components/core/CodeBlock.vue';
 import Tree from '@/components/core/tree/Tree.vue';
 import { executeAction } from '@/utils/contentScript.ts';
+import CodeInline from '@/components/core/code/CodeInline.vue';
 
 const props = defineProps<{
   outlet: StimulusControllerOutlet;
