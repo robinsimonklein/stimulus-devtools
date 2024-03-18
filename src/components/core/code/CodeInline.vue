@@ -1,5 +1,5 @@
 <template>
-  <span class="inline font-mono" v-html="highlightedCode" />
+  <span class="stimulus-devtools-code stimulus-devtools-code--inline inline font-mono" v-html="highlightedCode" />
 </template>
 
 <script setup lang="ts">
@@ -21,5 +21,9 @@ const highlightedCode = codeToHtml(formattedCode, toRef(props.language));
 <style>
 .shiki {
   background-color: transparent !important;
+}
+
+.stimulus-devtools-code--inline pre {
+  display: inline;
 }
 </style>
