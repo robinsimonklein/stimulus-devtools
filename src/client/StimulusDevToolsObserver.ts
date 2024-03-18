@@ -412,7 +412,15 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     let shouldUpdate = false;
 
     for (const mutation of mutationsList) {
-      if (mutation.type === 'childList' && (mutation.addedNodes.length || mutation.removedNodes.length)) {
+      if (mutation.type !== 'childList') continue;
+
+      for (const addedNode of mutation.addedNodes) {
+        if ((addedNode as HTMLElement).classList.contains('stimulus-devtools-highlight')) continue;
+        shouldUpdate = true;
+      }
+
+      for (const addedNode of mutation.removedNodes) {
+        if ((addedNode as HTMLElement).classList.contains('stimulus-devtools-highlight')) continue;
         shouldUpdate = true;
       }
     }
@@ -434,7 +442,15 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
   onControllerTargetsObservation(mutationsList: MutationRecord[]) {
     let shouldUpdate = false;
     for (const mutation of mutationsList) {
-      if (mutation.type === 'childList' && (mutation.addedNodes.length || mutation.removedNodes.length)) {
+      if (mutation.type !== 'childList') continue;
+
+      for (const addedNode of mutation.addedNodes) {
+        if ((addedNode as HTMLElement).classList.contains('stimulus-devtools-highlight')) continue;
+        shouldUpdate = true;
+      }
+
+      for (const addedNode of mutation.removedNodes) {
+        if ((addedNode as HTMLElement).classList.contains('stimulus-devtools-highlight')) continue;
         shouldUpdate = true;
       }
     }
@@ -446,7 +462,15 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     let shouldUpdate = false;
 
     for (const mutation of mutationsList) {
-      if (mutation.type === 'childList' && (mutation.addedNodes.length || mutation.removedNodes.length)) {
+      if (mutation.type !== 'childList') continue;
+
+      for (const addedNode of mutation.addedNodes) {
+        if ((addedNode as HTMLElement).classList.contains('stimulus-devtools-highlight')) continue;
+        shouldUpdate = true;
+      }
+
+      for (const addedNode of mutation.removedNodes) {
+        if ((addedNode as HTMLElement).classList.contains('stimulus-devtools-highlight')) continue;
         shouldUpdate = true;
       }
     }
