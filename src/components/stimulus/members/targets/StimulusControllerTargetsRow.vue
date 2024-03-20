@@ -48,7 +48,7 @@
       @item-mouse-leave="handleItemMouseLeave"
     >
       <template #item="{ item }">
-        <CodeInline class="text-xs" :code="item.elementSelector" language="css" />
+        <CodeInline class="text-xs cursor-default" :code="item.elementSelector" language="css" />
       </template>
       <template #item-actions="{ item }">
         <TreeAction @click.stop="inspectElement(item.uidSelector)">
