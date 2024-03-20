@@ -1,53 +1,45 @@
 <template>
-  <div class="flex items-center py-1 w-full">
-    <div class="flex-1 mr-2 overflow-hidden">
-      <Popover>
-        <PopoverTrigger>
-          <span class="truncate max-w-full hover:underline underline-offset-2">{{ value.name }}</span>
-        </PopoverTrigger>
-        <PopoverContent align="center" side="right">
-          <table class="w-full">
-            <tr>
-              <td>Type</td>
-              <td><ValueType :type="value.type" /></td>
-            </tr>
-            <tr v-if="value.defaultValue">
-              <td>Default</td>
-              <td><TypedValue :model-value="value.defaultValue" /></td>
-            </tr>
-          </table>
-          <hr class="my-2 opacity-20" />
-          <table class="w-full">
-            <tr>
-              <td><CodeInline :code="value.htmlAttribute" language="css" /></td>
-              <td><CopyButton :text="value.htmlAttribute" /></td>
-            </tr>
-            <tr>
-              <td><CodeInline :code="value.jsSingular" language="javascript" /></td>
-              <td><CopyButton :text="value.jsSingular" /></td>
-            </tr>
-            <tr>
-              <td><CodeInline :code="value.jsPlural" language="javascript" /></td>
-              <td><CopyButton :text="value.jsPlural" /></td>
-            </tr>
-            <tr>
-              <td><CodeInline :code="value.jsExistential" language="javascript" /></td>
-              <td><CopyButton :text="value.jsExistential" /></td>
-            </tr>
-          </table>
-        </PopoverContent>
-      </Popover>
-    </div>
-    <div class="w-[230px] shrink-0 ml-auto">
-      <TypedValue class="w-full" :model-value="value.currentValue" />
-    </div>
+  <div class="flex items-center py-0.5 w-full">
+    <ValueTree :name="value.name" :model-value="value.currentValue">
+      <template #definition>
+        <table class="w-full">
+          <tr>
+            <td>Type</td>
+            <td><ValueType :type="value.type" /></td>
+          </tr>
+          <tr v-if="value.defaultValue">
+            <td>Default</td>
+            <td>{{ value.defaultValue }}</td>
+          </tr>
+        </table>
+      </template>
+      <template #more>
+        <table class="w-full">
+          <tr>
+            <td><CodeInline :code="value.htmlAttribute" language="css" /></td>
+            <td><CopyButton :text="value.htmlAttribute" /></td>
+          </tr>
+          <tr>
+            <td><CodeInline :code="value.jsSingular" language="javascript" /></td>
+            <td><CopyButton :text="value.jsSingular" /></td>
+          </tr>
+          <tr>
+            <td><CodeInline :code="value.jsPlural" language="javascript" /></td>
+            <td><CopyButton :text="value.jsPlural" /></td>
+          </tr>
+          <tr>
+            <td><CodeInline :code="value.jsExistential" language="javascript" /></td>
+            <td><CopyButton :text="value.jsExistential" /></td>
+          </tr>
+        </table>
+      </template>
+    </ValueTree>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { StimulusControllerValue } from '@/types/stimulus.ts';
-import TypedValue from '@/components/core/TypedValue.vue';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import ValueTree from '@/components/core/ValueTree.vue';
 import CopyButton from '@/components/core/CopyButton.vue';
 import ValueType from '@/components/core/ValueType.vue';
 import CodeInline from '@/components/core/code/CodeInline.vue';
