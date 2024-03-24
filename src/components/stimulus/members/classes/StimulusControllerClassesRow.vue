@@ -44,7 +44,12 @@
       <template #item="{ item }">
         <CodeInline class="text-xs" :code="`.${item.name}`" language="css" />
       </template>
-      <!-- TODO(idea): Copy class selector action -->
+      <template #item-actions="{ item }">
+        <TreeAction @click.stop="copy(item.name)">
+          <Check v-if="copied" />
+          <Copy v-else />
+        </TreeAction>
+      </template>
     </Tree>
   </div>
 </template>
@@ -54,10 +59,14 @@ import { computed, ref } from 'vue';
 import { StimulusControllerClass } from '@/types/stimulus.ts';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import CopyButton from '@/components/core/CopyButton.vue';
-import { ChevronRight, EllipsisVertical } from 'lucide-vue-next';
+import { ChevronRight, EllipsisVertical, Copy, Check } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import Tree from '@/components/core/tree/Tree.vue';
 import CodeInline from '@/components/core/code/CodeInline.vue';
+import TreeAction from '@/components/core/tree/TreeAction.vue';
+import { useCopyButton } from '@/composables/useCopyButton.ts';
+
+const { copied, copy } = useCopyButton();
 
 const props = defineProps<{
   cssClass: StimulusControllerClass;
@@ -73,6 +82,4 @@ const toggle = () => {
 const canExpand = computed(() => !!props.cssClass.classNames.length);
 
 const classNames = props.cssClass.classNames.map(name => ({ name }));
-
-console.log(props.cssClass.classNames);
 </script>
