@@ -406,6 +406,25 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     });
   }
 
+  updateValue(args: any) {
+    const { value, key, identifier, uidSelector } = args as {
+      value: any;
+      key: string;
+      identifier?: string;
+      uidSelector?: string;
+    };
+
+    if (!key || !identifier || !uidSelector) return;
+    const controllerElement = document.querySelector(uidSelector);
+    if (!controllerElement) return;
+
+    const controller = window.Stimulus?.getControllerForElementAndIdentifier(controllerElement, identifier);
+    if (!controller) return;
+
+    // @ts-ignore
+    controller[key] = value;
+  }
+
   // Observations
 
   onControllersObservation(mutationsList: MutationRecord[]) {

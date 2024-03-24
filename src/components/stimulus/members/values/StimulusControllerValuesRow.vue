@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center py-0.5 w-full">
-    <ValueTree :name="value.name" :model-value="value.currentValue">
+    <ValueTree :name="value.name" :model-value="value.currentValue" @update:model-value="onValueUpdate">
       <template #definition>
         <table class="w-full">
           <tr>
@@ -38,13 +38,24 @@
 </template>
 
 <script lang="ts" setup>
-import { StimulusControllerValue } from '@/types/stimulus.ts';
-import ValueTree from '@/components/core/ValueTree.vue';
+import { ParsedStimulusControllerInstance, StimulusControllerValue } from '@/types/stimulus.ts';
+import ValueTree from '@/components/core/value-tree/ValueTree.vue';
 import CopyButton from '@/components/core/CopyButton.vue';
 import ValueType from '@/components/core/ValueType.vue';
 import CodeInline from '@/components/core/code/CodeInline.vue';
+import { executeAction } from '@/utils/contentScript.ts';
 
-defineProps<{
+const props = defineProps<{
   value: StimulusControllerValue;
+  instance: ParsedStimulusControllerInstance;
 }>();
+
+const onValueUpdate = (newValue: any) => {
+  executeAction('updateValue', {
+    value: newValue,
+    key: props.value.name + 'Value',
+    identifier: props.instance.identifier,
+    uidSelector: props.instance.uidSelector,
+  });
+};
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="px-3 py-2">
     <template v-if="values?.length">
-      <StimulusControllerValuesRow v-for="value in values" :key="value.key" :value="value" />
+      <StimulusControllerValuesRow v-for="value in values" :key="value.key" :value="value" :instance="instance" />
     </template>
 
     <template v-else>
