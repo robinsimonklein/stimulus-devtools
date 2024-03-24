@@ -40,9 +40,9 @@
         </PopoverContent>
       </Popover>
     </div>
-    <Tree v-if="expanded" :items="cssClass.classNames" unique-key="name">
+    <Tree v-if="expanded" :items="classNames" unique-key="name">
       <template #item="{ item }">
-        <CodeInline class="text-xs" :code="`.${item}`" language="css" />
+        <CodeInline class="text-xs" :code="`.${item.name}`" language="css" />
       </template>
       <!-- TODO(idea): Copy class selector action -->
     </Tree>
@@ -71,4 +71,8 @@ const toggle = () => {
 };
 
 const canExpand = computed(() => !!props.cssClass.classNames.length);
+
+const classNames = props.cssClass.classNames.map(name => ({ name }));
+
+console.log(props.cssClass.classNames);
 </script>

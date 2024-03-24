@@ -19,7 +19,7 @@
           <Button class="ml-1.5" variant="ghost" size="icon-sm"><EllipsisVertical class="h-3.5 w-3.5" /></Button>
         </PopoverTrigger>
         <PopoverContent align="center" side="right">
-          <table class="w-full">
+          <table v-if="outlet.selector" class="w-full">
             <tr>
               <td>Selector</td>
               <td><CodeInline :code="outlet.selector" language="css" /></td>

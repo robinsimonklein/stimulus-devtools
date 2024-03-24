@@ -8,7 +8,10 @@
       class="inline-flex shrink-0 items-center gap-x-1.5 opacity-70 group-hover:opacity-100 group-[.is-selected]:opacity-100"
     >
       <template v-for="(item, index) in path">
-        <span v-if="index < path.length - 1" :key="index" class="shrink-0 text-muted-foreground">{{ item }}</span>
+        <template v-if="index < path.length - 1">
+          <span :key="index" class="shrink-0 text-muted-foreground">{{ item }}</span>
+          <span :key="index" class="text-muted-foreground">/</span>
+        </template>
         <span
           v-else
           :key="index"
@@ -16,7 +19,6 @@
         >
           {{ item }}
         </span>
-        <span v-if="index < path.length - 1" :key="index" class="text-muted-foreground">/</span>
       </template>
     </div>
     <span

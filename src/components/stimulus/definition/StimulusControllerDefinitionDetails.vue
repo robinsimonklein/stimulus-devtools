@@ -27,7 +27,7 @@
       </div>
     </template>
     <template #b>
-      <div class="absolute inset-0 overflow-y-auto">
+      <div v-if="selectedInstance" class="absolute inset-0 overflow-y-auto">
         <Accordion v-model="detailsAccordion" type="multiple" collapsible>
           <AccordionItem value="values">
             <AccordionTrigger class="bg-neutral-100 px-3 py-2 text-sm dark:bg-neutral-900/40">Values</AccordionTrigger>
