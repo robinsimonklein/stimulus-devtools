@@ -1,5 +1,5 @@
 <template>
-  <ValueTreeWrapper :name has-children>
+  <ValueTreeWrapper :name has-children @delete="$emit('delete')">
     <template #value>
       <span type="button" class="text-muted-foreground select-none">
         <template v-if="Array.isArray(modelValue)"> Array ({{ modelValue.length }}) </template>
@@ -13,6 +13,7 @@
         :name="key.toString()"
         :model-value="value"
         :level="level + 1"
+        @delete="onDelete(key)"
         @update:model-value="onUpdate(key, $event)"
       >
         <template v-if="$slots.more" #more>
@@ -40,10 +41,26 @@ const props = withDefaults(
 
 const modelValue = defineModel<Record<string, any> | any[]>({ required: true });
 
+defineEmits(['delete']);
+
 const onUpdate = (key: string | number, value: any) => {
   const clone = props.type === 'array' ? Array.from(modelValue.value as any[]) : { ...modelValue.value };
   // @ts-ignore
   clone[key] = value;
   modelValue.value = clone;
+};
+
+const onDelete = (key: string | number) => {
+  if (props.type === 'array') {
+    const clone = Array.from(modelValue.value as any[]);
+    // @ts-ignore
+    clone.splice(key, 1);
+    modelValue.value = clone;
+  } else {
+    const clone = { ...modelValue.value };
+    // @ts-ignore
+    delete clone[key];
+    modelValue.value = clone;
+  }
 };
 </script>

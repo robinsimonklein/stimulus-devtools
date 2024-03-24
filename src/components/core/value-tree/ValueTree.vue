@@ -1,7 +1,14 @@
 <template>
   <div>
     <!-- String -->
-    <ValueTreeString v-if="type === 'string'" :model-value="modelValue" :name :level @update:model-value="updateValue">
+    <ValueTreeString
+      v-if="type === 'string'"
+      :model-value="modelValue"
+      :name
+      :level
+      @update:model-value="updateValue"
+      @delete="$emit('delete')"
+    >
       <template v-if="$slots.more" #more>
         <slot name="more" />
       </template>
@@ -14,6 +21,7 @@
       :name
       :level
       @update:model-value="updateValue"
+      @delete="$emit('delete')"
     >
       <template v-if="$slots.more" #more>
         <slot name="more" />
@@ -27,6 +35,7 @@
       :name
       :level
       @update:model-value="updateValue"
+      @delete="$emit('delete')"
     >
       <template v-if="$slots.more" #more>
         <slot name="more" />
@@ -41,6 +50,7 @@
       :level
       :type
       @update:model-value="updateValue"
+      @delete="$emit('delete')"
     >
       <template v-if="$slots.more" #more>
         <slot name="more" />
@@ -69,6 +79,8 @@ withDefaults(
 );
 
 const modelValue = defineModel<any>({ required: true });
+
+defineEmits(['delete']);
 
 const type = computed(() => {
   if (typeof modelValue.value === 'number') return 'number';

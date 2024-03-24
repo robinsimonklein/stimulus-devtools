@@ -1,5 +1,5 @@
 <template>
-  <ValueTreeWrapper :name :level :keep-actions-visible="isEditing">
+  <ValueTreeWrapper :name :level :keep-actions-visible="isEditing" @delete="$emit('delete')">
     <template #value>
       <div v-if="isEditing" class="inline-flex">
         <form @submit.prevent="save">
@@ -54,6 +54,8 @@ withDefaults(
 );
 
 const modelValue = defineModel<string>({ required: true });
+
+defineEmits(['delete']);
 
 const editInput = ref<HTMLInputElement | null>(null);
 const cancelButton = ref<HTMLButtonElement | null>(null);

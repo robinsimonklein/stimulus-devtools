@@ -29,6 +29,11 @@
           <!-- Actions -->
           <slot name="actions" />
 
+          <!-- Delete -->
+          <Button v-if="level > 0" size="icon-sm" variant="ghost" @click="$emit('delete')">
+            <Trash2 class="w-3.5 h-3.5" />
+          </Button>
+
           <!-- More -->
           <Popover v-if="$slots.more">
             <PopoverTrigger>
@@ -51,7 +56,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { ChevronRight, EllipsisVertical } from 'lucide-vue-next';
+import { ChevronRight, EllipsisVertical, Trash2 } from 'lucide-vue-next';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 
@@ -68,6 +73,8 @@ const props = withDefaults(
     keepActionsVisible: false,
   },
 );
+
+defineEmits(['delete']);
 
 const showChildren = ref(false);
 

@@ -1,5 +1,5 @@
 <template>
-  <ValueTreeWrapper :name :level>
+  <ValueTreeWrapper :name :level @delete="$emit('delete')">
     <template #value>
       <span class="inline-block min-w-[43px] text-green-600 dark:text-green-400 font-mono">
         {{ modelValue.toString() }}
@@ -30,4 +30,6 @@ withDefaults(
 );
 
 const modelValue = defineModel<boolean>({ required: true });
+
+defineEmits(['delete']);
 </script>
