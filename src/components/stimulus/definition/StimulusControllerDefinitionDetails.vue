@@ -9,9 +9,9 @@
   >
     <template #a>
       <div class="absolute inset-0 flex flex-col overflow-hidden">
-        <div class="h-[44px] flex items-center px-3">
-          <span class="text-base truncate font-medium">{{ identifier }}</span>
-          <CopyButton class="flex-shrink-0 ml-2" :text="identifier" />
+        <div class="flex h-[44px] items-center px-3">
+          <span class="truncate text-base font-medium">{{ identifier }}</span>
+          <CopyButton class="ml-2 flex-shrink-0" :text="identifier" />
         </div>
         <div v-if="definition" class="flex-1 overflow-y-auto">
           <div class="inline-block min-w-full">
@@ -30,25 +30,25 @@
       <div class="absolute inset-0 overflow-y-auto">
         <Accordion v-model="detailsAccordion" type="multiple" collapsible>
           <AccordionItem value="values">
-            <AccordionTrigger class="px-3 py-2 text-sm bg-neutral-100 dark:bg-neutral-900/40">Values</AccordionTrigger>
+            <AccordionTrigger class="bg-neutral-100 px-3 py-2 text-sm dark:bg-neutral-900/40">Values</AccordionTrigger>
             <AccordionContent>
               <StimulusControllerValues :instance="selectedInstance" />
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="targets">
-            <AccordionTrigger class="px-3 py-2 text-sm bg-neutral-100 dark:bg-neutral-900/40">Targets</AccordionTrigger>
+            <AccordionTrigger class="bg-neutral-100 px-3 py-2 text-sm dark:bg-neutral-900/40">Targets</AccordionTrigger>
             <AccordionContent>
               <StimulusControllerTargets :instance="selectedInstance" />
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="outlets">
-            <AccordionTrigger class="px-3 py-2 text-sm bg-neutral-100 dark:bg-neutral-900/40">Outlets</AccordionTrigger>
+            <AccordionTrigger class="bg-neutral-100 px-3 py-2 text-sm dark:bg-neutral-900/40">Outlets</AccordionTrigger>
             <AccordionContent>
               <StimulusControllerOutlets :instance="selectedInstance" />
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="classes">
-            <AccordionTrigger class="px-3 py-2 text-sm bg-neutral-100 dark:bg-neutral-900/40">Classes</AccordionTrigger>
+            <AccordionTrigger class="bg-neutral-100 px-3 py-2 text-sm dark:bg-neutral-900/40">Classes</AccordionTrigger>
             <AccordionContent>
               <StimulusControllerClasses :instance="selectedInstance" />
             </AccordionContent>

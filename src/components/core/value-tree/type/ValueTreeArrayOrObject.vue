@@ -1,7 +1,7 @@
 <template>
-  <ValueTreeWrapper :name has-children @delete="$emit('delete')">
+  <ValueTreeWrapper :name :level has-children @delete="$emit('delete')">
     <template #value>
-      <span type="button" class="text-muted-foreground select-none">
+      <span type="button" class="select-none text-muted-foreground">
         <template v-if="Array.isArray(modelValue)"> Array ({{ modelValue.length }}) </template>
         <template v-else> Object </template>
       </span>

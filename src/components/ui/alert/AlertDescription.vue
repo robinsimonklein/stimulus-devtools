@@ -3,6 +3,7 @@ import type { HTMLAttributes } from 'vue';
 import { cn } from '@/lib/utils';
 
 const props = defineProps<{
+  // eslint-disable-next-line vue/no-reserved-props
   class?: HTMLAttributes['class'];
 }>();
 </script>

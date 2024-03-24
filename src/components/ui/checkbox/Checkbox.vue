@@ -5,10 +5,12 @@ import { CheckboxIndicator, CheckboxRoot, useForwardPropsEmits } from 'radix-vue
 import { Check } from 'lucide-vue-next';
 import { cn } from '@/lib/utils';
 
+// eslint-disable-next-line vue/no-reserved-props
 const props = defineProps<CheckboxRootProps & { class?: HTMLAttributes['class'] }>();
 const emits = defineEmits<CheckboxRootEmits>();
 
 const delegatedProps = computed(() => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { class: _, ...delegated } = props;
 
   return delegated;

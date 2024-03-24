@@ -3,17 +3,17 @@
     <div class="group inline-flex items-center" :class="{ 'cursor-pointer': hasChildren }">
       <div class="inline-flex items-center" @click="toggle">
         <span
-          class="inline-block w-[16px] h-[16px] shrink-0 mr-1"
+          class="mr-1 inline-block h-[16px] w-[16px] shrink-0"
           :style="{
             marginLeft: `${level * 16}px`,
           }"
         >
-          <ChevronRight v-if="hasChildren" class="w-full h-full" :class="{ 'rotate-90': showChildren }" />
+          <ChevronRight v-if="hasChildren" class="h-full w-full" :class="{ 'rotate-90': showChildren }" />
         </span>
 
-        <span class="text-sm font-mono select-none">
+        <span class="select-none font-mono text-sm">
           <span class="text-indigo-600 dark:text-indigo-400">{{ name }}</span>
-          <span class="text-muted-foreground ml-0.5">:</span>
+          <span class="ml-0.5 text-muted-foreground">:</span>
         </span>
 
         <div class="ml-1">
@@ -22,8 +22,8 @@
 
         <!-- Actions -->
         <div
-          v-if="$slots.actions"
-          class="inline-flex items-center gap-x-1 ml-2"
+          v-if="$slots.actions || hasChildren"
+          class="ml-2 inline-flex items-center gap-x-1"
           :class="{ 'opacity-0 group-hover:opacity-100': !keepActionsVisible }"
         >
           <!-- Actions -->
@@ -31,14 +31,14 @@
 
           <!-- Delete -->
           <Button v-if="level > 0" size="icon-sm" variant="ghost" @click="$emit('delete')">
-            <Trash2 class="w-3.5 h-3.5" />
+            <Trash2 class="h-3.5 w-3.5" />
           </Button>
 
           <!-- More -->
           <Popover v-if="$slots.more">
             <PopoverTrigger>
               <Button variant="ghost" size="icon-sm">
-                <EllipsisVertical class="w-3.5 h-3.5" />
+                <EllipsisVertical class="h-3.5 w-3.5" />
               </Button>
             </PopoverTrigger>
             <PopoverContent>

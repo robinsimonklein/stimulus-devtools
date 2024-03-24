@@ -3,11 +3,14 @@ import { type HTMLAttributes, computed } from 'vue';
 import { ScrollAreaScrollbar, type ScrollAreaScrollbarProps, ScrollAreaThumb } from 'radix-vue';
 import { cn } from '@/lib/utils';
 
+// eslint-disable-next-line vue/no-reserved-props
 const props = withDefaults(defineProps<ScrollAreaScrollbarProps & { class?: HTMLAttributes['class'] }>(), {
   orientation: 'vertical',
+  class: undefined,
 });
 
 const delegatedProps = computed(() => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { class: _, ...delegated } = props;
 
   return delegated;

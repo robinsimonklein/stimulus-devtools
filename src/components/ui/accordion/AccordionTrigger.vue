@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import { type HTMLAttributes, computed } from 'vue'
-import {
-  AccordionHeader,
-  AccordionTrigger,
-  type AccordionTriggerProps,
-} from 'radix-vue'
-import { ChevronDown } from 'lucide-vue-next'
-import { cn } from '@/lib/utils'
+import { type HTMLAttributes, computed } from 'vue';
+import { AccordionHeader, AccordionTrigger, type AccordionTriggerProps } from 'radix-vue';
+import { ChevronDown } from 'lucide-vue-next';
+import { cn } from '@/lib/utils';
 
-const props = defineProps<AccordionTriggerProps & { class?: HTMLAttributes['class'] }>()
+// eslint-disable-next-line vue/no-reserved-props
+const props = defineProps<AccordionTriggerProps & { class?: HTMLAttributes['class'] }>();
 
 const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { class: _, ...delegated } = props;
 
-  return delegated
-})
+  return delegated;
+});
 </script>
 
 <template>
@@ -30,9 +28,7 @@ const delegatedProps = computed(() => {
     >
       <slot />
       <slot name="icon">
-        <ChevronDown
-          class="h-4 w-4 shrink-0 transition-transform duration-200"
-        />
+        <ChevronDown class="h-4 w-4 shrink-0 transition-transform duration-200" />
       </slot>
     </AccordionTrigger>
   </AccordionHeader>

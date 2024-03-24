@@ -1,8 +1,8 @@
 <template>
   <div class="absolute inset-0 flex flex-col items-center justify-center px-2">
     <div class="inline-flex items-center">
-      <StimulusLogo class="w-5 h-5 sm:w-8 sm:h-8" />
-      <p class="text-xl sm:text-3xl font-bold ml-2">
+      <StimulusLogo class="h-5 w-5 sm:h-8 sm:w-8" />
+      <p class="ml-2 text-xl font-bold sm:text-3xl">
         <span>Stimulus</span>
         <span class="ml-1" style="color: #d9c6a4">DevTools</span>
       </p>

@@ -6,6 +6,6 @@
 
 <style scoped>
 :slotted(svg) {
-  @apply w-4 h-4 opacity-60 hover:opacity-100;
+  @apply h-4 w-4 opacity-60 hover:opacity-100;
 }
 </style>

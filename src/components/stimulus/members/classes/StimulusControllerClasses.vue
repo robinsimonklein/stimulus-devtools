@@ -5,7 +5,7 @@
     </template>
 
     <template v-else>
-      <p class="text-muted-foreground text-sm">No class.</p>
+      <p class="text-sm text-muted-foreground">No class.</p>
     </template>
   </div>
 </template>

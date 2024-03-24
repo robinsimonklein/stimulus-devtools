@@ -17,16 +17,16 @@
         'before:opacity-0 hover:before:opacity-100',
         isResizing && 'before:opacity-100',
         orientation === 'horizontal'
-          ? 'before:top-0 before:bottom-0 before:left-1/2 before:ml-[-1.5px]'
+          ? 'before:bottom-0 before:left-1/2 before:top-0 before:ml-[-1.5px]'
           : 'before:left-0 before:right-0 before:top-1/2 before:mt-[-1.5px]',
-        orientation === 'horizontal' ? 'before:w-[3px] before:h-full' : 'before:w-full before:h-[3px]',
+        orientation === 'horizontal' ? 'before:h-full before:w-[3px]' : 'before:h-[3px] before:w-full',
         // After
         'after:block',
         'after:absolute',
         orientation === 'horizontal'
-          ? 'after:top-0 after:bottom-0 after:left-1/2 after:ml-[-3px]'
+          ? 'after:bottom-0 after:left-1/2 after:top-0 after:ml-[-3px]'
           : 'after:left-0 after:right-0 after:top-1/2 after:mt-[-3px]',
-        orientation === 'horizontal' ? 'after:w-[6px] after:h-full' : 'after:w-full after:h-[6px]',
+        orientation === 'horizontal' ? 'after:h-full after:w-[6px]' : 'after:h-[6px] after:w-full',
       ]"
       :style="{
         width: orientation === 'horizontal' ? '1px' : '100%',

@@ -1,23 +1,23 @@
 <template>
-  <div class="flex flex-col h-full overflow-hidden">
-    <div class="relative flex items-center w-full border-b border-b-neutral-200 dark:border-b-neutral-800">
+  <div class="flex h-full flex-col overflow-hidden">
+    <div class="relative flex w-full items-center border-b border-b-neutral-200 dark:border-b-neutral-800">
       <div class="flex-1">
         <input
           ref="searchInput"
           v-model="query"
-          class="peer border-none w-full pl-8 pr-2 py-1.5 text-sm placeholder-neutral-400 dark:placeholder-neutral-600 bg-transparent rounded-none focus-visible:outline-none appearance-none"
+          class="peer w-full appearance-none rounded-none border-none bg-transparent py-1.5 pl-8 pr-2 text-sm placeholder-neutral-400 focus-visible:outline-none dark:placeholder-neutral-600"
           type="text"
           placeholder="Find a controller..."
         />
         <span
-          class="absolute top-1/2 left-2 -mt-2 text-neutral-400 dark:text-neutral-600 peer-focus:text-muted-foreground pointer-events-none"
+          class="pointer-events-none absolute left-2 top-1/2 -mt-2 text-neutral-400 peer-focus:text-muted-foreground dark:text-neutral-600"
         >
-          <Search class="w-4 h-4" />
+          <Search class="h-4 w-4" />
         </span>
       </div>
-      <Button class="mr-2" size="icon-sm" variant="ghost" @click="refresh"> <RotateCcw class="w-3.5 h-3.5" /> </Button>
+      <Button class="mr-2" size="icon-sm" variant="ghost" @click="refresh"> <RotateCcw class="h-3.5 w-3.5" /> </Button>
     </div>
-    <div class="overflow-auto flex-1 h-full">
+    <div class="h-full flex-1 overflow-auto">
       <div class="inline-block min-w-full">
         <StimulusControllerDefinitionsRow
           v-for="definition in filteredDefinitions"

@@ -4,6 +4,7 @@ import { ScrollAreaCorner, ScrollAreaRoot, type ScrollAreaRootProps, ScrollAreaV
 import ScrollBar from './ScrollBar.vue';
 import { cn } from '@/lib/utils';
 
+// eslint-disable-next-line vue/no-reserved-props
 const props = defineProps<ScrollAreaRootProps & { class?: HTMLAttributes['class'] }>();
 
 const delegatedProps = computed(() => {

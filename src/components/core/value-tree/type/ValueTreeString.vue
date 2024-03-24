@@ -7,12 +7,12 @@
             ref="editInput"
             v-model="tempValue"
             type="text"
-            class="text-purple-600 dark:text-purple-400 font-mono dark:bg-neutral-800 px-1.5 py-0.5 rounded-sm"
+            class="rounded-sm px-1.5 py-0.5 font-mono text-purple-600 dark:bg-neutral-800 dark:text-purple-400"
             @keydown.esc.stop="cancel"
           />
         </form>
       </div>
-      <span v-else class="inline-block text-purple-600 dark:text-purple-400 font-mono">
+      <span v-else class="inline-block font-mono text-purple-600 dark:text-purple-400">
         "{{ modelValue.toString() }}"
       </span>
     </template>
@@ -20,14 +20,14 @@
       <!-- Edit -->
       <template v-if="isEditing">
         <Button ref="saveButton" size="icon-sm" variant="secondary" @click="save">
-          <Check class="w-3.5 h-3.5" />
+          <Check class="h-3.5 w-3.5" />
         </Button>
         <Button ref="cancelButton" size="icon-sm" variant="secondary" @click="cancel">
-          <XIcon class="w-3.5 h-3.5" />
+          <XIcon class="h-3.5 w-3.5" />
         </Button>
       </template>
       <template v-else>
-        <Button size="icon-sm" variant="ghost" @click="edit"><Pencil class="w-3.5 h-3.5" /></Button>
+        <Button size="icon-sm" variant="ghost" @click="edit"><Pencil class="h-3.5 w-3.5" /></Button>
       </template>
     </template>
     <template v-if="$slots.more" #more>

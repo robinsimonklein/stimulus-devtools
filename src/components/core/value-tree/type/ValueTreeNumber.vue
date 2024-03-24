@@ -8,14 +8,14 @@
             v-model="tempValue"
             type="number"
             step="any"
-            class="text-blue-600 dark:text-blue-400 font-mono dark:bg-neutral-800 px-1.5 py-0.5 rounded-sm"
+            class="rounded-sm px-1.5 py-0.5 font-mono text-blue-600 dark:bg-neutral-800 dark:text-blue-400"
             @keydown.up.stop.prevent="tempValue += 1"
             @keydown.down.stop.prevent="tempValue -= 1"
             @keydown.esc.stop="cancel"
           />
         </form>
       </div>
-      <span v-else class="inline-block text-blue-600 dark:text-blue-400 font-mono">
+      <span v-else class="inline-block font-mono text-blue-600 dark:text-blue-400">
         {{ modelValue.toString() }}
       </span>
     </template>
@@ -23,14 +23,14 @@
       <!-- Edit -->
       <template v-if="isEditing">
         <Button ref="saveButton" size="icon-sm" variant="secondary" @click="save">
-          <Check class="w-3.5 h-3.5" />
+          <Check class="h-3.5 w-3.5" />
         </Button>
         <Button ref="cancelButton" size="icon-sm" variant="secondary" @click="cancel">
-          <XIcon class="w-3.5 h-3.5" />
+          <XIcon class="h-3.5 w-3.5" />
         </Button>
       </template>
       <template v-else>
-        <Button size="icon-sm" variant="ghost" @click="edit"><Pencil class="w-3.5 h-3.5" /></Button>
+        <Button size="icon-sm" variant="ghost" @click="edit"><Pencil class="h-3.5 w-3.5" /></Button>
       </template>
     </template>
     <template v-if="$slots.more" #more>

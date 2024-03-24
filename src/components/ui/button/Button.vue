@@ -8,10 +8,14 @@ interface Props extends PrimitiveProps {
   variant?: ButtonVariants['variant'];
   size?: ButtonVariants['size'];
   as?: string;
+  // eslint-disable-next-line vue/no-reserved-props
   class?: HTMLAttributes['class'];
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  variant: 'default',
+  size: 'default',
+  class: undefined,
   as: 'button',
 });
 </script>

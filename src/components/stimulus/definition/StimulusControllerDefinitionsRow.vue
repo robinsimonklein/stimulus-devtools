@@ -1,28 +1,32 @@
 <template>
   <div
-    class="group inline-flex items-center gap-x-3 min-w-full px-3 py-2 text-sm cursor-pointer hover:bg-muted/60 border-b border-dashed dark:border-b-neutral-900"
+    class="group inline-flex min-w-full cursor-pointer items-center gap-x-3 border-b border-dashed px-3 py-2 text-sm hover:bg-muted/60 dark:border-b-neutral-900"
     :class="{ 'is-selected !bg-muted': selectedDefinition?.identifier === definition.identifier }"
     @click="selectDefinition(definition.identifier)"
   >
     <div
-      class="shrink-0 inline-flex items-center gap-x-1.5 opacity-70 group-hover:opacity-100 group-[.is-selected]:opacity-100"
+      class="inline-flex shrink-0 items-center gap-x-1.5 opacity-70 group-hover:opacity-100 group-[.is-selected]:opacity-100"
     >
       <template v-for="(item, index) in path">
-        <span v-if="index < path.length - 1" class="shrink-0 text-muted-foreground">{{ item }}</span>
-        <span v-else class="shrink-0 group-hover:underline group-[.is-selected]:underline underline-offset-2">
+        <span v-if="index < path.length - 1" :key="index" class="shrink-0 text-muted-foreground">{{ item }}</span>
+        <span
+          v-else
+          :key="index"
+          class="shrink-0 underline-offset-2 group-hover:underline group-[.is-selected]:underline"
+        >
           {{ item }}
         </span>
-        <span v-if="index < path.length - 1" class="text-muted-foreground">/</span>
+        <span v-if="index < path.length - 1" :key="index" class="text-muted-foreground">/</span>
       </template>
     </div>
     <span
       v-if="definition.instances.length > 1"
-      class="shrink-0 text-xs px-1.5 py-0.5 bg-neutral-200 dark:bg-neutral-700 opacity-70 group-hover:opacity-100 group-[.is-selected]:opacity-100 rounded-sm"
+      class="shrink-0 rounded-sm bg-neutral-200 px-1.5 py-0.5 text-xs opacity-70 group-hover:opacity-100 group-[.is-selected]:opacity-100 dark:bg-neutral-700"
     >
       x{{ definition.instances.length }}
     </span>
     <span v-if="definition.isLazyController" title="Lazy Controller">
-      <Zap class="w-3.5 h-3.5" style="color: #c8a213" />
+      <Zap class="h-3.5 w-3.5" style="color: #c8a213" />
     </span>
   </div>
 </template>

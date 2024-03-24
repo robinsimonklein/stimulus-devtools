@@ -1,8 +1,8 @@
 <template>
   <div class="group">
     <ScrollArea class="relative">
-      <CopyButton class="absolute top-2 right-2 transition-opacity opacity-0 group-hover:opacity-100" :text="code" />
-      <div class="whitespace-pre p-4 text-sm font-mono" v-html="highlightedCode" />
+      <CopyButton class="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100" :text="code" />
+      <div class="whitespace-pre p-4 font-mono text-sm" v-html="highlightedCode" />
       <ScrollBar orientation="horizontal" />
     </ScrollArea>
   </div>

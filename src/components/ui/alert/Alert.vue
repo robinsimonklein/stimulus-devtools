@@ -4,6 +4,7 @@ import { type AlertVariants, alertVariants } from '.';
 import { cn } from '@/lib/utils';
 
 const props = defineProps<{
+  // eslint-disable-next-line vue/no-reserved-props
   class?: HTMLAttributes['class'];
   variant?: AlertVariants['variant'];
 }>();

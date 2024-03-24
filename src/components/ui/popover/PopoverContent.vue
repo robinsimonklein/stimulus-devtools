@@ -13,8 +13,10 @@ defineOptions({
   inheritAttrs: false,
 });
 
+// eslint-disable-next-line vue/no-reserved-props
 const props = withDefaults(defineProps<PopoverContentProps & { class?: HTMLAttributes['class'] }>(), {
   align: 'center',
+  class: undefined,
   sideOffset: 4,
 });
 const emits = defineEmits<PopoverContentEmits>();

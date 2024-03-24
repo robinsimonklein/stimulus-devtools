@@ -8,7 +8,7 @@
         @click="toggle"
       >
         <span class="mr-1" :class="{ 'rotate-90': canExpand && expanded }">
-          <ChevronRight class="w-4 h-4" />
+          <ChevronRight class="h-4 w-4" />
         </span>
         <span class="underline-offset-2" :class="{ 'group-hover:underline': canExpand }">
           {{ cssClass.name }} ({{ cssClass.classNames.length }})
@@ -16,7 +16,7 @@
       </button>
       <Popover>
         <PopoverTrigger>
-          <Button class="ml-1.5" variant="ghost" size="icon-sm"><EllipsisVertical class="w-3.5 h-3.5" /></Button>
+          <Button class="ml-1.5" variant="ghost" size="icon-sm"><EllipsisVertical class="h-3.5 w-3.5" /></Button>
         </PopoverTrigger>
         <PopoverContent align="center" side="right">
           <table class="w-full">

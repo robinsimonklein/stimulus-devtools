@@ -1,13 +1,16 @@
 <template>
   <ValueTreeWrapper :name :level @delete="$emit('delete')">
     <template #value>
-      <span class="inline-block min-w-[43px] text-green-600 dark:text-green-400 font-mono">
+      <span class="inline-block min-w-[43px] font-mono text-green-600 dark:text-green-400">
         {{ modelValue.toString() }}
       </span>
     </template>
     <template #actions>
       <!-- Edit -->
-      <Checkbox v-model:checked="modelValue" />
+      <Button size="icon-sm" variant="ghost" @click="modelValue = !modelValue">
+        <SquareCheck v-if="modelValue" class="h-4 w-4" />
+        <Square v-else class="h-4 w-4" />
+      </Button>
     </template>
     <template v-if="$slots.more" #more>
       <slot name="more" />
@@ -17,7 +20,8 @@
 
 <script setup lang="ts">
 import ValueTreeWrapper from '@/components/core/value-tree/ValueTreeWrapper.vue';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/ui/button';
+import { Square, SquareCheck } from 'lucide-vue-next';
 
 withDefaults(
   defineProps<{
