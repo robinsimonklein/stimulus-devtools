@@ -117,10 +117,10 @@ function resize(e: PointerEvent) {
         props.max,
       );
     } else {
-      return (size.value = Math.min(
+      return Math.min(
         Math.max(startSize.value + (e.clientY - startY.value) / container.value!.clientHeight, props.min),
         props.max,
-      ));
+      );
     }
   };
 
