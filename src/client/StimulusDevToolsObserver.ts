@@ -279,7 +279,9 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     const controller = _stimulus_getControllerFromInstance(instance);
     if (!controller) return;
 
-    const outletNames = controller.context['outletObserver'].outletDefinitions as string[];
+    const outletNames = controller.context['outletObserver']?.outletDefinitions as string[] | undefined;
+    // Ignore if no outlet (Stimulus < v3.2)
+    if (!outletNames) return;
 
     const outlets = outletNames.map(outletName => {
       const outletReferences = controller.context['outletObserver'].outletsByName
