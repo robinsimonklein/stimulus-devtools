@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full items-center py-0.5">
+  <div class="flex w-full items-center py-0">
     <ValueTree :name="value.name" :model-value="value.currentValue" @update:model-value="onValueUpdate">
       <template #definition>
         <table class="w-full">

@@ -16,7 +16,7 @@
           <span class="ml-0.5 text-muted-foreground">:</span>
         </span>
 
-        <div class="ml-1">
+        <div class="ml-1 shrink-0">
           <slot name="value" />
         </div>
 
