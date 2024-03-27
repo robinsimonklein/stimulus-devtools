@@ -55,6 +55,14 @@ module.exports = {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
         },
+        // Code
+        'code-blue': 'hsl(var(--code-blue))',
+        'code-blue-secondary': 'hsl(var(--code-blue-secondary))',
+        'code-navy': 'hsl(var(--code-navy))',
+        'code-orange': 'hsl(var(--code-orange))',
+        'code-red': 'hsl(var(--code-red))',
+        'code-purple': 'hsl(var(--code-purple))',
+        'code-green': 'hsl(var(--code-green))',
         popover: {
           DEFAULT: 'hsl(var(--popover))',
           foreground: 'hsl(var(--popover-foreground))',

@@ -12,7 +12,7 @@
         </span>
 
         <span class="select-none font-mono text-sm">
-          <span class="text-indigo-600 dark:text-indigo-400">{{ name }}</span>
+          <span class="text-code-navy">{{ name }}</span>
           <span class="ml-0.5 text-muted-foreground">:</span>
         </span>
 

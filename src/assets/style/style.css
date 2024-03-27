@@ -38,6 +38,13 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
+    --code-blue: 212 100% 39%;
+    --code-navy: 212 94% 20%;
+    --code-orange: 24 92% 46%;
+    --code-red: 354 66% 54%;
+    --code-purple: 261 51% 51%;
+    --code-green: 134 60% 33%;
+
     --ring: 240 10% 3.9%;
 
     --radius: 0.5rem;
@@ -73,6 +80,13 @@
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
+
+    --code-blue: 212 100% 39%;
+    --code-navy: 212 100% 81%;
+    --code-orange: 25 100% 72%;
+    --code-red: 354 92% 72%;
+    --code-purple: 261 76% 76%;
+    --code-green: 135 68% 72%;
 
     --ring: 240 4.9% 83.9%;
   }

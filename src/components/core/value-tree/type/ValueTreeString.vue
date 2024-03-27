@@ -7,14 +7,12 @@
             ref="editInput"
             v-model="tempValue"
             type="text"
-            class="rounded-sm px-1.5 py-0.5 font-mono text-purple-600 dark:bg-neutral-800 dark:text-purple-400"
+            class="text-code-purple rounded-sm px-1.5 py-0.5 font-mono dark:bg-neutral-800"
             @keydown.esc.stop="cancel"
           />
         </form>
       </div>
-      <span v-else class="inline-block font-mono text-purple-600 dark:text-purple-400">
-        "{{ modelValue.toString() }}"
-      </span>
+      <span v-else class="text-code-purple inline-block font-mono"> "{{ modelValue.toString() }}" </span>
     </template>
     <template #actions>
       <!-- Edit -->
