@@ -1,7 +1,7 @@
 <template>
   <SplitPane
     class="absolute inset-0"
-    :size="instanceSplit.size"
+    :size="splitSize.size"
     :min="0.2"
     :max="0.8"
     :orientation="splitPaneOrientation"
@@ -28,7 +28,7 @@
     </template>
     <template #b>
       <div v-if="selectedInstance" class="absolute inset-0 overflow-y-auto">
-        <Accordion v-model="detailsAccordion" type="multiple" collapsible>
+        <Accordion v-model="tabs" type="multiple" collapsible>
           <AccordionItem value="values">
             <AccordionTrigger class="bg-neutral-100 px-3 py-2 text-sm dark:bg-neutral-900/40">Values</AccordionTrigger>
             <AccordionContent>
@@ -80,10 +80,24 @@ const props = defineProps<{
 }>();
 
 const selectedInstance = ref<ParsedStimulusControllerInstance | null>(null);
-const detailsAccordion = ref<string[]>(['values', 'targets', 'outlets', 'classes']);
 
 const { definition } = useControllerDefinition(toRef(props, 'identifier'));
-const instanceSplit = useChromeStorage('instanceSplit', { size: 0.3 });
+const splitSize = useChromeStorage('stimulus-devtools:details:splitSize', {
+  size: 0.3,
+});
+const accordion = useChromeStorage('stimulus-devtools:details:accordion', {
+  activeTabs: 'values/targets/outlets/classes',
+});
+
+const tabs = computed({
+  get() {
+    return accordion.value?.activeTabs?.split('/') || [];
+  },
+  set(newTabs) {
+    console.log({ newTabs });
+    accordion.value = { activeTabs: newTabs.join('/') };
+  },
+});
 
 const { width: windowWidth } = useWindowSize();
 const splitPaneOrientation = computed(() => (windowWidth.value > 960 ? 'horizontal' : 'vertical'));
@@ -98,7 +112,7 @@ const onControllersUpdate = () => {
 };
 
 const handleInstanceSplitResize = (size: number) => {
-  instanceSplit.value = { size };
+  splitSize.value = { size };
 };
 
 watch(

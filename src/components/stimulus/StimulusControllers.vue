@@ -28,7 +28,7 @@ import { useChromeStorage } from '@/composables/useChromeStorage.ts';
 const { width: windowWidth } = useWindowSize();
 const { selectedDefinition, refresh } = useControllerDefinitions();
 
-const mainSplit = useChromeStorage('mainSplit', { size: 0.3 });
+const mainSplit = useChromeStorage('stimulus-devtools:mainSplit', { size: 0.3 });
 
 const splitPaneOrientation = computed(() => (windowWidth.value > 540 ? 'horizontal' : 'vertical'));
 
