@@ -27,6 +27,10 @@ module.exports = {
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        stimulus: {
+          DEFAULT: 'hsl(var(--stimulus))',
+          foreground: 'hsl(var(--stimulus-foreground))',
+        },
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
@@ -66,9 +70,6 @@ module.exports = {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
-      backgroundImage: {
-        'mezcalito-gradient': 'linear-gradient(90deg, rgb(68, 193, 216) 0%, rgb(238, 38, 66) 100%);',
-      },
       keyframes: {
         pin: {
           from: { transform: 'scale(0)' },
@@ -97,9 +98,6 @@ module.exports = {
         'accordion-up': 'accordion-up 0.2s ease-out',
         'collapsible-down': 'collapsible-down 0.2s ease-in-out',
         'collapsible-up': 'collapsible-up 0.2s ease-in-out',
-      },
-      transitionTimingFunction: {
-        'back-out': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
       },
     },
   },

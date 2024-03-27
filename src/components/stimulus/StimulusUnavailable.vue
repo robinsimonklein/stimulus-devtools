@@ -4,7 +4,7 @@
       <StimulusLogo class="h-5 w-5 sm:h-8 sm:w-8" />
       <p class="ml-2 text-xl font-bold sm:text-3xl">
         <span>Stimulus</span>
-        <span class="ml-1" style="color: #d9c6a4">DevTools</span>
+        <span class="text-stimulus ml-1">DevTools</span>
       </p>
     </div>
     <div class="mt-14 text-center">
