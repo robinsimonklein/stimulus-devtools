@@ -28,5 +28,4 @@ Contributions are welcome! Before getting started, please review our contributio
 
 ## License
 
-[//]: # (TODO: Choose a license)
 This project is licensed under the [MIT License](LICENSE).
