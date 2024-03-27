@@ -94,7 +94,6 @@ const tabs = computed({
     return accordion.value?.activeTabs?.split('/') || [];
   },
   set(newTabs) {
-    console.log({ newTabs });
     accordion.value = { activeTabs: newTabs.join('/') };
   },
 });

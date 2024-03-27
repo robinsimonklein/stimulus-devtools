@@ -20,6 +20,7 @@
   },
   "rules": {
     "prettier/prettier": "error",
+    "no-console": ["error", { "allow": ["warn", "error"] }],
     // Typescript
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-comment": "off",
