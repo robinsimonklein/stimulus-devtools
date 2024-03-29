@@ -1,17 +1,18 @@
-<h1 align="center">
+<div align="center">
+    <br>
     <img style="max-width: 100%; width: 360px; height: auto;" src=".docs/stimulus_devtools_logo.svg" alt="Stimulus DevTools" />
-    <span style="position: absolute; width: 0; height: 0; opacity: 0;">Stimulus DevTools</span>
-</h1>
+    <br>
+</div>
 
 <h4 align="center">A developer tool for debugging Stimulus applications at runtime.</h4>
 
 ## Overview
 
-![Screenshot](.docs/screenshot.jpg)
-
 The Stimulus DevTools Chrome Extension is an open-source tool designed to simplify the process of debugging [Stimulus](https://stimulus.hotwired.dev/) on a web page. It provides a user-friendly interface for inspecting values, targets, outlets, and classes of Stimulus controllers, all directly from Chrome's DevTools.
 
 *Inspired by the amazing [Vue DevTools](https://github.com/vuejs/devtools) and [Nuxt DevTools](https://github.com/nuxt/devtools).*
+
+![Screenshot](.docs/screenshot.jpg)
 
 ## Features
 
