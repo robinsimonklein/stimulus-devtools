@@ -1,7 +1,7 @@
 <template>
   <div class="group inline-flex items-center">
-    <component :is="typeData.icon" :class="['mr-1', 'w-3.5', 'h-3.5', typeData.color]" />
-    <span class="text-sm underline-offset-2" :class="{ 'group-hover:underline': clickable }">{{ typeData.label }}</span>
+    <component :is="typeData.icon" :class="['mr-1', 'w-3', 'h-3', typeData.color]" />
+    <span class="underline-offset-2" :class="{ 'group-hover:underline': clickable }">{{ typeData.label }}</span>
   </div>
 </template>
 
@@ -15,27 +15,27 @@ const valueTypes: Record<ValueType, { label: string; icon: Component; color: str
   string: {
     label: 'String',
     icon: CaseSensitive,
-    color: 'text-orange-700 dark:text-orange-500',
+    color: 'text-code-purple',
   },
   number: {
     label: 'Number',
     icon: Hash,
-    color: 'text-blue-700 dark:text-blue-500',
+    color: 'text-code-orange',
   },
   boolean: {
     label: 'Boolean',
     icon: ToggleRight,
-    color: 'text-green-700 dark:text-green-500',
+    color: 'text-code-green',
   },
   object: {
     label: 'Object',
     icon: Braces,
-    color: 'text-purple-700 dark:text-purple-500',
+    color: 'text-code-red',
   },
   array: {
     label: 'Array',
     icon: Brackets,
-    color: 'text-cyan-700 dark:text-cyan-500',
+    color: 'text-code-red',
   },
 };
 

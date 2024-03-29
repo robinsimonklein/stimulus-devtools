@@ -1,7 +1,7 @@
 <template>
   <div class="flex w-full items-center py-0">
     <ValueTree :name="value.name" :model-value="value.currentValue" @update:model-value="onValueUpdate">
-      <template #definition>
+      <template #more>
         <table class="w-full">
           <tr>
             <td>Type</td>
@@ -9,11 +9,10 @@
           </tr>
           <tr v-if="value.defaultValue">
             <td>Default</td>
-            <td>{{ value.defaultValue }}</td>
+            <CodeInline :code="value.defaultValue.toString()" language="javascript" />
           </tr>
         </table>
-      </template>
-      <template #more>
+        <hr class="my-2" />
         <table class="w-full">
           <tr>
             <td><CodeInline :code="value.htmlAttribute" language="css" /></td>
