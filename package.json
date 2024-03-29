@@ -3,7 +3,7 @@
   "displayName": "Stimulus DevTools",
   "description": "A developer tool for inspecting and debugging Stimulus applications.",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "NODE_ENV=development vite build --watch",
