@@ -1,36 +1,47 @@
 <template>
   <ValueTreeWrapper :name :level :keep-actions-visible="isEditing" @delete="$emit('delete')">
     <template #value>
-      <div v-if="isEditing" class="inline-flex">
-        <form @submit.prevent="save">
-          <input
-            ref="editInput"
-            v-model="tempValue"
-            type="number"
-            step="any"
-            class="rounded-sm px-1.5 py-0.5 font-mono text-code-orange dark:bg-neutral-800"
-            @keydown.up.stop.prevent="tempValue += 1"
-            @keydown.down.stop.prevent="tempValue -= 1"
-            @keydown.esc.stop="cancel"
-          />
-        </form>
+      <div class="inline-flex shrink-0">
+        <span
+          ref="valueElement"
+          class="inline-block font-mono text-code-orange"
+          :class="{ '-ml-1 px-1.5 py-0.5': isEditing, 'outline-destructive': isEditing && !isValid }"
+          spellcheck="false"
+          :contenteditable="isEditing"
+          @input="validate"
+          @keydown.enter.prevent.stop="save"
+          @keydown.esc.prevent.stop="cancel"
+          @keydown.up.prevent.stop="increment"
+          @keydown.down.prevent.stop="decrement"
+          @blur="onBlur"
+        />
       </div>
-      <span v-else class="inline-block font-mono text-code-orange">
-        {{ modelValue.toString() }}
-      </span>
     </template>
     <template #actions>
       <!-- Edit -->
       <template v-if="isEditing">
-        <Button ref="saveButton" size="icon-sm" variant="secondary" @click="save">
+        <Button
+          v-if="isValid"
+          :id="`value-save-${name}-${level}`"
+          ref="saveButton"
+          size="icon-sm"
+          variant="secondary"
+          @click="save"
+        >
           <Check class="h-3.5 w-3.5" />
         </Button>
+        <span
+          v-else
+          class="inline-flex h-6 w-6 items-center justify-center rounded-md bg-destructive text-destructive-foreground"
+        >
+          <TriangleAlert class="h-3.5 w-3.5" />
+        </span>
         <Button ref="cancelButton" size="icon-sm" variant="secondary" @click="cancel">
           <XIcon class="h-3.5 w-3.5" />
         </Button>
       </template>
       <template v-else>
-        <Button size="icon-sm" variant="ghost" @click="edit"><Pencil class="h-3.5 w-3.5" /></Button>
+        <Button ref="editButton" size="icon-sm" variant="ghost" @click="edit"><Pencil class="h-3.5 w-3.5" /></Button>
       </template>
     </template>
     <template v-if="$slots.more" #more>
@@ -40,13 +51,12 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref } from 'vue';
-import { onClickOutside } from '@vueuse/core';
+import { nextTick, onMounted, ref, watch } from 'vue';
 import ValueTreeWrapper from '@/components/core/value-tree/ValueTreeWrapper.vue';
 import { Button } from '@/components/ui/button';
-import { Pencil, Check, XIcon } from 'lucide-vue-next';
+import { Pencil, Check, XIcon, TriangleAlert } from 'lucide-vue-next';
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     name: string;
     level?: number;
@@ -60,31 +70,81 @@ const modelValue = defineModel<number>({ required: true });
 
 defineEmits(['delete']);
 
-const editInput = ref<HTMLInputElement | null>(null);
+const valueElement = ref<HTMLInputElement | null>(null);
+const editButton = ref<HTMLButtonElement | null>(null);
 const cancelButton = ref<HTMLButtonElement | null>(null);
 const saveButton = ref<HTMLButtonElement | null>(null);
 
 const isEditing = ref(false);
-const tempValue = ref(0);
+const isValid = ref(false);
+
+const validate = () => {
+  if (!valueElement.value) return;
+  const value = valueElement.value.innerText;
+  isValid.value = /^-?\d+(\.\d{1,2})?$/.test(value);
+};
+
+const decrement = () => {
+  if (!isEditing.value) return;
+  if (!valueElement.value) return;
+  const value = parseFloat(valueElement.value.innerText);
+  if (!isNaN(value)) valueElement.value.innerText = (value - 1).toString();
+};
+
+const increment = () => {
+  if (!isEditing.value) return;
+  if (!valueElement.value) return;
+  const value = parseFloat(valueElement.value.innerText);
+  if (!isNaN(value)) valueElement.value.innerText = (value + 1).toString();
+};
 
 const edit = () => {
-  tempValue.value = modelValue.value;
   isEditing.value = true;
+
   nextTick(() => {
-    if (editInput.value) editInput.value.focus();
+    if (!valueElement.value) return;
+    const range = document.createRange();
+    const sel = window.getSelection();
+    range.setStart(valueElement.value.childNodes[0], modelValue.value.toString().length);
+    range.collapse(true);
+    sel?.removeAllRanges();
+    sel?.addRange(range);
+    valueElement.value.focus();
+    validate();
   });
 };
 
 const save = () => {
-  modelValue.value = tempValue.value;
+  validate();
+  if (!isValid.value) return;
+  if (!valueElement.value) return;
   isEditing.value = false;
-  tempValue.value = 0;
+  modelValue.value = parseFloat(valueElement.value.innerText);
 };
 
 const cancel = () => {
+  if (!isEditing.value) return;
+  if (!valueElement.value) return;
+  valueElement.value.innerText = modelValue.value.toString();
   isEditing.value = false;
-  tempValue.value = 0;
 };
 
-onClickOutside(editInput, cancel, { ignore: [saveButton, cancelButton] });
+const onBlur = (e: FocusEvent) => {
+  if ((e.relatedTarget as HTMLElement)?.id === `value-save-${props.name}-${props.level}`) return;
+  cancel();
+};
+
+watch(modelValue, newValue => {
+  // Prevent overriding current editing value
+  if (isEditing.value) return;
+  if (!valueElement.value) return;
+  valueElement.value.innerText = newValue.toString();
+  validate();
+});
+
+onMounted(() => {
+  if (!valueElement.value) return;
+  valueElement.value.innerText = modelValue.value.toString();
+  validate();
+});
 </script>

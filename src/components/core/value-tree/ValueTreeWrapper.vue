@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="group inline-flex items-center" :class="{ 'cursor-pointer': hasChildren }">
-      <div class="inline-flex items-center">
-        <div class="inline-flex items-center" @click="toggle">
+      <div class="inline-flex shrink-0 items-center">
+        <div class="inline-flex shrink-0 items-center" @click="toggle">
           <span
             class="mr-1 inline-block h-[16px] w-[16px] shrink-0"
             :style="{
@@ -25,7 +25,7 @@
         <!-- Actions -->
         <div
           v-if="$slots.actions || hasChildren"
-          class="ml-2 inline-flex items-center gap-x-1"
+          class="ml-2 inline-flex shrink-0 items-center gap-x-1"
           :class="{ 'opacity-0 group-hover:opacity-100': !keepActionsVisible }"
         >
           <!-- Actions -->

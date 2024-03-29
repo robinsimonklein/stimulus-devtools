@@ -1,12 +1,14 @@
 <template>
-  <div class="overflow-y-auto px-3 py-2">
-    <template v-if="values?.length">
-      <StimulusControllerValuesRow v-for="value in values" :key="value.key" :value="value" :instance="instance" />
-    </template>
+  <div class="overflow-y-auto">
+    <div class="inline-block px-3 py-2">
+      <template v-if="values?.length">
+        <StimulusControllerValuesRow v-for="value in values" :key="value.key" :value="value" :instance="instance" />
+      </template>
 
-    <template v-else>
-      <p class="text-sm text-muted-foreground">No value.</p>
-    </template>
+      <template v-else>
+        <p class="text-sm text-muted-foreground">No value.</p>
+      </template>
+    </div>
   </div>
 </template>
 

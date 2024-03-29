@@ -1,31 +1,41 @@
 <template>
   <ValueTreeWrapper :name :level :keep-actions-visible="isEditing" @delete="$emit('delete')">
     <template #value>
-      <div v-if="isEditing" class="inline-flex">
-        <form @submit.prevent="save">
-          <input
-            ref="editInput"
-            v-model="tempValue"
-            type="text"
-            class="rounded-sm px-1.5 py-0.5 font-mono text-code-purple dark:bg-neutral-800"
-            @keydown.esc.stop="cancel"
-          />
-        </form>
-      </div>
-      <span v-else class="inline-block font-mono text-code-purple"> "{{ modelValue.toString() }}" </span>
+      <template v-if="!isEditing">"</template>
+      <span
+        ref="valueElement"
+        class="inline-block font-mono text-code-purple"
+        :class="{ 'px-1.5 py-0.5': isEditing }"
+        spellcheck="false"
+        :contenteditable="isEditing"
+        @keydown.enter.stop="save"
+        @keydown.esc.stop="cancel"
+        @keydown.up.stop
+        @keydown.down.stop
+        @blur="onBlur"
+      />
+      <template v-if="!isEditing">"</template>
     </template>
     <template #actions>
       <!-- Edit -->
       <template v-if="isEditing">
-        <Button ref="saveButton" size="icon-sm" variant="secondary" @click="save">
+        <Button
+          :id="`value-save-${name}-${level}`"
+          ref="saveButton"
+          size="icon-sm"
+          variant="secondary"
+          @click.stop="save"
+        >
           <Check class="h-3.5 w-3.5" />
         </Button>
-        <Button ref="cancelButton" size="icon-sm" variant="secondary" @click="cancel">
+        <Button ref="cancelButton" size="icon-sm" variant="secondary" @click.stop="cancel">
           <XIcon class="h-3.5 w-3.5" />
         </Button>
       </template>
       <template v-else>
-        <Button size="icon-sm" variant="ghost" @click="edit"><Pencil class="h-3.5 w-3.5" /></Button>
+        <Button ref="editButton" size="icon-sm" variant="ghost" @click.stop="edit">
+          <Pencil class="h-3.5 w-3.5" />
+        </Button>
       </template>
     </template>
     <template v-if="$slots.more" #more>
@@ -35,13 +45,12 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref } from 'vue';
-import { onClickOutside } from '@vueuse/core';
+import { nextTick, onMounted, ref, watch } from 'vue';
 import ValueTreeWrapper from '@/components/core/value-tree/ValueTreeWrapper.vue';
 import { Button } from '@/components/ui/button';
 import { Pencil, Check, XIcon } from 'lucide-vue-next';
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     name: string;
     level?: number;
@@ -55,31 +64,54 @@ const modelValue = defineModel<string>({ required: true });
 
 defineEmits(['delete']);
 
-const editInput = ref<HTMLInputElement | null>(null);
-const cancelButton = ref<HTMLButtonElement | null>(null);
+const valueElement = ref<HTMLInputElement | null>(null);
+const editButton = ref<HTMLButtonElement | null>(null);
 const saveButton = ref<HTMLButtonElement | null>(null);
+const cancelButton = ref<HTMLButtonElement | null>(null);
 
 const isEditing = ref(false);
-const tempValue = ref('');
 
 const edit = () => {
-  tempValue.value = modelValue.value;
   isEditing.value = true;
   nextTick(() => {
-    if (editInput.value) editInput.value.focus();
+    if (!valueElement.value) return;
+    const range = document.createRange();
+    const sel = window.getSelection();
+    range.setStart(valueElement.value.childNodes[0], modelValue.value.length);
+    range.collapse(true);
+    sel?.removeAllRanges();
+    sel?.addRange(range);
+    valueElement.value.focus();
   });
 };
 
 const save = () => {
-  modelValue.value = tempValue.value;
+  if (!valueElement.value) return;
   isEditing.value = false;
-  tempValue.value = '';
+  modelValue.value = valueElement.value.innerText;
 };
 
 const cancel = () => {
+  if (!isEditing.value) return;
+  if (!valueElement.value) return;
+  valueElement.value.innerText = modelValue.value;
   isEditing.value = false;
-  tempValue.value = '';
 };
 
-onClickOutside(editInput, cancel, { ignore: [saveButton, cancelButton] });
+const onBlur = (e: FocusEvent) => {
+  if ((e.relatedTarget as HTMLElement)?.id === `value-save-${props.name}-${props.level}`) return;
+  cancel();
+};
+
+watch(modelValue, newValue => {
+  // Prevent overriding current editing value
+  if (isEditing.value) return;
+  if (!valueElement.value) return;
+  valueElement.value.innerText = newValue;
+});
+
+onMounted(() => {
+  if (!valueElement.value) return;
+  valueElement.value.innerText = modelValue.value;
+});
 </script>
