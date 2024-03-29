@@ -1,23 +1,25 @@
 <template>
   <div>
     <div class="group inline-flex items-center" :class="{ 'cursor-pointer': hasChildren }">
-      <div class="inline-flex items-center" @click="toggle">
-        <span
-          class="mr-1 inline-block h-[16px] w-[16px] shrink-0"
-          :style="{
-            marginLeft: `${level * 16}px`,
-          }"
-        >
-          <ChevronRight v-if="hasChildren" class="h-full w-full" :class="{ 'rotate-90': showChildren }" />
-        </span>
+      <div class="inline-flex items-center">
+        <div class="inline-flex items-center" @click="toggle">
+          <span
+            class="mr-1 inline-block h-[16px] w-[16px] shrink-0"
+            :style="{
+              marginLeft: `${level * 16}px`,
+            }"
+          >
+            <ChevronRight v-if="hasChildren" class="h-full w-full" :class="{ 'rotate-90': showChildren }" />
+          </span>
 
-        <span class="select-none font-mono text-sm">
-          <span class="text-code-navy">{{ name }}</span>
-          <span class="ml-0.5 text-muted-foreground">:</span>
-        </span>
+          <span class="select-none font-mono text-sm">
+            <span class="text-code-navy">{{ name }}</span>
+            <span class="ml-0.5 text-muted-foreground">:</span>
+          </span>
 
-        <div class="ml-1 shrink-0">
-          <slot name="value" />
+          <div class="ml-1 shrink-0">
+            <slot name="value" />
+          </div>
         </div>
 
         <!-- Actions -->

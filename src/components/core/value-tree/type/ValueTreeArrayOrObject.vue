@@ -6,6 +6,9 @@
         <template v-else> Object </template>
       </span>
     </template>
+    <template v-if="$slots.more" #more>
+      <slot name="more" />
+    </template>
     <template #children>
       <ValueTree
         v-for="[key, value] in Object.entries(modelValue)"
@@ -15,11 +18,7 @@
         :level="level + 1"
         @delete="onDelete(key)"
         @update:model-value="onUpdate(key, $event)"
-      >
-        <template v-if="$slots.more" #more>
-          <slot name="more" />
-        </template>
-      </ValueTree>
+      />
     </template>
   </ValueTreeWrapper>
 </template>
