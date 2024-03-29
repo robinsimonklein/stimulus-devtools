@@ -4,7 +4,7 @@
     <br>
 </div>
 
-<h4 align="center">A developer tool for debugging Stimulus applications at runtime.</h4>
+<h4 align="center">A developer tool for inspecting and debugging Stimulus applications.</h4>
 
 ## Overview
 

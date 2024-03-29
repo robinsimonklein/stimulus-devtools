@@ -1,7 +1,7 @@
 {
   "name": "stimulus-devtools",
-  "displayName": "Stimulus Devtools",
-  "description": "Chrome DevTools extension for debugging Stimulus.js",
+  "displayName": "Stimulus DevTools",
+  "description": "A developer tool for inspecting and debugging Stimulus applications.",
   "private": true,
   "version": "0.0.0",
   "type": "module",
