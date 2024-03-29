@@ -8,14 +8,14 @@
             v-model="tempValue"
             type="number"
             step="any"
-            class="text-code-orange rounded-sm px-1.5 py-0.5 font-mono dark:bg-neutral-800"
+            class="rounded-sm px-1.5 py-0.5 font-mono text-code-orange dark:bg-neutral-800"
             @keydown.up.stop.prevent="tempValue += 1"
             @keydown.down.stop.prevent="tempValue -= 1"
             @keydown.esc.stop="cancel"
           />
         </form>
       </div>
-      <span v-else class="text-code-orange inline-block font-mono">
+      <span v-else class="inline-block font-mono text-code-orange">
         {{ modelValue.toString() }}
       </span>
     </template>

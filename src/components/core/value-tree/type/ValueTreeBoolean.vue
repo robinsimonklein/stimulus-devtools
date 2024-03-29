@@ -1,7 +1,7 @@
 <template>
   <ValueTreeWrapper :name :level @delete="$emit('delete')">
     <template #value>
-      <span class="text-code-green inline-block min-w-[43px] font-mono">
+      <span class="inline-block min-w-[43px] font-mono text-code-green">
         {{ modelValue.toString() }}
       </span>
     </template>
