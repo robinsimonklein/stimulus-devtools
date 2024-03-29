@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import StimulusControllerDefinitionsRow from '@/components/stimulus/definition/StimulusControllerDefinitionsRow.vue';
 import { useControllerDefinitions } from '@/composables/stimulus/useControllerDefinitions.ts';
 import { Search, RotateCcw } from 'lucide-vue-next';
@@ -54,5 +54,21 @@ watch(definitions, newDefinitions => {
       selectDefinition(newDefinitions[0].identifier);
     }
   }
+});
+
+const handleShortcut = (e: KeyboardEvent) => {
+  if (e.key === 'k' && e.metaKey) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (searchInput.value) searchInput.value.focus();
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('keydown', handleShortcut);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('keydown', handleShortcut);
 });
 </script>
