@@ -81,5 +81,5 @@ const toggle = () => {
 
 const canExpand = computed(() => !!props.cssClass.classNames.length);
 
-const classNames = props.cssClass.classNames.map(name => ({ name }));
+const classNames = computed(() => props.cssClass.classNames.map(name => ({ name })));
 </script>
