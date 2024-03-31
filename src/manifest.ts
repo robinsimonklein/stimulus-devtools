@@ -1,7 +1,5 @@
 import packageData from '../package.json';
 
-const isDev = process.env.NODE_ENV !== 'production';
-
 const manifest: Record<string, unknown> = {
   manifest_version: 3,
   name: packageData.displayName || packageData.name,
@@ -32,10 +30,5 @@ const manifest: Record<string, unknown> = {
   },
   permissions: ['tabs', 'storage'],
 };
-
-if (isDev)
-  manifest['background'] = {
-    service_worker: 'assets/background.js',
-  };
 
 export default JSON.stringify(manifest);

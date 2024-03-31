@@ -1,10 +1,10 @@
 import { defineConfig } from 'vite';
-import path from 'path';
+import { resolve } from 'node:path';
 import vue from '@vitejs/plugin-vue';
 import tailwind from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
-import hotReloadExtension from 'hot-reload-extension-vite';
 import manifest from './src/manifest';
+import { isDev } from './scripts/utils';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -15,15 +15,11 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': resolve(__dirname, './src'),
     },
   },
   plugins: [
     vue(),
-    hotReloadExtension({
-      log: true,
-      backgroundPath: 'src/background/index.ts',
-    }),
     {
       name: 'manifest',
       generateBundle() {
@@ -36,15 +32,14 @@ export default defineConfig({
     },
   ],
   build: {
-    emptyOutDir: true,
-    outDir: 'build',
-    minify: false,
-    target: ['esnext'],
+    watch: isDev ? {} : undefined,
+    outDir: 'dist',
+    emptyOutDir: false,
+    chunkSizeWarningLimit: 2 * 1000,
     rollupOptions: {
       input: {
         devtools: 'devtools.html',
         'devtools-background': 'devtools-background.html',
-        client: 'src/client/index.ts',
         background: 'src/background/index.ts',
         'content-script': 'src/contentScript/index.ts',
       },
