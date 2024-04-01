@@ -9,3 +9,12 @@ export const getElementSelectorString = (element: Element) => {
   }
   return str;
 };
+
+export const placeCursorAtEnd = (element: HTMLElement) => {
+  const range = document.createRange();
+  const sel = window.getSelection();
+  range.setStart(element.childNodes[0], element.innerText?.length);
+  range.collapse(true);
+  sel?.removeAllRanges();
+  sel?.addRange(range);
+};
