@@ -1,9 +1,10 @@
 import { StimulusControllerInstance } from '@/types/stimulus.ts';
 import type { Controller } from '@hotwired/stimulus';
+import { MessageKey } from '@/enum';
 
-export const _stimulus_sendEvent = (name: string, data?: Record<string, unknown>) => {
+export const sendEvent = (name: string, data?: Record<string, unknown>) => {
   window.postMessage({
-    key: '_stimulus-devtools-send-message',
+    key: MessageKey.Message,
     message: {
       type: 'event',
       name,
@@ -12,20 +13,20 @@ export const _stimulus_sendEvent = (name: string, data?: Record<string, unknown>
   });
 };
 
-export const _stimulus_getControllerFromInstance = (instance: StimulusControllerInstance) => {
+export const getControllerFromInstance = (instance: StimulusControllerInstance) => {
   if (!window.Stimulus) return null;
   if (!instance) return null;
 
   return window.Stimulus.getControllerForElementAndIdentifier(instance.element, instance.identifier);
 };
 
-export const _stimulus_getControllerKeys = (controller: Controller) => {
+export const getControllerKeys = (controller: Controller) => {
   // Retrieve controller's prototype members
   const controllerPrototypeMembers = Object.getOwnPropertyDescriptors(Object.getPrototypeOf(controller));
   return Object.keys(controllerPrototypeMembers);
 };
 
-export const _stimulus_createHighlightBox = (target: HTMLElement, title?: string) => {
+export const createHighlightBox = (target: HTMLElement, title?: string) => {
   const targetBoundingClientRect = target.getBoundingClientRect();
 
   const highlightBox = document.createElement('div');

@@ -87,7 +87,7 @@ import { inspectElement } from '@/utils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import CopyButton from '@/components/core/CopyButton.vue';
 import Tree from '@/components/core/tree/Tree.vue';
-import { executeAction } from '@/utils/contentScript.ts';
+import { executeAction } from '@/utils/bridge.ts';
 import CodeInline from '@/components/core/code/CodeInline.vue';
 import TreeAction from '@/components/core/tree/TreeAction.vue';
 

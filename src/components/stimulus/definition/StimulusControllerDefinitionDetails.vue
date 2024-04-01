@@ -72,7 +72,7 @@ import StimulusControllerClasses from '@/components/stimulus/members/classes/Sti
 import StimulusControllerTargets from '@/components/stimulus/members/targets/StimulusControllerTargets.vue';
 import { useControllerDefinition } from '@/composables/stimulus/useControllerDefinition.ts';
 import { useChromeStorage } from '@/composables/useChromeStorage.ts';
-import { executeAction } from '@/utils/contentScript.ts';
+import { executeAction } from '@/utils/bridge.ts';
 import { useWindowSize } from '@vueuse/core';
 
 const props = defineProps<{

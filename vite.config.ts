@@ -40,8 +40,8 @@ export default defineConfig({
       input: {
         devtools: 'devtools.html',
         'devtools-background': 'devtools-background.html',
-        background: 'src/background/index.ts',
-        'content-script': 'src/contentScript/index.ts',
+        bridge: 'src/bridge/index.ts',
+        detector: 'src/client/detector.ts',
       },
       output: {
         entryFileNames: 'assets/[name].js',

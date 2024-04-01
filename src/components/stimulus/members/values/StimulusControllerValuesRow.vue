@@ -42,7 +42,7 @@ import ValueTree from '@/components/core/value-tree/ValueTree.vue';
 import CopyButton from '@/components/core/CopyButton.vue';
 import ValueType from '@/components/core/ValueType.vue';
 import CodeInline from '@/components/core/code/CodeInline.vue';
-import { executeAction } from '@/utils/contentScript.ts';
+import { executeAction } from '@/utils/bridge.ts';
 
 const props = defineProps<{
   value: StimulusControllerValue;

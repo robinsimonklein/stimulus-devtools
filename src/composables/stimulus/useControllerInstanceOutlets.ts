@@ -1,7 +1,7 @@
 import { onBeforeMount, onBeforeUnmount, Ref, shallowRef, watch } from 'vue';
 import { ParsedStimulusControllerInstance, StimulusControllerOutlet } from '@/types/stimulus.ts';
 import { StimulusDevToolsMessage } from '@/types';
-import { executeAction } from '@/utils/contentScript.ts';
+import { executeAction } from '@/utils/bridge.ts';
 
 export const useControllerInstanceOutlets = (instance: Ref<ParsedStimulusControllerInstance>) => {
   const outlets = shallowRef<StimulusControllerOutlet[]>([]);

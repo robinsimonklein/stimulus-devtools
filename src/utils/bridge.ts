@@ -1,8 +1,6 @@
 export const sendMessage = async (message: unknown) => {
-  const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-  if (!tab?.id) throw new Error('Tab id is not defined');
   try {
-    await chrome.tabs.sendMessage(tab.id, message);
+    await chrome.tabs?.sendMessage(chrome.devtools.inspectedWindow.tabId, message);
   } catch (error) {
     console.error(error);
   }

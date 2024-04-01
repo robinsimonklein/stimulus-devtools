@@ -26,7 +26,7 @@
 import { ParsedStimulusControllerInstance } from '@/types/stimulus.ts';
 import { inspectElement } from '@/utils';
 import { SquareDashedMousePointer } from 'lucide-vue-next';
-import { executeAction } from '@/utils/contentScript.ts';
+import { executeAction } from '@/utils/bridge.ts';
 import CodeInline from '@/components/core/code/CodeInline.vue';
 
 defineProps<{

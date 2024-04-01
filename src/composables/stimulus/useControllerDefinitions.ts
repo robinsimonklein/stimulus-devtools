@@ -1,7 +1,7 @@
 import { computed, ref, shallowRef, watch } from 'vue';
 import type { Controller } from '@hotwired/stimulus';
 import { ParsedStimulusControllerDefinition } from '@/types/stimulus.ts';
-import { executeAction } from '@/utils/contentScript.ts';
+import { executeAction } from '@/utils/bridge.ts';
 
 const definitions = shallowRef<ParsedStimulusControllerDefinition[]>([]);
 const selectedDefinitionIdentifier = ref<Controller['identifier'] | null>(null);
