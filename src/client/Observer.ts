@@ -7,27 +7,14 @@ import {
   StimulusControllerTarget,
   StimulusControllerValue,
 } from '../types/stimulus.ts';
-import { createHighlightBox, getControllerFromInstance, getControllerKeys, sendEvent } from '@/utils/client.ts';
+import { getControllerFromInstance, getControllerKeys, sendEvent } from '@/utils/client.ts';
 import { getElementSelectorString } from '@/utils/dom.ts';
 import type { ValueController } from '@hotwired/stimulus/dist/types/tests/controllers/value_controller';
 import { MessageEventName } from '@/enum';
 
-type StimulusDevToolsObserverAction = (args?: unknown) => void;
-
 type ControllerWithClasses = Controller & Record<string, string[]>;
 
-export interface StimulusDevToolsObserverInterface {
-  updateControllers: StimulusDevToolsObserverAction;
-  updateInstanceValues: StimulusDevToolsObserverAction;
-  updateInstanceTargets: StimulusDevToolsObserverAction;
-  updateInstanceOutlets: StimulusDevToolsObserverAction;
-  updateInstanceClasses: StimulusDevToolsObserverAction;
-  highlightElement: StimulusDevToolsObserverAction;
-  stopHighlightElement: StimulusDevToolsObserverAction;
-  updateValue: StimulusDevToolsObserverAction;
-}
-
-export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterface {
+export class Observer {
   controllerInstances: StimulusControllerInstance[] = [];
   lazyControllerIdentifiers = new Set<Controller['identifier']>();
 
@@ -391,25 +378,6 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     }
 
     sendEvent(MessageEventName.InstanceClassesUpdated, { uid, classes });
-  }
-
-  highlightElement(args: any) {
-    const { selector, title } = args;
-    if (!selector) return;
-
-    const highlightedElement = document.querySelector(selector) as HTMLElement;
-    if (!highlightedElement) return;
-
-    const highlightBox = createHighlightBox(highlightedElement, title);
-
-    document.body.appendChild(highlightBox);
-  }
-
-  stopHighlightElement() {
-    const highlightBoxes = document.querySelectorAll('.stimulus-devtools-highlight');
-    highlightBoxes.forEach(highlightBoxe => {
-      highlightBoxe.remove();
-    });
   }
 
   updateValue(args: any) {

@@ -41,7 +41,7 @@ export default defineConfig({
         devtools: 'devtools.html',
         'devtools-background': 'devtools-background.html',
         bridge: 'src/bridge/index.ts',
-        detector: 'src/client/detector.ts',
+        detector: 'src/detector/index.ts',
       },
       output: {
         entryFileNames: 'assets/[name].js',
