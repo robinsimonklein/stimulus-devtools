@@ -51,6 +51,7 @@ import { nextTick, onMounted, ref, watch } from 'vue';
 import ValueTreeWrapper from '@/components/core/value-tree/ValueTreeWrapper.vue';
 import { Button } from '@/components/ui/button';
 import { Pencil, Check, XIcon } from 'lucide-vue-next';
+import { placeCursorAtEnd } from '@/utils/dom.ts';
 
 const props = withDefaults(
   defineProps<{
@@ -77,12 +78,7 @@ const edit = () => {
   isEditing.value = true;
   nextTick(() => {
     if (!valueElement.value) return;
-    const range = document.createRange();
-    const sel = window.getSelection();
-    range.setStart(valueElement.value.childNodes[0], modelValue.value.length);
-    range.collapse(true);
-    sel?.removeAllRanges();
-    sel?.addRange(range);
+    placeCursorAtEnd(valueElement.value);
     valueElement.value.focus();
   });
 };

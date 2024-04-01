@@ -55,6 +55,7 @@ import { nextTick, onMounted, ref, watch } from 'vue';
 import ValueTreeWrapper from '@/components/core/value-tree/ValueTreeWrapper.vue';
 import { Button } from '@/components/ui/button';
 import { Pencil, Check, XIcon, TriangleAlert } from 'lucide-vue-next';
+import { placeCursorAtEnd } from '@/utils/dom.ts';
 
 const props = withDefaults(
   defineProps<{
@@ -89,6 +90,7 @@ const decrement = () => {
   if (!valueElement.value) return;
   const value = parseFloat(valueElement.value.innerText);
   if (!isNaN(value)) valueElement.value.innerText = (value - 1).toString();
+  placeCursorAtEnd(valueElement.value);
 };
 
 const increment = () => {
@@ -96,6 +98,7 @@ const increment = () => {
   if (!valueElement.value) return;
   const value = parseFloat(valueElement.value.innerText);
   if (!isNaN(value)) valueElement.value.innerText = (value + 1).toString();
+  placeCursorAtEnd(valueElement.value);
 };
 
 const edit = () => {
@@ -103,12 +106,7 @@ const edit = () => {
 
   nextTick(() => {
     if (!valueElement.value) return;
-    const range = document.createRange();
-    const sel = window.getSelection();
-    range.setStart(valueElement.value.childNodes[0], modelValue.value.toString().length);
-    range.collapse(true);
-    sel?.removeAllRanges();
-    sel?.addRange(range);
+    placeCursorAtEnd(valueElement.value);
     valueElement.value.focus();
     validate();
   });
