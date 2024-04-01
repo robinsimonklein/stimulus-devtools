@@ -12,6 +12,7 @@
     "build": "NODE_ENV=production run-s clear build:main build:client",
     "build:main": "vite build --config vite.config.ts",
     "build:client": "vite build --config vite.config.client.ts",
+    "pack": "rimraf extension.zip && jszip-cli add dist/* -o ./extension.zip",
     "start": "web-ext run --source-dir ./dist --target=chromium",
     "clear": "rimraf --glob ./dist",
     "lint": "eslint --ext .js,.ts,.vue ./src"
@@ -27,6 +28,7 @@
     "vue": "^3.4.19"
   },
   "devDependencies": {
+    "@ffflorian/jszip-cli": "^3.6.2",
     "@hotwired/stimulus": "^3.2.2",
     "@types/chrome": "^0.0.263",
     "@types/node": "^20.11.25",
