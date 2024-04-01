@@ -1,6 +1,6 @@
 <div align="center">
     <br>
-    <img style="max-width: 100%; width: 360px; height: auto;" src=".docs/stimulus_devtools_logo.svg" alt="Stimulus DevTools" />
+    <img style="max-width: 100%; width: 360px; height: auto;" src=".github/stimulus_devtools_logo.svg" alt="Stimulus DevTools" />
     <br>
 </div>
 
@@ -12,7 +12,7 @@ The Stimulus DevTools Chrome Extension is an open-source tool designed to simpli
 
 *Inspired by the amazing [Vue DevTools](https://github.com/vuejs/devtools) and [Nuxt DevTools](https://github.com/nuxt/devtools).*
 
-![Screenshot](.docs/screenshot.jpg)
+![Screenshot](.github/screenshot.jpg)
 
 ## Features
 
