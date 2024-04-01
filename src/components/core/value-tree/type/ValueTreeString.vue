@@ -1,20 +1,22 @@
 <template>
   <ValueTreeWrapper :name :level :keep-actions-visible="isEditing" @delete="$emit('delete')">
     <template #value>
-      <template v-if="!isEditing">"</template>
-      <span
-        ref="valueElement"
-        class="inline-block font-mono text-code-purple"
-        :class="{ 'px-1.5 py-0.5': isEditing }"
-        spellcheck="false"
-        :contenteditable="isEditing"
-        @keydown.enter.stop="save"
-        @keydown.esc.stop="cancel"
-        @keydown.up.stop
-        @keydown.down.stop
-        @blur="onBlur"
-      />
-      <template v-if="!isEditing">"</template>
+      <span class="font-mono text-code-purple">
+        <template v-if="!isEditing">"</template>
+        <span
+          ref="valueElement"
+          class="inline-block"
+          :class="{ 'px-1.5 py-0.5': isEditing }"
+          spellcheck="false"
+          :contenteditable="isEditing"
+          @keydown.enter.stop="save"
+          @keydown.esc.stop="cancel"
+          @keydown.up.stop
+          @keydown.down.stop
+          @blur="onBlur"
+        />
+        <template v-if="!isEditing">"</template>
+      </span>
     </template>
     <template #actions>
       <!-- Edit -->
