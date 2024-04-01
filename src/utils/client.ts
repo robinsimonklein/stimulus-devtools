@@ -1,15 +1,12 @@
 import { StimulusControllerInstance } from '@/types/stimulus.ts';
 import type { Controller } from '@hotwired/stimulus';
-import { MessageKey } from '@/enum';
+import { MessageType } from '@/enum';
 
 export const sendEvent = (name: string, data?: Record<string, unknown>) => {
   window.postMessage({
-    key: MessageKey.Message,
-    message: {
-      type: 'event',
-      name,
-      data,
-    },
+    type: MessageType.Event,
+    name,
+    data,
   });
 };
 

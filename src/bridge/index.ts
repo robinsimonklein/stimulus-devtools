@@ -1,5 +1,3 @@
-import { MessageKey } from '@/enum';
-
 function injectClient() {
   // Inject client script in page
   const script = document.createElement('script');
@@ -8,23 +6,20 @@ function injectClient() {
 }
 
 chrome.runtime.onMessage.addListener(message => {
-  window.postMessage({
-    key: MessageKey.Message,
-    message,
-  });
+  window.postMessage(message);
 });
 
 window.addEventListener(
   'message',
   async event => {
-    if (event.data.key === MessageKey.Detected) {
+    if (event.data.type === 'stimulus-devtools:event' && event.data.name === 'stimulus-devtools:detected') {
       injectClient();
       return;
     }
 
-    // Transmit message to devtools
-    if (event.data.key === MessageKey.Message) {
-      await chrome.runtime.sendMessage(event.data.message);
+    // Transmit events to devtools
+    if (event.data.type === 'stimulus-devtools:event') {
+      await chrome.runtime.sendMessage(event.data);
       return;
     }
   },

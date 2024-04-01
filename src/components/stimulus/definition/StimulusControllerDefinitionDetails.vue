@@ -64,7 +64,7 @@ import { computed, onBeforeMount, onBeforeUnmount, ref, toRef, watch } from 'vue
 import SplitPane from '@/components/core/SplitPane.vue';
 import CopyButton from '@/components/core/CopyButton.vue';
 import { ParsedStimulusControllerDefinition, ParsedStimulusControllerInstance } from '@/types/stimulus.ts';
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import StimulusControllerInstancesRow from '@/components/stimulus/instance/StimulusControllerInstancesRow.vue';
 import StimulusControllerValues from '@/components/stimulus/members/values/StimulusControllerValues.vue';
 import StimulusControllerOutlets from '@/components/stimulus/members/outlets/StimulusControllerOutlets.vue';
@@ -72,8 +72,11 @@ import StimulusControllerClasses from '@/components/stimulus/members/classes/Sti
 import StimulusControllerTargets from '@/components/stimulus/members/targets/StimulusControllerTargets.vue';
 import { useControllerDefinition } from '@/composables/stimulus/useControllerDefinition.ts';
 import { useChromeStorage } from '@/composables/useChromeStorage.ts';
-import { executeAction } from '@/utils/bridge.ts';
 import { useWindowSize } from '@vueuse/core';
+import { Action } from '@/enum';
+import { useBridge } from '@/composables/useBridge.ts';
+
+const { executeAction } = useBridge();
 
 const props = defineProps<{
   identifier: ParsedStimulusControllerDefinition['identifier'];
@@ -103,10 +106,10 @@ const splitPaneOrientation = computed(() => (windowWidth.value > 960 ? 'horizont
 
 const onControllersUpdate = () => {
   if (selectedInstance.value) {
-    executeAction('updateInstanceValues', { uid: selectedInstance.value.uid });
-    executeAction('updateInstanceTargets', { uid: selectedInstance.value.uid });
-    executeAction('updateInstanceOutlets', { uid: selectedInstance.value.uid });
-    executeAction('updateInstanceClasses', { uid: selectedInstance.value.uid });
+    executeAction(Action.UpdateInstanceValues, { uid: selectedInstance.value.uid });
+    executeAction(Action.UpdateInstanceTargets, { uid: selectedInstance.value.uid });
+    executeAction(Action.UpdateInstanceOutlets, { uid: selectedInstance.value.uid });
+    executeAction(Action.UpdateInstanceClasses, { uid: selectedInstance.value.uid });
   }
 };
 

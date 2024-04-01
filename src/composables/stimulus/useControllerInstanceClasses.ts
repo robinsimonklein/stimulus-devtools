@@ -1,20 +1,23 @@
 import { onBeforeMount, onBeforeUnmount, Ref, shallowRef, watch } from 'vue';
 import { ParsedStimulusControllerInstance, StimulusControllerClass } from '@/types/stimulus.ts';
-import { executeAction } from '@/utils/bridge.ts';
 import { StimulusDevToolsMessage } from '@/types';
+import { Action, MessageEventName, MessageType } from '@/enum';
+import { useBridge } from '@/composables/useBridge.ts';
 
 export const useControllerInstanceClasses = (instance: Ref<ParsedStimulusControllerInstance>) => {
+  const { executeAction } = useBridge();
+
   const classes = shallowRef<StimulusControllerClass[]>([]);
 
   const updateClassesFromMessage = async (message: StimulusDevToolsMessage) => {
-    if (message.type === 'event' && message.name === 'stimulus-devtools:instance-classes:updated') {
+    if (message.type === MessageType.Event && message.name === MessageEventName.InstanceClassesUpdated) {
       // TODO: check if instance has same id ?
       if (message.data?.classes) classes.value = message.data.classes as StimulusControllerClass[];
     }
   };
 
   const reset = async () => {
-    await executeAction('updateInstanceClasses', { uid: instance.value.uid });
+    await executeAction(Action.UpdateInstanceClasses, { uid: instance.value.uid });
   };
 
   watch(instance, reset);
@@ -26,8 +29,6 @@ export const useControllerInstanceClasses = (instance: Ref<ParsedStimulusControl
   });
 
   onBeforeUnmount(async () => {
-    await executeAction('unobserveInstanceClasses', { uid: instance.value.uid });
-
     chrome.runtime.onMessage.removeListener(updateClassesFromMessage);
   });
 

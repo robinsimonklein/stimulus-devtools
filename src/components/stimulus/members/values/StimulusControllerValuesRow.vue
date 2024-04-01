@@ -42,7 +42,10 @@ import ValueTree from '@/components/core/value-tree/ValueTree.vue';
 import CopyButton from '@/components/core/CopyButton.vue';
 import ValueType from '@/components/core/ValueType.vue';
 import CodeInline from '@/components/core/code/CodeInline.vue';
-import { executeAction } from '@/utils/bridge.ts';
+import { Action } from '@/enum';
+import { useBridge } from '@/composables/useBridge.ts';
+
+const { executeAction } = useBridge();
 
 const props = defineProps<{
   value: StimulusControllerValue;
@@ -50,7 +53,7 @@ const props = defineProps<{
 }>();
 
 const onValueUpdate = (newValue: any) => {
-  executeAction('updateValue', {
+  executeAction(Action.UpdateValue, {
     value: newValue,
     key: props.value.name + 'Value',
     identifier: props.instance.identifier,

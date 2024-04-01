@@ -11,7 +11,8 @@
       if (stimulusDetected) {
         window.postMessage(
           {
-            key: 'stimulus-devtools:detected',
+            type: 'stimulus-devtools:event',
+            name: 'stimulus-devtools:detected',
           },
           '*',
         );

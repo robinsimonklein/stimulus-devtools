@@ -1,6 +1,6 @@
 import type { Application } from '@hotwired/stimulus';
 import { StimulusDevToolsObserver, StimulusDevToolsObserverInterface } from '@/client/StimulusDevToolsObserver.ts';
-import { MessageKey } from '@/enum';
+import { MessageType } from '@/enum';
 
 declare global {
   interface Window {
@@ -12,18 +12,15 @@ declare global {
 const observer = new StimulusDevToolsObserver();
 
 window.addEventListener('message', e => {
-  if (e.data.key === MessageKey.Message) {
-    const { message } = e.data;
-    if (!message) return;
+  const message = e.data;
+  if (!message) return;
 
-    if (message.type === 'action') {
-      if (!observer) return;
+  if (message.type !== MessageType.Action) return;
+  if (!observer) return;
 
-      const actionName = message.name as keyof StimulusDevToolsObserverInterface;
+  const actionName = message.name as keyof StimulusDevToolsObserverInterface;
 
-      if (observer[actionName] && typeof observer[actionName] === 'function') {
-        observer[actionName](message.args);
-      }
-    }
+  if (observer[actionName] && typeof observer[actionName] === 'function') {
+    observer[actionName](message.args);
   }
 });

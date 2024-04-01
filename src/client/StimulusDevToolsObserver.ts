@@ -7,9 +7,10 @@ import {
   StimulusControllerTarget,
   StimulusControllerValue,
 } from '../types/stimulus.ts';
-import { createHighlightBox, getControllerFromInstance, getControllerKeys, sendEvent } from '@/client/utils.ts';
+import { createHighlightBox, getControllerFromInstance, getControllerKeys, sendEvent } from '@/utils/client.ts';
 import { getElementSelectorString } from '@/utils/dom.ts';
 import type { ValueController } from '@hotwired/stimulus/dist/types/tests/controllers/value_controller';
+import { MessageEventName } from '@/enum';
 
 type StimulusDevToolsObserverAction = (args?: unknown) => void;
 
@@ -109,7 +110,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
 
   updateControllers() {
     if (!window.Stimulus) {
-      sendEvent('stimulus-devtools:undetected');
+      sendEvent(MessageEventName.Undetected);
       return;
     }
 
@@ -150,7 +151,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
         } as StimulusControllerInstance;
       }) || [];
 
-    sendEvent('stimulus-devtools:controllers:updated', {
+    sendEvent(MessageEventName.ControllersUpdated, {
       controllerDefinitions: this.parsedControllerDefinitions,
     });
   }
@@ -193,7 +194,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
       });
     }
 
-    sendEvent('stimulus-devtools:instance-values:updated', { uid, values });
+    sendEvent(MessageEventName.InstanceValuesUpdated, { uid, values });
   }
 
   updateInstanceTargets(args: unknown) {
@@ -267,7 +268,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
       });
     }
 
-    sendEvent('stimulus-devtools:instance-targets:updated', { uid, targets });
+    sendEvent(MessageEventName.InstanceTargetsUpdated, { uid, targets });
   }
 
   updateInstanceOutlets(args: unknown) {
@@ -348,7 +349,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
       });
     }
 
-    sendEvent('stimulus-devtools:instance-outlets:updated', { uid, outlets });
+    sendEvent(MessageEventName.InstanceOutletsUpdated, { uid, outlets });
   }
 
   updateInstanceClasses(args: unknown) {
@@ -389,7 +390,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
       });
     }
 
-    sendEvent('stimulus-devtools:instance-classes:updated', { uid, classes });
+    sendEvent(MessageEventName.InstanceClassesUpdated, { uid, classes });
   }
 
   highlightElement(args: any) {

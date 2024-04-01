@@ -1,20 +1,23 @@
 import { onBeforeMount, onBeforeUnmount, Ref, shallowRef, watch } from 'vue';
 import { ParsedStimulusControllerInstance, StimulusControllerTarget } from '@/types/stimulus.ts';
 import { StimulusDevToolsMessage } from '@/types';
-import { executeAction } from '@/utils/bridge.ts';
+import { Action, MessageEventName, MessageType } from '@/enum';
+import { useBridge } from '@/composables/useBridge.ts';
 
 export const useControllerInstanceTargets = (instance: Ref<ParsedStimulusControllerInstance>) => {
+  const { executeAction } = useBridge();
+
   const targets = shallowRef<StimulusControllerTarget[]>([]);
 
   const updateTargetsFromMessage = async (message: StimulusDevToolsMessage) => {
-    if (message.type === 'event' && message.name === 'stimulus-devtools:instance-targets:updated') {
+    if (message.type === MessageType.Event && message.name === MessageEventName.InstanceTargetsUpdated) {
       // TODO: check if instance has same id ?
       if (message.data?.targets) targets.value = message.data.targets as StimulusControllerTarget[];
     }
   };
 
   const reset = async () => {
-    await executeAction('updateInstanceTargets', { uid: instance.value.uid });
+    await executeAction(Action.UpdateInstanceTargets, { uid: instance.value.uid });
   };
 
   watch(instance, reset);
@@ -26,8 +29,6 @@ export const useControllerInstanceTargets = (instance: Ref<ParsedStimulusControl
   });
 
   onBeforeUnmount(async () => {
-    await executeAction('unobserveInstanceTargets', { uid: instance.value.uid });
-
     chrome.runtime.onMessage.removeListener(updateTargetsFromMessage);
   });
 

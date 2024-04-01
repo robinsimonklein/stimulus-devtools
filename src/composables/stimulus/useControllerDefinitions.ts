@@ -1,17 +1,20 @@
 import { computed, ref, shallowRef, watch } from 'vue';
 import type { Controller } from '@hotwired/stimulus';
 import { ParsedStimulusControllerDefinition } from '@/types/stimulus.ts';
-import { executeAction } from '@/utils/bridge.ts';
+import { Action, MessageEventName, MessageType } from '@/enum';
+import { useBridge } from '@/composables/useBridge.ts';
 
 const definitions = shallowRef<ParsedStimulusControllerDefinition[]>([]);
 const selectedDefinitionIdentifier = ref<Controller['identifier'] | null>(null);
 
+const { executeAction } = useBridge();
+
 chrome.runtime.onMessage.addListener(async message => {
-  if (message.type === 'event' && message.name === 'stimulus-devtools:detected') {
-    await executeAction('updateControllers');
+  if (message.type === MessageType.Event && message.name === MessageEventName.Detected) {
+    await executeAction(Action.UpdateControllers);
   }
 
-  if (message.type === 'event' && message.name === 'stimulus-devtools:controllers:updated') {
+  if (message.type === MessageType.Event && message.name === MessageEventName.ControllersUpdated) {
     definitions.value = (message.data.controllerDefinitions || []).sort(
       (a: ParsedStimulusControllerDefinition, b: ParsedStimulusControllerDefinition) =>
         a.identifier < b.identifier ? -1 : 1,
@@ -37,7 +40,7 @@ export const useControllerDefinitions = () => {
   };
 
   const refresh = async () => {
-    await executeAction('updateControllers');
+    await executeAction(Action.UpdateControllers);
   };
 
   return { definitions, selectedDefinition, refresh, selectDefinition };

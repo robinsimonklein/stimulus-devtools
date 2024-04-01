@@ -68,9 +68,11 @@ import Tree from '@/components/core/tree/Tree.vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ChevronRight, EllipsisVertical, SquareDashedMousePointer } from 'lucide-vue-next';
 import { inspectElement } from '@/utils';
-import { executeAction } from '@/utils/bridge.ts';
 import CodeInline from '@/components/core/code/CodeInline.vue';
 import TreeAction from '@/components/core/tree/TreeAction.vue';
+import { Action } from '@/enum';
+import { useBridge } from '@/composables/useBridge.ts';
+const { executeAction } = useBridge();
 
 const props = defineProps<{
   target: StimulusControllerTarget;
@@ -86,10 +88,10 @@ const toggle = () => {
 };
 
 const handleItemMouseEnter = (element: StimulusControllerTargetElement) => {
-  executeAction('highlightElement', { selector: element.uidSelector, title: props.target.name });
+  executeAction(Action.HighlightElement, { selector: element.uidSelector, title: props.target.name });
 };
 
 const handleItemMouseLeave = () => {
-  executeAction('stopHighlightElement');
+  executeAction(Action.StopHighlightElement);
 };
 </script>
