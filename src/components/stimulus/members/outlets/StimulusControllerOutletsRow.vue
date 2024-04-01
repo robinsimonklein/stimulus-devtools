@@ -87,9 +87,12 @@ import { inspectElement } from '@/utils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import CopyButton from '@/components/core/CopyButton.vue';
 import Tree from '@/components/core/tree/Tree.vue';
-import { executeAction } from '@/utils/contentScript.ts';
 import CodeInline from '@/components/core/code/CodeInline.vue';
 import TreeAction from '@/components/core/tree/TreeAction.vue';
+import { Action } from '@/enum';
+import { useBridge } from '@/composables/useBridge.ts';
+
+const { executeAction } = useBridge();
 
 const props = defineProps<{
   outlet: StimulusControllerOutlet;
@@ -105,10 +108,10 @@ const toggle = () => {
 const canExpand = computed(() => !!props.outlet.references.length);
 
 const handleItemMouseEnter = (item: StimulusControllerOutletReference) => {
-  executeAction('highlightElement', { selector: item.uidSelector, title: props.outlet.name });
+  executeAction(Action.HighlightElement, { selector: item.uidSelector, title: props.outlet.name });
 };
 
 const handleItemMouseLeave = () => {
-  executeAction('stopHighlightElement');
+  executeAction(Action.StopHighlightElement);
 };
 </script>

@@ -3,8 +3,8 @@
     class="group relative z-0 inline-flex min-w-full cursor-pointer items-center px-3 py-0.5 hover:bg-accent/60"
     :class="{ 'is-selected !bg-accent': selected }"
     @click.prevent="$emit('select')"
-    @mouseenter="executeAction('highlightElement', { selector: instance.uidSelector, title: instance.identifier })"
-    @mouseleave="executeAction('stopHighlightElement')"
+    @mouseenter="executeAction(Action.HighlightElement, { selector: instance.uidSelector, title: instance.identifier })"
+    @mouseleave="executeAction(Action.StopHighlightElement)"
   >
     <span v-show="selected" class="absolute inset-y-0 left-0 w-[1px] bg-primary" />
     <div class="flex w-full items-center opacity-70 group-hover:opacity-100 group-[.is-selected]:opacity-100">
@@ -26,8 +26,11 @@
 import { ParsedStimulusControllerInstance } from '@/types/stimulus.ts';
 import { inspectElement } from '@/utils';
 import { SquareDashedMousePointer } from 'lucide-vue-next';
-import { executeAction } from '@/utils/contentScript.ts';
 import CodeInline from '@/components/core/code/CodeInline.vue';
+import { Action } from '@/enum';
+import { useBridge } from '@/composables/useBridge.ts';
+
+const { executeAction } = useBridge();
 
 defineProps<{
   instance: ParsedStimulusControllerInstance;

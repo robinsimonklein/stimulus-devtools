@@ -7,25 +7,14 @@ import {
   StimulusControllerTarget,
   StimulusControllerValue,
 } from '../types/stimulus.ts';
-import {
-  _stimulus_createHighlightBox,
-  _stimulus_getControllerFromInstance,
-  _stimulus_getControllerKeys,
-  _stimulus_sendEvent,
-} from '@/client/utils.ts';
+import { getControllerFromInstance, getControllerKeys, sendEvent } from '@/utils/client.ts';
 import { getElementSelectorString } from '@/utils/dom.ts';
 import type { ValueController } from '@hotwired/stimulus/dist/types/tests/controllers/value_controller';
-
-type StimulusDevToolsObserverAction = (args?: unknown) => void;
+import { MessageEventName } from '@/enum';
 
 type ControllerWithClasses = Controller & Record<string, string[]>;
 
-export interface StimulusDevToolsObserverInterface {
-  updateControllers: StimulusDevToolsObserverAction;
-  updateInstanceValues: StimulusDevToolsObserverAction;
-}
-
-export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterface {
+export class Observer {
   controllerInstances: StimulusControllerInstance[] = [];
   lazyControllerIdentifiers = new Set<Controller['identifier']>();
 
@@ -56,6 +45,8 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     this.controllerTargetsObserver = new MutationObserver(this.onControllerTargetsObservation.bind(this));
     this.controllerOutletsObserver = new MutationObserver(this.onControllerOutletsObservation.bind(this));
     this.controllerClassesObserver = new MutationObserver(this.onControllerClassesObservation.bind(this));
+
+    this.updateControllers();
   }
 
   // Getters
@@ -106,7 +97,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
 
   updateControllers() {
     if (!window.Stimulus) {
-      _stimulus_sendEvent('stimulus-devtools:undetected');
+      sendEvent(MessageEventName.Undetected);
       return;
     }
 
@@ -147,7 +138,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
         } as StimulusControllerInstance;
       }) || [];
 
-    _stimulus_sendEvent('stimulus-devtools:controllers:updated', {
+    sendEvent(MessageEventName.ControllersUpdated, {
       controllerDefinitions: this.parsedControllerDefinitions,
     });
   }
@@ -161,7 +152,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     const instance = this.controllerInstances.find(controllerInstance => controllerInstance.uid === uid);
     if (!instance) return;
 
-    const controller = _stimulus_getControllerFromInstance(instance);
+    const controller = getControllerFromInstance(instance);
     if (!controller) return;
 
     const valueDescriptorMap = (controller as ValueController).valueDescriptorMap;
@@ -190,7 +181,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
       });
     }
 
-    _stimulus_sendEvent('stimulus-devtools:instance-values:updated', { uid, values });
+    sendEvent(MessageEventName.InstanceValuesUpdated, { uid, values });
   }
 
   updateInstanceTargets(args: unknown) {
@@ -202,10 +193,10 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     const instance = this.controllerInstances.find(controllerInstance => controllerInstance.uid === uid);
     if (!instance) return;
 
-    const controller = _stimulus_getControllerFromInstance(instance);
+    const controller = getControllerFromInstance(instance);
     if (!controller) return;
 
-    const controllerKeys = _stimulus_getControllerKeys(controller);
+    const controllerKeys = getControllerKeys(controller);
 
     const targetNames = controllerKeys
       .filter(k => k.endsWith('Target') && !k.startsWith('has'))
@@ -264,7 +255,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
       });
     }
 
-    _stimulus_sendEvent('stimulus-devtools:instance-targets:updated', { uid, targets });
+    sendEvent(MessageEventName.InstanceTargetsUpdated, { uid, targets });
   }
 
   updateInstanceOutlets(args: unknown) {
@@ -276,7 +267,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     const instance = this.controllerInstances.find(controllerInstance => controllerInstance.uid === uid);
     if (!instance) return;
 
-    const controller = _stimulus_getControllerFromInstance(instance);
+    const controller = getControllerFromInstance(instance);
     if (!controller) return;
 
     const outletNames = controller.context['outletObserver']?.outletDefinitions as string[] | undefined;
@@ -345,7 +336,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
       });
     }
 
-    _stimulus_sendEvent('stimulus-devtools:instance-outlets:updated', { uid, outlets });
+    sendEvent(MessageEventName.InstanceOutletsUpdated, { uid, outlets });
   }
 
   updateInstanceClasses(args: unknown) {
@@ -357,11 +348,11 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
     const instance = this.controllerInstances.find(controllerInstance => controllerInstance.uid === uid);
     if (!instance) return;
 
-    const controller = _stimulus_getControllerFromInstance(instance);
+    const controller = getControllerFromInstance(instance);
     if (!controller) return;
 
     // Retrieve controller's prototype members
-    const controllerKeys = _stimulus_getControllerKeys(controller);
+    const controllerKeys = getControllerKeys(controller);
 
     const classesNames = controllerKeys
       .filter(k => k.endsWith('Class') && !k.startsWith('has'))
@@ -386,26 +377,7 @@ export class StimulusDevToolsObserver implements StimulusDevToolsObserverInterfa
       });
     }
 
-    _stimulus_sendEvent('stimulus-devtools:instance-classes:updated', { uid, classes });
-  }
-
-  highlightElement(args: any) {
-    const { selector, title } = args;
-    if (!selector) return;
-
-    const highlightedElement = document.querySelector(selector) as HTMLElement;
-    if (!highlightedElement) return;
-
-    const highlightBox = _stimulus_createHighlightBox(highlightedElement, title);
-
-    document.body.appendChild(highlightBox);
-  }
-
-  stopHighlightElement() {
-    const highlightBoxes = document.querySelectorAll('.stimulus-devtools-highlight');
-    highlightBoxes.forEach(highlightBoxe => {
-      highlightBoxe.remove();
-    });
+    sendEvent(MessageEventName.InstanceClassesUpdated, { uid, classes });
   }
 
   updateValue(args: any) {

@@ -1,11 +1,21 @@
-import { StimulusDevToolsClient } from '@/client/StimulusDevToolsClient.ts';
-import type { Application } from '@hotwired/stimulus';
+import { Observer } from '@/client/Observer.ts';
+import { Inspector } from '@/client/Inspector.ts';
+import { MessageType } from '@/enum';
 
-declare global {
-  interface Window {
-    Stimulus?: Application;
-    __STIMULUS_DEVTOOLS_DETECTED__?: boolean;
-  }
-}
+const observer = new Observer();
+const inspector = new Inspector();
 
-new StimulusDevToolsClient();
+window.addEventListener('message', e => {
+  const message = e.data;
+  if (!message) return;
+
+  if (message.type !== MessageType.Action) return;
+  if (!observer) return;
+
+  const actionName = message.name as string;
+
+  // @ts-ignore
+  if (observer[actionName] && typeof observer[actionName] === 'function') observer[actionName](message.args);
+  // @ts-ignore
+  if (inspector[actionName] && typeof inspector[actionName] === 'function') inspector[actionName](message.args);
+});
