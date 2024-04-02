@@ -11,8 +11,12 @@
           @input="validate"
           @keydown.enter.prevent.stop="save"
           @keydown.esc.prevent.stop="cancel"
-          @keydown.up.prevent.stop="increment"
-          @keydown.down.prevent.stop="decrement"
+          @keydown.up.exact.prevent.stop="increment(1)"
+          @keydown.up.shift.prevent.stop="increment(10)"
+          @keydown.up.alt.prevent.stop="increment(0.1)"
+          @keydown.down.exact.prevent.stop="decrement(1)"
+          @keydown.down.shift.prevent.stop="decrement(10)"
+          @keydown.down.alt.prevent.stop="decrement(0.1)"
           @blur="onBlur"
         />
       </div>
@@ -57,6 +61,8 @@ import { Button } from '@/components/ui/button';
 import { Pencil, Check, XIcon, TriangleAlert } from 'lucide-vue-next';
 import { placeCursorAtEnd } from '@/utils/dom.ts';
 
+const precision = 1000;
+
 const props = withDefaults(
   defineProps<{
     name: string;
@@ -85,19 +91,19 @@ const validate = () => {
   isValid.value = /^-?\d+(\.\d{1,2})?$/.test(value);
 };
 
-const decrement = () => {
+const decrement = (factor: number) => {
   if (!isEditing.value) return;
   if (!valueElement.value) return;
   const value = parseFloat(valueElement.value.innerText);
-  if (!isNaN(value)) valueElement.value.innerText = (value - 1).toString();
+  if (!isNaN(value)) valueElement.value.innerText = ((value * precision - factor * precision) / precision).toString();
   placeCursorAtEnd(valueElement.value);
 };
 
-const increment = () => {
+const increment = (factor: number) => {
   if (!isEditing.value) return;
   if (!valueElement.value) return;
   const value = parseFloat(valueElement.value.innerText);
-  if (!isNaN(value)) valueElement.value.innerText = (value + 1).toString();
+  if (!isNaN(value)) valueElement.value.innerText = ((value * precision + factor * precision) / precision).toString();
   placeCursorAtEnd(valueElement.value);
 };
 
