@@ -1,3 +1,6 @@
+const titleTemplate: string = `<span style="font-size: 16px; color: #000">__title__</span>`;
+const sizeTemplate: string = `<span style="font-size: 12px; color: #888">__width__x__height__</span>`;
+
 function createHighlightBox(target: HTMLElement, title?: string) {
   const targetBoundingClientRect = target.getBoundingClientRect();
 
@@ -15,23 +18,53 @@ function createHighlightBox(target: HTMLElement, title?: string) {
   highlightBox.style.borderStyle = 'dashed';
 
   if (title) {
-    const titleHeight = 16;
-    const highlightBoxTitle = document.createElement('span');
-    highlightBoxTitle.innerText = title;
+    const titleHeight = 24;
+    const arrowHeight = 8;
+
+    const direction = targetBoundingClientRect.top > titleHeight + arrowHeight ? 'bottom' : 'top';
+
+    const highlightBoxTitle = document.createElement('div');
+    highlightBoxTitle.innerHTML =
+      titleTemplate.replaceAll('__title__', title) +
+      sizeTemplate
+        .replaceAll('__width__', parseFloat(targetBoundingClientRect.width.toFixed(2)).toString())
+        .replaceAll('__height__', parseFloat(targetBoundingClientRect.height.toFixed(2)).toString());
+
     highlightBoxTitle.style.display = 'inline-flex';
     highlightBoxTitle.style.position = 'absolute';
+    highlightBoxTitle.style.fontFamily = 'ui-sans-serif, system-ui, sans-serif';
     highlightBoxTitle.style.left = '0';
     highlightBoxTitle.style.height = `${titleHeight}px`;
     highlightBoxTitle.style.alignItems = 'center';
-    highlightBoxTitle.style.padding = '0 4px';
-    highlightBoxTitle.style.fontSize = '12px';
+    highlightBoxTitle.style.columnGap = '4px';
+    highlightBoxTitle.style.padding = '0 8px';
     highlightBoxTitle.style.color = '#000';
-    highlightBoxTitle.style.backgroundColor = 'rgba(119, 232, 185, 1)';
+    highlightBoxTitle.style.backgroundColor = 'rgba(255, 255, 255, 1)';
 
-    targetBoundingClientRect.top > 16
-      ? (highlightBoxTitle.style.bottom = 'calc(100% + 1px)')
-      : (highlightBoxTitle.style.top = 'calc(100% + 1px)');
+    direction === 'bottom'
+      ? (highlightBoxTitle.style.bottom = `calc(100% + 1px + ${arrowHeight}px)`)
+      : (highlightBoxTitle.style.top = `calc(100% + 1px + ${arrowHeight}px)`);
+
     highlightBox.appendChild(highlightBoxTitle);
+
+    const highlightBoxArrow = document.createElement('span');
+    highlightBoxArrow.style.display = 'inline-block';
+    highlightBoxArrow.style.position = 'absolute';
+    highlightBoxTitle.style.left = '0';
+    highlightBoxArrow.style.width = '0';
+    highlightBoxArrow.style.height = '0';
+    highlightBoxArrow.style.borderLeft = `${arrowHeight / 2}px solid transparent`;
+    highlightBoxArrow.style.borderRight = `${arrowHeight / 2}px solid transparent`;
+
+    if (direction === 'bottom') {
+      highlightBoxArrow.style.borderTop = `${arrowHeight}px solid #fff`;
+      highlightBoxArrow.style.bottom = `calc(100% + 1px)`;
+    } else {
+      highlightBoxArrow.style.borderBottom = `${arrowHeight}px solid #fff`;
+      highlightBoxArrow.style.top = `calc(100% + 1px)`;
+    }
+
+    highlightBox.appendChild(highlightBoxArrow);
   }
 
   return highlightBox;
