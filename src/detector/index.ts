@@ -20,6 +20,17 @@
         return;
       }
 
+      if (detector.retry < 8) {
+        window.postMessage(
+          {
+            type: 'stimulus-devtools:event',
+            name: 'stimulus-devtools:undetected',
+          },
+          '*',
+        );
+        if (window['__STIMULUS_DEVTOOLS_DETECTED__']) delete window['__STIMULUS_DEVTOOLS_DETECTED__'];
+      }
+
       if (detector.retry > 0) {
         detector.retry--;
         setTimeout(() => {
