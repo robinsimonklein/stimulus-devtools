@@ -11,6 +11,8 @@ export const getElementSelectorString = (element: Element) => {
 };
 
 export const placeCursorAtEnd = (element: HTMLElement) => {
+  if (!element.childNodes?.length) return;
+
   const range = document.createRange();
   const sel = window.getSelection();
   range.setStart(element.childNodes[0], element.innerText?.length);
