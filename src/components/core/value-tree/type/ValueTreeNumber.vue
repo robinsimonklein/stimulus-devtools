@@ -1,11 +1,16 @@
 <template>
   <ValueTreeWrapper :name :level :keep-actions-visible="isEditing" @delete="$emit('delete')">
     <template #value>
-      <div class="inline-flex shrink-0">
+      <div class="inline-flex shrink-0 font-mono text-code-orange">
         <span
           ref="valueElement"
-          class="inline-block font-mono text-code-orange"
-          :class="{ '-ml-1 px-1.5 py-0.5': isEditing, 'outline-destructive': isEditing && !isValid }"
+          class="relative inline-block outline-0 after:pointer-events-none after:absolute after:inset-0 after:rounded-sm after:opacity-0 after:outline after:outline-2 after:content-['']"
+          :class="[
+            {
+              '-ml-1 px-1.5 py-0.5 after:opacity-100': isEditing,
+            },
+            isEditing && !isValid ? 'after:outline-destructive' : 'after:outline-muted-foreground',
+          ]"
           spellcheck="false"
           :contenteditable="isEditing"
           @input="validate"

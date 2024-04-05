@@ -5,8 +5,8 @@
         <template v-if="!isEditing">"</template>
         <span
           ref="valueElement"
-          class="inline-block"
-          :class="{ 'px-1.5 py-0.5': isEditing }"
+          class="relative inline-block outline-0 after:pointer-events-none after:absolute after:inset-0 after:rounded-sm after:opacity-0 after:outline after:outline-2 after:outline-muted-foreground after:content-['']"
+          :class="{ 'px-1.5 py-0.5 after:opacity-100': isEditing }"
           spellcheck="false"
           :contenteditable="isEditing"
           @keydown.enter.stop="save"
