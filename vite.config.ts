@@ -38,6 +38,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 2 * 1000,
     rollupOptions: {
       input: {
+        popup: 'popup.html',
         devtools: 'devtools.html',
         'devtools-background': 'devtools-background.html',
         bridge: 'src/bridge/index.ts',
