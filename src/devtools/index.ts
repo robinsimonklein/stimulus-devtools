@@ -1,5 +1,5 @@
 import { createApp } from 'vue';
-import '@/assets/style/style.css';
+import '@/devtools/style.css';
 import DevTools from './DevTools.vue';
 import { initHighlighter } from '@/devtools/highlighter.ts';
 
