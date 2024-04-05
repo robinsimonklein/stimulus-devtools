@@ -1,14 +1,23 @@
 <div align="center">
-    <br>
-    <img style="max-width: 100%; width: 360px; height: auto;" src=".github/stimulus_devtools_logo.svg" alt="Stimulus DevTools" />
-    <br>
+    <br><br>
+        <a href="https://chromewebstore.google.com/detail/stimulus-devtools/ljofhbgbmcnggnnomninmadlnicbojbh" target="_blank">
+            <img style="max-width: 100%; width: 360px; height: auto;" src=".github/stimulus_devtools_logo.svg" alt="Stimulus DevTools" />
+        </a>
+    <br><br>
 </div>
 
 <h4 align="center">A developer tool for inspecting and debugging Stimulus applications.</h4>
 
+<p align="center">
+    <img alt="Chrome Web Store Version" src="https://img.shields.io/chrome-web-store/v/ljofhbgbmcnggnnomninmadlnicbojbh">
+    <img alt="CI" src="https://github.com/robinsimonklein/stimulus-devtools/actions/workflows/ci.yml">
+</p>
+
+
+
 ## Overview
 
-The Stimulus DevTools Chrome Extension is an open-source tool designed to simplify the process of debugging [Stimulus](https://stimulus.hotwired.dev/) on a web page. It provides a user-friendly interface for inspecting values, targets, outlets, and classes of Stimulus controllers, all directly from Chrome's DevTools.
+The [Stimulus DevTools Chrome Extension](https://chromewebstore.google.com/detail/stimulus-devtools/ljofhbgbmcnggnnomninmadlnicbojbh) is designed to simplify the process of debugging [Stimulus](https://stimulus.hotwired.dev/) on a web page. It provides a user-friendly interface for inspecting values, targets, outlets, and classes of Stimulus controllers, all directly from Chrome's DevTools.
 
 *Inspired by the amazing [Vue DevTools](https://github.com/vuejs/devtools) and [Nuxt DevTools](https://github.com/nuxt/devtools).*
 
@@ -24,8 +33,7 @@ The Stimulus DevTools Chrome Extension is an open-source tool designed to simpli
 
 ### Install the Extension
 
-[//]: # (TODO: Add link)
-Download and install the Stimulus Debugger Chrome Extension from the Chrome Web Store (link to be provided).
+Download and install the Stimulus Debugger Chrome Extension [from the Chrome Web Store](https://chromewebstore.google.com/detail/stimulus-devtools/ljofhbgbmcnggnnomninmadlnicbojbh).
 
 ### Open Stimulus DevTools
 
@@ -48,6 +56,20 @@ import ClipboardController from "./controllers/clipboard_controller"
 window.Stimulus = Application.start() // <- Here
 Stimulus.register("hello", HelloController)
 Stimulus.register("clipboard", ClipboardController)
+```
+
+#### TypeScipt
+
+If you are using TypeScript in your project, it may throw an error when accessing `window.Stimulus`. To fix that, add this `stimulus.d.ts` file :
+
+```typescript
+import type { Application } from '@hotwired/stimulus';
+
+declare global {
+  interface Window {
+    Stimulus?: Application;
+  }
+}
 ```
 
 ## License
