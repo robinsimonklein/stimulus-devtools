@@ -1,0 +1,54 @@
+
+<html>
+    <head>
+        <title>Stimulus DevTools</title>
+        <meta charset="utf-8" />
+        <style>
+            body {
+                margin: 0;
+                padding: 12px;
+                width: 238px;
+                height: 104px;
+                text-align: center;
+
+                @media screen and (prefers-color-scheme: dark) {
+                    background: #09090b;
+                    color: #fff;
+                }
+            }
+
+            .popup__help {
+                font-size: 12px;
+                margin: 12px 12px 24px 12px;
+            }
+
+            .popup__tab {
+                display: inline-block;
+                margin: auto;
+                height: 28px;
+            }
+
+            .popup__tab--light {
+                display: block;
+                @media screen and (prefers-color-scheme: dark) {
+                    display: none;
+                }
+            }
+
+            .popup__tab--dark {
+                display: none;
+
+                @media screen and (prefers-color-scheme: dark) {
+                    display: block;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="popup">
+            <p class="popup__help">Open the Chrome DevTools and access to the Stimulus tab.</p>
+            <img class="popup__tab popup__tab--light" src="images/popup_tab_light.jpg" alt="Stimulus tab in Chrome DevTools" />
+            <img class="popup__tab popup__tab--dark" src="images/popup_tab_dark.jpg" alt="Stimulus tab in Chrome DevTools" />
+        </div>
+    </body>
+</html>

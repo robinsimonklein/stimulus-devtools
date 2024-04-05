@@ -11,6 +11,16 @@ const manifest: Record<string, unknown> = {
     '48': 'images/icon-48.png',
     '128': 'images/icon-128.png',
   },
+  action: {
+    default_icons: {
+      '16': 'images/icon-16.png',
+      '32': 'images/icon-34.png',
+      '48': 'images/icon-48.png',
+      '128': 'images/icon-128.png',
+    },
+    default_title: 'Stimulus DevTools',
+    default_popup: 'popup.html',
+  },
   devtools_page: 'devtools-background.html',
   content_scripts: [
     {
