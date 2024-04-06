@@ -1,22 +1,31 @@
 <template>
   <ValueTreeWrapper :name :level :keep-actions-visible="isEditing" @delete="$emit('delete')">
     <template #value>
-      <span class="font-mono text-code-purple">
-        <template v-if="!isEditing">"</template>
-        <span
-          ref="valueElement"
-          class="relative inline-block outline-0 after:pointer-events-none after:absolute after:inset-0 after:rounded-sm after:opacity-0 after:outline after:outline-2 after:outline-muted-foreground after:content-['']"
-          :class="{ 'px-1.5 py-0.5 after:opacity-100': isEditing }"
-          spellcheck="false"
-          :contenteditable="isEditing"
-          @keydown.enter.stop="save"
-          @keydown.esc.stop="cancel"
-          @keydown.up.stop
-          @keydown.down.stop
-          @blur="onBlur"
-        />
-        <template v-if="!isEditing">"</template>
-      </span>
+      <div class="inline-flex shrink-0 items-center">
+        <label
+          v-if="isColor"
+          class="relative mr-1 inline-block h-3.5 w-3.5 shrink-0 cursor-pointer rounded border"
+          :style="`background-color: ${modelValue}`"
+        >
+          <input type="color" :value="modelValue" class="absolute h-0 w-0 opacity-0" @input="onColorInput" />
+        </label>
+        <span class="shrink-0 font-mono text-code-purple">
+          <template v-if="!isEditing">"</template>
+          <span
+            ref="valueElement"
+            class="relative inline-block outline-0 after:pointer-events-none after:absolute after:inset-0 after:rounded-sm after:opacity-0 after:outline after:outline-2 after:outline-muted-foreground after:content-['']"
+            :class="{ 'px-1.5 py-0.5 after:opacity-100': isEditing }"
+            spellcheck="false"
+            :contenteditable="isEditing"
+            @keydown.enter.stop="save"
+            @keydown.esc.stop="cancel"
+            @keydown.up.stop
+            @keydown.down.stop
+            @blur="onBlur"
+          />
+          <template v-if="!isEditing">"</template>
+        </span>
+      </div>
     </template>
     <template #actions>
       <!-- Edit -->
@@ -47,11 +56,13 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import ValueTreeWrapper from '@/components/core/value-tree/ValueTreeWrapper.vue';
 import { Button } from '@/components/ui/button';
 import { Pencil, Check, XIcon } from 'lucide-vue-next';
 import { placeCursorAtEnd } from '@/utils/dom.ts';
+
+const colorRegex = new RegExp(/(?:#|0x)(?:[a-f0-9]{3}|[a-f0-9]{6})\b|(?:rgb|hsl)a?\([^)]*\)/, 'i');
 
 const props = withDefaults(
   defineProps<{
@@ -73,6 +84,8 @@ const saveButton = ref<HTMLButtonElement | null>(null);
 const cancelButton = ref<HTMLButtonElement | null>(null);
 
 const isEditing = ref(false);
+
+const isColor = computed(() => colorRegex.exec(modelValue.value));
 
 const edit = () => {
   isEditing.value = true;
@@ -99,6 +112,10 @@ const cancel = () => {
 const onBlur = (e: FocusEvent) => {
   if ((e.relatedTarget as HTMLElement)?.id === `value-save-${props.name}-${props.level}`) return;
   cancel();
+};
+
+const onColorInput = (e: InputEvent) => {
+  modelValue.value = (e.target as HTMLInputElement).value;
 };
 
 watch(modelValue, newValue => {
