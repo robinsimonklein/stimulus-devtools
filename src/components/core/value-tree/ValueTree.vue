@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="relative">
     <!-- String -->
     <ValueTreeString
       v-if="type === 'string'"
@@ -42,20 +42,33 @@
       </template>
     </ValueTreeBoolean>
 
-    <!-- Array or Object -->
-    <ValueTreeArrayOrObject
-      v-else-if="type === 'array' || type === 'object'"
+    <!-- Array -->
+    <ValueTreeArray
+      v-else-if="type === 'array'"
       :model-value="modelValue"
       :name
       :level
-      :type
       @update:model-value="updateValue"
       @delete="$emit('delete')"
     >
       <template v-if="$slots.more" #more>
         <slot name="more" />
       </template>
-    </ValueTreeArrayOrObject>
+    </ValueTreeArray>
+
+    <!-- Object -->
+    <ValueTreeObject
+      v-else-if="type === 'object'"
+      :model-value="modelValue"
+      :name
+      :level
+      @update:model-value="updateValue"
+      @delete="$emit('delete')"
+    >
+      <template v-if="$slots.more" #more>
+        <slot name="more" />
+      </template>
+    </ValueTreeObject>
   </div>
 </template>
 
@@ -64,7 +77,8 @@ import { computed } from 'vue';
 import ValueTreeBoolean from '@/components/core/value-tree/type/ValueTreeBoolean.vue';
 import ValueTreeString from '@/components/core/value-tree/type/ValueTreeString.vue';
 import ValueTreeNumber from '@/components/core/value-tree/type/ValueTreeNumber.vue';
-import ValueTreeArrayOrObject from '@/components/core/value-tree/type/ValueTreeArrayOrObject.vue';
+import ValueTreeArray from '@/components/core/value-tree/type/ValueTreeArray.vue';
+import ValueTreeObject from '@/components/core/value-tree/type/ValueTreeObject.vue';
 
 withDefaults(
   defineProps<{
