@@ -33,7 +33,7 @@ The [Stimulus DevTools Chrome Extension](https://chromewebstore.google.com/detai
 
 ### Install the Extension
 
-Download and install the Stimulus Debugger Chrome Extension [from the Chrome Web Store](https://chromewebstore.google.com/detail/stimulus-devtools/ljofhbgbmcnggnnomninmadlnicbojbh).
+Download and install the Stimulus DevTools [from the Chrome Web Store](https://chromewebstore.google.com/detail/stimulus-devtools/ljofhbgbmcnggnnomninmadlnicbojbh).
 
 ### Open Stimulus DevTools
 
@@ -67,7 +67,7 @@ import type { Application } from '@hotwired/stimulus';
 
 declare global {
   interface Window {
-    Stimulus?: Application;
+    Stimulus: Application;
   }
 }
 ```
