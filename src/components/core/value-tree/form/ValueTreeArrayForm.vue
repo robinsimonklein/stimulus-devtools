@@ -6,7 +6,7 @@
         marginLeft: `${(level + 1) * 16}px`,
       }"
     />
-    <form v-if="isFormVisible" class="flex shrink-0 items-center font-mono text-sm">
+    <div v-if="isFormVisible" class="flex shrink-0 items-center font-mono text-sm">
       <span class="select-none">
         <span class="text-code-navy opacity-50">{{ index }}</span>
         <span class="ml-0.5 text-muted-foreground">:</span>
@@ -29,20 +29,14 @@
         </span>
       </div>
       <div class="ml-2 inline-flex shrink-0 items-center gap-x-1">
-        <Button
-          :id="`value-save-${index}-${level}`"
-          ref="saveButton"
-          size="icon-sm"
-          variant="secondary"
-          @click.stop="save"
-        >
+        <Button ref="saveButton" data-ignore-blur size="icon-sm" variant="secondary" @click.stop="save">
           <Check class="h-3.5 w-3.5" />
         </Button>
         <Button ref="cancelButton" size="icon-sm" variant="secondary" @click.stop="cancel">
           <XIcon class="h-3.5 w-3.5" />
         </Button>
       </div>
-    </form>
+    </div>
     <Button v-else size="icon-sm" variant="ghost" @click="showForm">
       <Plus class="h-3.5 w-3.5" />
     </Button>
@@ -54,7 +48,7 @@ import { computed, nextTick, ref } from 'vue';
 import { Check, Plus, XIcon } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     index?: number;
     level?: number;
@@ -116,7 +110,7 @@ const cancel = () => {
 };
 
 const onBlur = (e: FocusEvent) => {
-  if ((e.relatedTarget as HTMLElement)?.id === `value-save-${props.index}-${props.level}`) return;
+  if ((e.relatedTarget as HTMLElement)?.hasAttribute('data-ignore-blur')) return;
   cancel();
 };
 </script>

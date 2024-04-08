@@ -29,14 +29,7 @@
     <template #actions>
       <!-- Edit -->
       <template v-if="isEditing">
-        <Button
-          v-if="isValid"
-          :id="`value-save-${name}-${level}`"
-          ref="saveButton"
-          size="icon-sm"
-          variant="secondary"
-          @click="save"
-        >
+        <Button v-if="isValid" ref="saveButton" data-ignore-blur size="icon-sm" variant="secondary" @click="save">
           <Check class="h-3.5 w-3.5" />
         </Button>
         <span
@@ -68,7 +61,7 @@ import { placeCursorAtEnd } from '@/utils/dom.ts';
 
 const precision = 1000;
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     name: string;
     level?: number;
@@ -139,7 +132,7 @@ const cancel = () => {
 };
 
 const onBlur = (e: FocusEvent) => {
-  if ((e.relatedTarget as HTMLElement)?.id === `value-save-${props.name}-${props.level}`) return;
+  if ((e.relatedTarget as HTMLElement)?.hasAttribute('data-ignore-blur')) return;
   cancel();
 };
 

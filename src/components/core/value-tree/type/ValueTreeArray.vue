@@ -40,14 +40,14 @@ const modelValue = defineModel<any[]>({ required: true });
 
 defineEmits(['delete']);
 
-const onUpdate = (key: string | number, value: any) => {
+const onUpdate = (key: number, value: any) => {
   const clone = Array.from(modelValue.value as any[]);
   // @ts-ignore
   clone[key] = value;
   modelValue.value = clone;
 };
 
-const onDelete = (key: string | number) => {
+const onDelete = (key: number) => {
   const clone = Array.from(modelValue.value as any[]);
   // @ts-ignore
   clone.splice(key, 1);
