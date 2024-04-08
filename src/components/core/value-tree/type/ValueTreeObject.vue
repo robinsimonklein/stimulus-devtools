@@ -16,6 +16,7 @@
         @delete="onDelete(key)"
         @update:model-value="onUpdate(key, $event)"
       />
+      <ValueTreeObjectForm :object="modelValue" :level @save="onFormSave" />
     </template>
   </ValueTreeWrapper>
 </template>
@@ -23,6 +24,7 @@
 <script setup lang="ts">
 import ValueTree from '@/components/core/value-tree/ValueTree.vue';
 import ValueTreeWrapper from '@/components/core/value-tree/ValueTreeWrapper.vue';
+import ValueTreeObjectForm from '@/components/core/value-tree/form/ValueTreeObjectForm.vue';
 
 withDefaults(
   defineProps<{
@@ -38,7 +40,7 @@ const modelValue = defineModel<Record<string, any>>({ required: true });
 
 defineEmits(['delete']);
 
-const onUpdate = (key: string | number, value: any) => {
+const onUpdate = (key: string, value: any) => {
   const clone = { ...modelValue.value };
   // @ts-ignore
   clone[key] = value;
@@ -50,5 +52,9 @@ const onDelete = (key: string | number) => {
   // @ts-ignore
   delete clone[key];
   modelValue.value = clone;
+};
+
+const onFormSave = (key: string, value: string | number | boolean) => {
+  onUpdate(key, value);
 };
 </script>
