@@ -9,8 +9,8 @@
         >
           <input type="color" :value="modelValue" class="absolute h-0 w-0 opacity-0" @input="onColorInput" />
         </label>
-        <span class="shrink-0 font-mono text-code-purple">
-          <template v-if="!isEditing">"</template>
+        <div class="shrink-0 font-mono text-code-purple">
+          <span v-if="!isEditing" class="select-none">"</span>
           <span
             ref="valueElement"
             class="relative inline-block outline-0 after:pointer-events-none after:absolute after:inset-0 after:rounded-sm after:opacity-0 after:outline after:outline-2 after:outline-muted-foreground after:content-['']"
@@ -23,8 +23,8 @@
             @keydown.down.stop
             @blur="onBlur"
           />
-          <template v-if="!isEditing">"</template>
-        </span>
+          <span v-if="!isEditing" class="select-none">"</span>
+        </div>
       </div>
     </template>
     <template #actions>
