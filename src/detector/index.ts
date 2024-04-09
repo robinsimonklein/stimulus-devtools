@@ -45,5 +45,10 @@
     }, 100);
   }
 
-  if (document instanceof HTMLDocument) document.addEventListener('DOMContentLoaded', detect);
+  if (document instanceof HTMLDocument) {
+    document.addEventListener('DOMContentLoaded', detect);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') detect();
+    });
+  }
 })();
