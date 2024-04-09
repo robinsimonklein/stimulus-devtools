@@ -40,7 +40,7 @@ const manifest: Record<string, unknown> = {
     extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
   },
   host_permissions: ['<all_urls>'],
-  permissions: ['tabs', 'storage'],
+  permissions: ['storage'],
 };
 
 export default JSON.stringify(manifest);
