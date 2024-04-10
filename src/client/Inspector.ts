@@ -1,7 +1,7 @@
 const zIndex = '2147483645';
 
-const titleTemplate: string = `<span style="font-size: 16px; color: #000">__title__</span>`;
-const sizeTemplate: string = `<span style="font-size: 12px; color: #888">__width__x__height__</span>`;
+const titleTemplate: string = `<span style="flex-shrink: 0; font-size: 16px; color: #000">__title__</span>`;
+const sizeTemplate: string = `<span style="flex-shrink: 0; font-size: 12px; color: #888">__width__x__height__</span>`;
 
 function createHighlightBox(target: HTMLElement, title?: string) {
   const targetBoundingClientRect = target.getBoundingClientRect();
