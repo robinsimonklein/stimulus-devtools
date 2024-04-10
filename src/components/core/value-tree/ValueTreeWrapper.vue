@@ -57,7 +57,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import { ChevronRight, EllipsisVertical, Trash2 } from 'lucide-vue-next';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
@@ -76,9 +75,9 @@ const props = withDefaults(
   },
 );
 
-defineEmits(['delete']);
+const showChildren = defineModel<boolean>('showChildren', { default: false });
 
-const showChildren = ref(false);
+defineEmits(['delete']);
 
 const toggle = () => {
   if (!props.hasChildren) return;

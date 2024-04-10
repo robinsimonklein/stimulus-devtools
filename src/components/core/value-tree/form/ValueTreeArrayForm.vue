@@ -6,7 +6,7 @@
         marginLeft: `${(level + 1) * 16}px`,
       }"
     />
-    <div v-if="isFormVisible" class="flex shrink-0 items-center font-mono text-sm">
+    <div class="flex shrink-0 items-center font-mono text-sm">
       <span class="select-none">
         <span class="text-code-navy opacity-50">{{ index }}</span>
         <span class="ml-0.5 text-muted-foreground">:</span>
@@ -37,15 +37,12 @@
         </Button>
       </div>
     </div>
-    <Button v-else size="icon-sm" variant="ghost" @click="showForm">
-      <Plus class="h-3.5 w-3.5" />
-    </Button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue';
-import { Check, Plus, XIcon } from 'lucide-vue-next';
+import { computed, onMounted, ref } from 'vue';
+import { Check, XIcon } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 
 withDefaults(
@@ -59,11 +56,10 @@ withDefaults(
   },
 );
 
-const emits = defineEmits(['save']);
+const emits = defineEmits(['save', 'cancel']);
 
 const input = ref<HTMLInputElement | null>(null);
 
-const isFormVisible = ref(false);
 const value = ref('');
 
 const type = computed(() => {
@@ -83,13 +79,6 @@ const style = computed(() => {
   }
 });
 
-const showForm = () => {
-  isFormVisible.value = true;
-  nextTick(() => {
-    if (input.value) input.value.focus();
-  });
-};
-
 const onInput = () => {
   if (!input.value) return;
 
@@ -101,16 +90,19 @@ const save = () => {
   if (type.value === 'boolean') formattedValue = JSON.parse(formattedValue);
   if (type.value === 'number') formattedValue = parseFloat(formattedValue as string);
   emits('save', formattedValue);
-  isFormVisible.value = false;
 };
 
 const cancel = () => {
   value.value = '';
-  isFormVisible.value = false;
+  emits('cancel');
 };
 
 const onBlur = (e: FocusEvent) => {
   if ((e.relatedTarget as HTMLElement)?.hasAttribute('data-ignore-blur')) return;
   cancel();
 };
+
+onMounted(() => {
+  if (input.value) input.value.focus();
+});
 </script>

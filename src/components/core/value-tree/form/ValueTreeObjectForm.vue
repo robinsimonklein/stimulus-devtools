@@ -6,7 +6,7 @@
         marginLeft: `${(level + 1) * 16}px`,
       }"
     />
-    <div v-if="isFormVisible" class="flex shrink-0 items-center font-mono text-sm">
+    <div class="flex shrink-0 items-center font-mono text-sm">
       <div class="select-none">
         <span
           ref="keyInput"
@@ -66,15 +66,12 @@
         </Button>
       </div>
     </div>
-    <Button v-else size="icon-sm" variant="ghost" @click="showForm">
-      <Plus class="h-3.5 w-3.5" />
-    </Button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue';
-import { Check, Plus, TriangleAlert, XIcon } from 'lucide-vue-next';
+import { computed, onMounted, ref } from 'vue';
+import { Check, TriangleAlert, XIcon } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 
 const props = withDefaults(
@@ -87,12 +84,10 @@ const props = withDefaults(
   },
 );
 
-const emits = defineEmits(['save']);
+const emits = defineEmits(['save', 'cancel']);
 
 const keyInput = ref<HTMLInputElement | null>(null);
 const valueInput = ref<HTMLInputElement | null>(null);
-
-const isFormVisible = ref(false);
 
 const key = ref('');
 const value = ref('');
@@ -124,13 +119,6 @@ const valueStyle = computed(() => {
   }
 });
 
-const showForm = () => {
-  isFormVisible.value = true;
-  nextTick(() => {
-    if (keyInput.value) keyInput.value.focus();
-  });
-};
-
 const onKeyInput = () => {
   if (!keyInput.value) return;
 
@@ -150,17 +138,20 @@ const save = () => {
   if (valueType.value === 'boolean') formattedValue = JSON.parse(formattedValue);
   if (valueType.value === 'number') formattedValue = parseFloat(formattedValue as string);
   emits('save', key.value, formattedValue);
-  isFormVisible.value = false;
 };
 
 const cancel = () => {
   key.value = '';
   value.value = '';
-  isFormVisible.value = false;
+  emits('cancel');
 };
 
 const onBlur = (e: FocusEvent) => {
   if ((e.relatedTarget as HTMLElement)?.hasAttribute('data-ignore-blur')) return;
   cancel();
 };
+
+onMounted(() => {
+  if (keyInput.value) keyInput.value.focus();
+});
 </script>
