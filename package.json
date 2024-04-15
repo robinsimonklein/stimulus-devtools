@@ -3,7 +3,7 @@
   "displayName": "Stimulus DevTools",
   "description": "A developer tool for inspecting and debugging Stimulus applications.",
   "private": true,
-  "version": "0.3.1",
+  "version": "0.3.2",
   "type": "module",
   "scripts": {
     "dev": "npm run clear && NODE_ENV=development run-p dev:*",
