@@ -2,6 +2,17 @@
   "name": "stimulus-devtools",
   "displayName": "Stimulus DevTools",
   "description": "A developer tool for inspecting and debugging Stimulus applications.",
+  "keywords": ["stimulus", "devtools", "stimulusjs", "chrome extension"],
+  "author": {
+    "name": "Robin Simonklein",
+    "email": "contact@robinsimonklein.com",
+    "url": "robinsimonklein.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/robinsimonklein/stimulus-devtools",
+  "bugs": {
+    "url": "https://github.com/robinsimonklein/stimulus-devtools/issues"
+  },
   "private": true,
   "version": "0.3.2",
   "type": "module",
