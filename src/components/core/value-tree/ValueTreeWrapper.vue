@@ -24,7 +24,6 @@
 
         <!-- Actions -->
         <div
-          v-if="$slots.actions || hasChildren"
           class="ml-2 inline-flex shrink-0 items-center gap-x-1"
           :class="{ 'opacity-0 group-hover:opacity-100': !keepActionsVisible }"
         >

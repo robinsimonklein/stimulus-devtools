@@ -69,6 +69,13 @@
         <slot name="more" />
       </template>
     </ValueTreeObject>
+
+    <!-- Null -->
+    <ValueTreeNull v-else-if="type === 'null'" :name :level @delete="$emit('delete')">
+      <template v-if="$slots.more" #more>
+        <slot name="more" />
+      </template>
+    </ValueTreeNull>
   </div>
 </template>
 
@@ -79,6 +86,7 @@ import ValueTreeString from '@/components/core/value-tree/type/ValueTreeString.v
 import ValueTreeNumber from '@/components/core/value-tree/type/ValueTreeNumber.vue';
 import ValueTreeArray from '@/components/core/value-tree/type/ValueTreeArray.vue';
 import ValueTreeObject from '@/components/core/value-tree/type/ValueTreeObject.vue';
+import ValueTreeNull from '@/components/core/value-tree/type/ValueTreeNull.vue';
 
 withDefaults(
   defineProps<{
@@ -97,11 +105,11 @@ const modelValue = defineModel<any>({ required: true });
 defineEmits(['delete']);
 
 const type = computed(() => {
+  if (modelValue.value === null) return 'null';
+  if (modelValue.value === undefined) return 'undefined';
   if (typeof modelValue.value === 'number') return 'number';
   if (typeof modelValue.value === 'boolean') return 'boolean';
   if (typeof modelValue.value === 'object') return Array.isArray(modelValue.value) ? 'array' : 'object';
-  if (modelValue.value === null) return 'null';
-  if (modelValue.value === undefined) return 'undefined';
   return 'string';
 });
 
