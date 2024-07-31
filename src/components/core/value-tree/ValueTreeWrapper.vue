@@ -12,7 +12,7 @@
             <ChevronRight v-if="hasChildren" class="h-full w-full" :class="{ 'rotate-90': showChildren }" />
           </span>
 
-          <span class="select-none font-mono text-sm">
+          <span class="font-mono text-sm">
             <span class="text-code-navy">{{ name }}</span>
             <span class="ml-0.5 text-muted-foreground">:</span>
           </span>
