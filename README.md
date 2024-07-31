@@ -33,12 +33,12 @@ The [Stimulus DevTools Chrome Extension](https://chromewebstore.google.com/detai
 
 ### Install the Extension
 
-Download and install the Stimulus DevTools [from the Chrome Web Store](https://chromewebstore.google.com/detail/stimulus-devtools/ljofhbgbmcnggnnomninmadlnicbojbh).
+Download and install the Stimulus DevTools extension [from the Chrome Web Store](https://chromewebstore.google.com/detail/stimulus-devtools/ljofhbgbmcnggnnomninmadlnicbojbh).
 
 ### Open Stimulus DevTools
 
 1. Navigate to your web page where Stimulus controllers are used.
-2. Open Chrome DevTools by right-clicking on the page, selecting "Inspect", or using the keyboard shortcut (Ctrl+Shift+I on Windows/Linux or Cmd+Opt+I on macOS).
+2. Open Chrome DevTools by right-clicking on the page, selecting "Inspect", or using the keyboard shortcut (Ctrl+Shift+I on Windows/Linux or Cmd+Option+I on macOS).
 3. In Chrome DevTools, go to the "Stimulus" tab.
 
 ### Enable Stimulus DevTools on your project
@@ -58,7 +58,7 @@ Stimulus.register("hello", HelloController)
 Stimulus.register("clipboard", ClipboardController)
 ```
 
-#### TypeScipt
+#### TypeScript
 
 If you are using TypeScript in your project, it may throw an error when accessing `window.Stimulus`. To fix that, add this `stimulus.d.ts` file :
 
