@@ -1,5 +1,5 @@
 <template>
-  <Button size="icon-sm" variant="ghost" @click.prevent="copy(text)">
+  <Button size="icon-sm" variant="ghost" @click.prevent.stop="copy(text)">
     <Check v-if="copied" class="h-3.5 w-3.5" />
     <Copy v-else class="h-3.5 w-3.5" />
   </Button>
