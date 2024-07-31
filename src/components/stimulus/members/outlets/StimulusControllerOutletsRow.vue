@@ -108,10 +108,10 @@ const toggle = () => {
 const canExpand = computed(() => !!props.outlet.references.length);
 
 const handleItemMouseEnter = (item: StimulusControllerOutletReference) => {
-  executeAction(Action.HighlightElement, { selector: item.uidSelector, title: props.outlet.name });
+  executeAction(Action.HighlightElements, { elements: [{ selector: item.uidSelector, title: props.outlet.name }] });
 };
 
 const handleItemMouseLeave = () => {
-  executeAction(Action.StopHighlightElement);
+  executeAction(Action.StopHighlightElements);
 };
 </script>

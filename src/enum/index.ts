@@ -24,6 +24,6 @@ export enum Action {
   UpdateInstanceClasses = 'updateInstanceClasses',
   UpdateValue = 'updateValue',
 
-  HighlightElement = 'highlightElement',
-  StopHighlightElement = 'stopHighlightElement',
+  HighlightElements = 'highlightElements',
+  StopHighlightElements = 'stopHighlightElements',
 }

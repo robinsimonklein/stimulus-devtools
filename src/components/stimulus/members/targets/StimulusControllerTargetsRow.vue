@@ -88,10 +88,10 @@ const toggle = () => {
 };
 
 const handleItemMouseEnter = (element: StimulusControllerTargetElement) => {
-  executeAction(Action.HighlightElement, { selector: element.uidSelector, title: props.target.name });
+  executeAction(Action.HighlightElements, { elements: [{ selector: element.uidSelector, title: props.target.name }] });
 };
 
 const handleItemMouseLeave = () => {
-  executeAction(Action.StopHighlightElement);
+  executeAction(Action.StopHighlightElements);
 };
 </script>

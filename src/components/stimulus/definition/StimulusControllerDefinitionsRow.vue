@@ -3,6 +3,12 @@
     class="group inline-flex min-w-full cursor-pointer items-center gap-x-3 border-b border-dashed px-3 py-2 text-sm hover:bg-muted/60 dark:border-b-neutral-900"
     :class="{ 'is-selected !bg-muted': selectedDefinition?.identifier === definition.identifier }"
     @click="selectDefinition(definition.identifier)"
+    @mouseenter="
+      executeAction(Action.HighlightElements, {
+        elements: definition.instances.map(instance => ({ selector: instance.uidSelector })),
+      })
+    "
+    @mouseleave="executeAction(Action.StopHighlightElements)"
   >
     <div
       class="inline-flex shrink-0 items-center gap-x-1.5 opacity-70 group-hover:opacity-100 group-[.is-selected]:opacity-100"
@@ -38,6 +44,10 @@ import { computed } from 'vue';
 import { Zap } from 'lucide-vue-next';
 import { useControllerDefinitions } from '@/composables/stimulus/useControllerDefinitions.ts';
 import { ParsedStimulusControllerDefinition } from '@/types/stimulus.ts';
+import { Action } from '@/enum';
+import { useBridge } from '@/composables/useBridge.ts';
+
+const { executeAction } = useBridge();
 
 const { selectedDefinition, selectDefinition } = useControllerDefinitions();
 
