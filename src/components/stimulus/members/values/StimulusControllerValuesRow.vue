@@ -9,7 +9,22 @@
           </tr>
           <tr v-if="value.defaultValue">
             <td>Default</td>
-            <CodeInline :code="value.defaultValue.toString()" language="javascript" />
+            <template v-if="value.type === 'object' || value.type === 'array'">
+              <Popover v-if="value.defaultValue">
+                <PopoverTrigger>
+                  <button class="inline-flex items-center capitalize italic text-muted-foreground">
+                    <span>{{ value.type }}</span>
+                    <ChevronRight class="h-4" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <CodeBlock :code="JSON.stringify(value.defaultValue, null, 2)" language="javascript" />
+                </PopoverContent>
+              </Popover>
+            </template>
+            <template v-else>
+              <CodeInline :code="JSON.stringify(value.defaultValue)" language="javascript" />
+            </template>
           </tr>
         </table>
         <hr class="my-2" />
@@ -44,6 +59,9 @@ import ValueType from '@/components/core/ValueType.vue';
 import CodeInline from '@/components/core/code/CodeInline.vue';
 import { Action } from '@/enum';
 import { useBridge } from '@/composables/useBridge.ts';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import CodeBlock from '@/components/core/CodeBlock.vue';
+import { ChevronRight } from 'lucide-vue-next';
 
 const { executeAction } = useBridge();
 
