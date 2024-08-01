@@ -9,8 +9,12 @@
 <h4 align="center">A developer tool for inspecting and debugging Stimulus applications.</h4>
 
 <p align="center">
-    <img alt="Chrome Web Store Version" src="https://img.shields.io/chrome-web-store/v/ljofhbgbmcnggnnomninmadlnicbojbh">
-    <img alt="CI" src="https://github.com/robinsimonklein/stimulus-devtools/actions/workflows/ci.yml">
+    <a href="https://chromewebstore.google.com/detail/stimulus-devtools/ljofhbgbmcnggnnomninmadlnicbojbh" target="_blank">
+        <img alt="Chrome Web Store Version" src="https://img.shields.io/chrome-web-store/v/ljofhbgbmcnggnnomninmadlnicbojbh">
+    </a>
+    <a href="https://github.com/robinsimonklein/stimulus-devtools/actions/workflows/ci.yml">
+        <img alt="CI" src="https://github.com/robinsimonklein/stimulus-devtools/actions/workflows/ci.yml/badge.svg">
+    </a>
 </p>
 
 
