@@ -16,7 +16,7 @@ function createHighlightBox(target: HTMLElement, title?: string) {
   highlightBox.style.height = `${targetBoundingClientRect.height}px`;
   highlightBox.style.backgroundColor = 'rgba(119, 232, 185, 0.5)';
   highlightBox.style.borderColor = 'rgba(119, 232, 185, 1)';
-  highlightBox.style.borderWidth = '1px';
+  highlightBox.style.borderWidth = '2px';
   highlightBox.style.borderStyle = 'dashed';
 
   if (title) {
@@ -78,19 +78,21 @@ function createHighlightBox(target: HTMLElement, title?: string) {
 }
 
 export class Inspector {
-  highlightElement(args: any) {
-    const { selector, title } = args;
-    if (!selector) return;
+  highlightElements(args: { elements: { selector: string; title?: string }[] }) {
+    const { elements } = args;
+    if (!elements?.length) return;
 
-    const highlightedElement = document.querySelector(selector) as HTMLElement;
-    if (!highlightedElement) return;
+    elements.forEach(element => {
+      const highlightedElement = document.querySelector(element.selector) as HTMLElement;
+      if (!highlightedElement) return;
 
-    const highlightBox = createHighlightBox(highlightedElement, title);
+      const highlightBox = createHighlightBox(highlightedElement, element.title);
 
-    document.body.appendChild(highlightBox);
+      document.body.appendChild(highlightBox);
+    });
   }
 
-  stopHighlightElement() {
+  stopHighlightElements() {
     const highlightBoxes = document.querySelectorAll('.stimulus-devtools-highlight');
     highlightBoxes.forEach(highlightBoxe => {
       highlightBoxe.remove();

@@ -3,8 +3,12 @@
     class="group relative z-0 inline-flex min-w-full cursor-pointer items-center px-3 py-0.5 hover:bg-accent/60"
     :class="{ 'is-selected !bg-accent': selected }"
     @click.prevent="$emit('select')"
-    @mouseenter="executeAction(Action.HighlightElement, { selector: instance.uidSelector, title: instance.identifier })"
-    @mouseleave="executeAction(Action.StopHighlightElement)"
+    @mouseenter="
+      executeAction(Action.HighlightElements, {
+        elements: [{ selector: instance.uidSelector, title: instance.identifier }],
+      })
+    "
+    @mouseleave="executeAction(Action.StopHighlightElements)"
   >
     <span v-show="selected" class="absolute inset-y-0 left-0 w-[1px] bg-primary" />
     <div class="flex w-full items-center opacity-70 group-hover:opacity-100 group-[.is-selected]:opacity-100">
