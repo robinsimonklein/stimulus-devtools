@@ -76,6 +76,14 @@ declare global {
 }
 ```
 
+## Sponsors
+
+<p align="center">
+  <a target="_blank" href="https://www.mezcalito.fr">
+    <img alt="Mezcalito - Agence Digitale à Grenoble depuis 2006" src="https://raw.githubusercontent.com/IQ2i/storia-bundle/main/doc/static/mezcalito.svg" width="300">
+  </a>
+</p>
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
