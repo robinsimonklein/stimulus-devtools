@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --font-size-xs: 0.5rem;
+  --font-size-sm: 0.625rem;
+  --font-size-base: 0.75rem;
+  --font-size-lg: 0.875rem;
+  --font-size-xl: 1rem;
+  --font-size-2xl: 1.125rem;
+}
+
+body {
+  @apply bg-white text-neutral-900;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    @apply bg-neutral-800 text-neutral-100;
+  }
+}

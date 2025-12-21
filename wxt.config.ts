@@ -1,0 +1,29 @@
+import { defineConfig } from 'wxt';
+import tailwindcss from '@tailwindcss/vite';
+
+// See https://wxt.dev/api/config.html
+export default defineConfig({
+  srcDir: 'src',
+  modules: ['@wxt-dev/module-vue'],
+  manifest: {
+    permissions: ['storage'],
+    web_accessible_resources: [
+      {
+        resources: ['stimulus-detector.js'],
+        matches: ['<all_urls>'],
+      },
+    ],
+  },
+  webExt: {
+    chromiumArgs: [
+      '--user-data-dir=./.wxt/chrome-data',
+      '--auto-open-devtools-for-tabs',
+      '--no-first-run',
+      '--hide-crash-restore-bubble',
+    ],
+    startUrls: ['http://localhost:5173'],
+  },
+  vite: () => ({
+    plugins: [tailwindcss()],
+  }),
+});
