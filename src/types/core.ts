@@ -4,12 +4,14 @@ export type ControllerInstance = {
   uid: string;
   identifier: string;
   selector: ElementSelector;
+  isLazy: boolean;
   // values: ControllerValue[];
 };
 
 export type ControllerDefinition = {
   identifier: string;
   instances: ControllerInstance[];
+  isLazy: boolean;
 };
 
 // export type ValueType = 'String' | 'Number' | 'Boolean' | 'Object' | 'Array';

@@ -18,10 +18,15 @@ const controllerDefinitions = computed<ControllerDefinition[]>(() => {
   });
 
   // Convert map to array of ControllerDefinition
-  return Array.from(identifiers.values()).map(identifier => ({
-    identifier,
-    instances: controllerInstances.value.filter(instance => instance.identifier === identifier),
-  }));
+  return Array.from(identifiers.values()).map(identifier => {
+    const instances = controllerInstances.value.filter(instance => instance.identifier === identifier);
+
+    return {
+      identifier,
+      instances,
+      isLazy: instances.some(i => i.isLazy),
+    };
+  });
 });
 
 // Initialize message listening at module level

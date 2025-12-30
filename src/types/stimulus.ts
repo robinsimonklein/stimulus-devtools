@@ -31,6 +31,9 @@ export interface StimulusController {
   identifier: string;
   element: Element;
   context: StimulusControllerContext;
+
+  // Lazy-loaded controller with webpack
+  __stimulusLazyController?: boolean;
 }
 
 export interface StimulusControllerContext {

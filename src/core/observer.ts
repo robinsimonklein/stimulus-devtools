@@ -55,8 +55,9 @@ export class StimulusObserver {
         uid,
         identifier: controller.identifier,
         selector: getElementSelector(controller.element),
-        // hasValues: Object.keys(ctrl.values || {}).length > 0,
-        // hasClasses: Object.keys(ctrl.classes || {}).length > 0,
+        isLazy: !!controller['__stimulusLazyController'],
+        // hasValues: Object.keys(controller.values || {}).length > 0,
+        // hasClasses: Object.keys(controller.classes || {}).length > 0,
       };
     });
 

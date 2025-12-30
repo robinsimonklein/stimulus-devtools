@@ -23,8 +23,14 @@ export default defineConfig(
       },
     },
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
+      // General
       'no-console': ['warn', { allow: ['warn', 'error'] }],
+
+      // Typescript
+      '@typescript-eslint/no-explicit-any': 'off',
+
+      // Vue
+      'vue/multi-word-component-names': ['off'],
     },
   },
   pluginPrettier,

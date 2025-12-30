@@ -34,6 +34,9 @@
   },
   "dependencies": {
     "@vueuse/core": "^14.1.0",
+    "lucide-vue-next": "^0.562.0",
+    "reka-ui": "^2.7.0",
+    "tailwind-variants": "^3.2.2",
     "uuid": "^13.0.0",
     "vue": "^3.5.26"
   },

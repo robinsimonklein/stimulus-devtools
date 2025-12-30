@@ -1,16 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  --font-size-xs: 0.5rem;
-  --font-size-sm: 0.625rem;
-  --font-size-base: 0.75rem;
-  --font-size-lg: 0.875rem;
-  --font-size-xl: 1rem;
-  --font-size-2xl: 1.125rem;
+  --text-xs: 0.5rem;
+  --text-xs--line-height: calc(0.75 / 0.5);
+
+  --text-sm: 0.625rem;
+  --text-sm--line-height: calc(0.875 / 0.625);
+
+  --text-base: 0.75rem;
+  --text-base--line-height: calc(1 / 0.75);
+
+  --text-lg: 0.875rem;
+  --text-lg--line-height: calc(1.25 / 0.875);
+
+  --text-xl: 1rem;
+  --text-xl--line-height: calc(1.5 / 1);
+
+  --text-2xl: 1.125rem;
+  --text-2xl--line-height: calc(1.75 / 1.125);
 }
 
 body {
-  @apply bg-white text-neutral-900;
+  @apply bg-white text-neutral-900 text-base;
 }
 
 @media (prefers-color-scheme: dark) {

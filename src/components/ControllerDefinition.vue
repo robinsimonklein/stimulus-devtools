@@ -1,25 +1,43 @@
 <template>
   <div
-    class="controller-definition relative flex items-center gap-1.5 border-b border-neutral-200 px-3 py-2 dark:border-neutral-700"
+    class="controller-definition relative flex w-full items-center gap-1.5 border-b border-dashed border-neutral-200/75 px-3 py-2 dark:border-neutral-700"
     :class="{ 'is-selected': isSelected }"
   >
-    <p class="flex items-center gap-1 text-sm">
-      <template v-for="(labelPart, index) in label" :key="index">
-        <span v-if="index > 0" class="text-neutral-500 dark:text-neutral-400">/</span>
-        <button
-          v-if="index === label.length - 1"
-          class="cursor-pointer font-bold before:absolute before:inset-0 before:content-[''] hover:underline"
-          :class="{ underline: isSelected }"
-          @click="selectControllerDefinition(definition.identifier)"
-        >
-          {{ labelPart }}
-        </button>
-        <span v-else class="text-neutral-500 dark:text-neutral-400">{{ labelPart }}</span>
-      </template>
-    </p>
-    <p v-if="definition.instances.length > 1" class="rounded bg-neutral-200 px-1 text-xs dark:bg-neutral-700">
-      x{{ definition.instances.length }}
-    </p>
+    <div class="flex min-w-0 items-center gap-1.5 overflow-hidden">
+      <span
+        v-if="label.length > 1"
+        class="truncate text-neutral-500 dark:text-neutral-400"
+        :title="definition.identifier"
+      >
+        {{ label.slice(0, -1).join(' / ') }} /
+      </span>
+
+      <button
+        class="shrink-0 text-left font-semibold before:absolute before:inset-0 before:content-[''] hover:underline"
+        :class="{ underline: isSelected }"
+        :title="definition.identifier"
+        @click="selectControllerDefinition(definition.identifier)"
+      >
+        {{ label[label.length - 1] }}
+      </button>
+
+      <p
+        v-if="definition.instances.length > 1"
+        class="shrink-0 rounded bg-neutral-200 px-1 text-sm dark:bg-neutral-700"
+      >
+        x{{ definition.instances.length }}
+      </p>
+      <Tooltip v-if="definition.isLazy">
+        <template #trigger>
+          <div class="relative z-10 shrink-0">
+            <LucideZap class="size-3 text-purple-500 dark:text-purple-400" />
+          </div>
+        </template>
+        <template #default>
+          <p>Lazy-loaded</p>
+        </template>
+      </Tooltip>
+    </div>
   </div>
 </template>
 
@@ -27,6 +45,8 @@
 import { computed } from 'vue';
 import { useState } from '@/composables/useState';
 import { ControllerDefinition } from '@/types/core';
+import { LucideZap } from 'lucide-vue-next';
+import Tooltip from '@/components/ui/Tooltip.vue';
 
 const { selectedControllerDefinition, selectControllerDefinition } = useState();
 
@@ -43,10 +63,10 @@ const isSelected = computed(() => props.definition.identifier === selectedContro
 @reference '@/entrypoints/devtools-panel/style.css';
 
 .controller-definition:not(.is-selected):has(button:hover) {
-  @apply bg-neutral-100 dark:bg-neutral-700/30;
+  @apply bg-neutral-50 dark:bg-neutral-700/30;
 }
 
 .controller-definition.is-selected {
-  @apply bg-neutral-200/70 dark:bg-neutral-700/70;
+  @apply bg-neutral-100 dark:bg-neutral-700/70;
 }
 </style>
