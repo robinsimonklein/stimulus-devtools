@@ -15,6 +15,8 @@ export interface StimulusApplication {
    */
   load?(definitions: unknown[]): void;
 
+  start(): void;
+
   /**
    * The schema defines data attributes
    */

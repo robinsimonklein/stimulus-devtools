@@ -1,1 +1,1 @@
-export type MessageType = 'INIT' | 'UPDATE' | 'REFRESH';
+export type MessageType = 'INIT' | 'STIMULUS_DETECTED' | 'UPDATE' | 'REFRESH';

@@ -15,55 +15,128 @@ export default defineUnlistedScript(() => {
   };
 
   let observer: StimulusObserver | null = null;
-  let stimulusApp: StimulusApplication | null = null;
 
-  Object.defineProperty(window, 'Stimulus', {
-    get: () => stimulusApp,
-    set: value => {
-      stimulusApp = value;
-      if (value && !state.isDetected) {
-        onStimulusDetected(value);
-      }
-    },
-    configurable: true,
-  });
+  const POTENTIAL_WINDOW_KEYS = ['Stimulus', 'application'];
 
-  // Fallback : si Stimulus est déjà là (ou assigné avant notre script)
-  const checkExisting = () => {
-    if (window.Stimulus && !state.isDetected) {
-      onStimulusDetected(window.Stimulus);
+  /**
+   * Le déclencheur unique. Une fois qu'on a l'app, on arrête de chercher.
+   */
+  function onStimulusDetected(app: StimulusApplication) {
+    if (state.isDetected) return;
+
+    // Validation basique pour s'assurer que c'est bien une app Stimulus
+    // (doit avoir une propriété 'controllers' ou 'schema')
+    if (!app || typeof app.start !== 'function' || !app.controllers) {
+      return;
     }
-  };
-  checkExisting();
-  setTimeout(checkExisting, 0);
 
-  // Listen for messages from content script
-  window.addEventListener('message', (event: MessageEvent<Message>) => {
-    // Only accept messages from same window
-    if (event.source !== window) return;
+    state.isDetected = true;
 
-    const message = event.data;
-    if (!message || message.source !== 'stimulus-devtools') return;
+    // Nettoyage si besoin
+    if (observer) observer.stop();
 
-    // Handle REFRESH message
-    if (message.type === 'REFRESH' && observer) {
-      observer.refresh();
-    }
-  });
+    // Démarrage de l'observer
+    observer = new StimulusObserver(app, onStimulusObserverUpdate);
+    observer.start();
+
+    // Annonce officielle au Content Script
+    window.postMessage(new Message('STIMULUS_DETECTED'));
+  }
 
   function onStimulusObserverUpdate(controllers: ControllerInstance[]) {
     state.controllers = controllers;
     window.postMessage(new Message('UPDATE', state));
   }
 
-  function onStimulusDetected(app: StimulusApplication) {
-    if (observer) observer.stop();
+  /**
+   * Try to get Stimulus application instance by using common keys
+   */
+  function scan() {
+    if (state.isDetected) return;
 
-    state.isDetected = true;
-    stimulusApp = app;
-
-    // Start observing Stimulus app
-    observer = new StimulusObserver(app, onStimulusObserverUpdate);
-    observer.start();
+    for (const key of POTENTIAL_WINDOW_KEYS) {
+      // @ts-expect-error type
+      const candidate = window[key];
+      if (candidate) {
+        onStimulusDetected(candidate);
+        if (state.isDetected) return;
+      }
+    }
   }
+
+  /**
+   * Installe un "piège" sur window.Stimulus et window.application
+   * pour être notifié dès que l'assignation se fait.
+   */
+  function installTraps() {
+    POTENTIAL_WINDOW_KEYS.forEach(key => {
+      let internalValue: any = undefined;
+
+      try {
+        // On vérifie si la propriété est configurable avant de l'écraser
+        const descriptor = Object.getOwnPropertyDescriptor(window, key);
+        if (descriptor && !descriptor.configurable) return; // Impossible d'intercepter, on se reposera sur le polling
+
+        // @ts-expect-error type
+        if (window[key]) {
+          // @ts-expect-error type
+          internalValue = window[key];
+        }
+
+        Object.defineProperty(window, key, {
+          configurable: true,
+          enumerable: true,
+          get() {
+            return internalValue;
+          },
+          set(value) {
+            internalValue = value;
+            onStimulusDetected(value);
+          },
+        });
+      } catch {
+        // Ignore security errors (cross-origin iframe, etc.)
+      }
+    });
+  }
+
+  function startPolling() {
+    const interval = 500;
+    const maxDuration = 10000;
+    let elapsed = 0;
+
+    const timer = setInterval(() => {
+      if (state.isDetected) {
+        clearInterval(timer);
+        return;
+      }
+
+      scan();
+      elapsed += interval;
+
+      if (elapsed >= maxDuration) {
+        clearInterval(timer);
+      }
+    }, interval);
+  }
+
+  // Run detection strategies
+
+  if (document instanceof HTMLDocument) {
+    scan();
+    installTraps();
+    startPolling();
+  }
+
+  // Communications
+
+  window.addEventListener('message', (event: MessageEvent<Message>) => {
+    if (event.source !== window) return;
+    const message = event.data;
+    if (!message || message.source !== 'stimulus-devtools') return;
+
+    if (message.type === 'REFRESH' && observer) {
+      observer.refresh();
+    }
+  });
 });
