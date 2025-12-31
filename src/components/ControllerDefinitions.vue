@@ -2,11 +2,7 @@
   <div>
     <div class="flex items-center border-b border-neutral-200/75 px-3 py-1.5 dark:border-neutral-700">
       <div class="ml-auto">
-        <Button square @click="refresh">
-          <template #icon>
-            <LucideRotateCcw class="size-4" />
-          </template>
-        </Button>
+        <Button icon="lucide:rotate-ccw" square @click="refresh" />
       </div>
     </div>
     <ControllerDefinition
@@ -20,7 +16,6 @@
 <script setup lang="ts">
 import ControllerDefinition from '@/components/ControllerDefinition.vue';
 import { useState } from '@/composables/useState';
-import { LucideRotateCcw } from 'lucide-vue-next';
 import Button from '@/components/ui/Button.vue';
 import { computed } from 'vue';
 
