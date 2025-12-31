@@ -24,7 +24,8 @@ const controllerDefinitions = computed<ControllerDefinition[]>(() => {
     return {
       identifier,
       instances,
-      isLazy: instances.some(i => i.isLazy),
+      hasLazyInstance: instances.some(i => i.status === 'registered' && i.isLazy),
+      hasUnregisteredInstance: instances.some(i => i.status === 'unregistered'),
     };
   });
 });
