@@ -141,7 +141,7 @@ export default defineUnlistedScript(() => {
       observer.refresh();
     }
 
-    if (message.type === 'INSPECT_ELEMENT') {
+    if (Message.is(message, 'INSPECT_ELEMENT')) {
       const element = registry.getElement(message.data.uid);
       if (!element) return;
 

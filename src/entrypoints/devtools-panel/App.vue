@@ -33,6 +33,7 @@
 import { onMounted, computed } from 'vue';
 import { useWindowSize } from '@vueuse/core';
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle, TooltipProvider } from 'reka-ui';
+import { Message } from '@/core/message';
 import { useState } from '@/composables/useState';
 import { useMessaging } from '@/composables/useMessaging';
 import { inspectElement } from '@/utils/browser';
@@ -50,7 +51,7 @@ onMounted(() => {
 });
 
 onMessage(async message => {
-  if (message.type === 'INSPECT_ELEMENT_READY' && message.data.inspectId) {
+  if (Message.is(message, 'INSPECT_ELEMENT_READY')) {
     await inspectElement(message.data.inspectId);
   }
 });
