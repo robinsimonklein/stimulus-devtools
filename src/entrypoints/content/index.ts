@@ -29,6 +29,6 @@ export default defineContentScript({
       window.postMessage(message, '*');
     });
 
-    await injectScript('/stimulus-detector.js');
+    await injectScript('/main.js');
   },
 });

@@ -34,15 +34,24 @@ import { onMounted, computed } from 'vue';
 import { useWindowSize } from '@vueuse/core';
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle, TooltipProvider } from 'reka-ui';
 import { useState } from '@/composables/useState';
+import { useMessaging } from '@/composables/useMessaging';
+import { inspectElement } from '@/utils/browser';
 import ControllerDefinitions from '@/components/ControllerDefinitions.vue';
 import ControllerInstances from '@/components/ControllerInstances.vue';
 
 const { width: windowWidth } = useWindowSize();
 const { refresh } = useState();
+const { onMessage } = useMessaging();
 
 const splitterDirection = computed(() => (windowWidth.value > 540 ? 'horizontal' : 'vertical'));
 
 onMounted(() => {
   refresh();
+});
+
+onMessage(async message => {
+  if (message.type === 'INSPECT_ELEMENT_READY' && message.data.inspectId) {
+    await inspectElement(message.data.inspectId);
+  }
 });
 </script>

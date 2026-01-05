@@ -2,6 +2,7 @@ import type { StimulusApplication } from '@/types/stimulus';
 import { StimulusObserver } from '@/core/observer';
 import { Message } from '@/core/message';
 import { ControllerInstance } from '@/types/core';
+import { ElementRegistry } from '@/core/registry';
 
 interface State {
   isDetected: boolean;
@@ -15,6 +16,7 @@ export default defineUnlistedScript(() => {
   };
 
   let observer: StimulusObserver | null = null;
+  const registry = new ElementRegistry();
 
   const POTENTIAL_WINDOW_KEYS = ['Stimulus', 'application'];
 
@@ -36,7 +38,7 @@ export default defineUnlistedScript(() => {
     if (observer) observer.stop();
 
     // Démarrage de l'observer
-    observer = new StimulusObserver(app, onStimulusObserverUpdate);
+    observer = new StimulusObserver(app, registry, onStimulusObserverUpdate);
     observer.start();
 
     // Annonce officielle au Content Script
@@ -137,6 +139,21 @@ export default defineUnlistedScript(() => {
 
     if (message.type === 'REFRESH' && observer) {
       observer.refresh();
+    }
+
+    if (message.type === 'INSPECT_ELEMENT') {
+      const element = registry.getElement(message.data.uid);
+      if (!element) return;
+
+      const inspectId = `${Date.now()}`;
+      element.setAttribute('data-stimulus-devtools-inspect', inspectId);
+      postMessage(new Message('INSPECT_ELEMENT_READY', { inspectId }));
+
+      // Clean data-attribute by default after 1s
+      setTimeout(() => {
+        if (!element) return;
+        element.removeAttribute('data-stimulus-devtools-inspect');
+      }, 1000);
     }
   });
 });

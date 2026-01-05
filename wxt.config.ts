@@ -9,7 +9,7 @@ export default defineConfig({
     permissions: ['storage'],
     web_accessible_resources: [
       {
-        resources: ['stimulus-detector.js'],
+        resources: ['main.js'],
         matches: ['<all_urls>'],
       },
     ],

@@ -33,7 +33,7 @@ const controllerDefinitions = computed<ControllerDefinition[]>(() => {
 // Initialize message listening at module level
 const { onMessage, postMessage } = useMessaging();
 
-onMessage((message: Message) => {
+onMessage(message => {
   if (message.type === 'UPDATE') {
     controllerInstances.value = message.data.controllers || [];
   }

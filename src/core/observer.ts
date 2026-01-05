@@ -4,13 +4,18 @@ import { ControllerInstance, RegisteredControllerInstance, UnregisteredControlle
 import { getElementSelector } from '@/utils/dom';
 
 export class StimulusObserver {
-  private readonly registry = new ElementRegistry();
+  private readonly registry: ElementRegistry;
   private observer: MutationObserver;
   private readonly app: StimulusApplication;
   private onUpdate: (controllers: ControllerInstance[]) => void;
 
-  constructor(app: StimulusApplication, onUpdate: (controllers: ControllerInstance[]) => void) {
+  constructor(
+    app: StimulusApplication,
+    registry: ElementRegistry,
+    onUpdate: (controllers: ControllerInstance[]) => void,
+  ) {
     this.app = app;
+    this.registry = registry;
     this.onUpdate = onUpdate;
     this.observer = new MutationObserver(this.handleMutations.bind(this));
   }
