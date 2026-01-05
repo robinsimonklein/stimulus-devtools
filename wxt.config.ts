@@ -21,6 +21,8 @@ export default defineConfig({
       '--no-first-run',
       '--hide-crash-restore-bubble',
     ],
+    firefoxProfile: './.wxt/firefox-data',
+    keepProfileChanges: true,
     startUrls: ['http://localhost:5173'],
   },
   vite: () => ({
